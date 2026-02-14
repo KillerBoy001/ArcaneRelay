@@ -1,6 +1,6 @@
 package com.arcanerelay.core.blockmovement;
 
-import com.arcanerelay.state.ArcaneMoveState.MoveEntry;
+import com.arcanerelay.resources.ArcaneMoveState.MoveEntry;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3i;
@@ -8,7 +8,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
-import com.hypixel.hytale.server.core.universe.world.chunk.section.FluidSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;

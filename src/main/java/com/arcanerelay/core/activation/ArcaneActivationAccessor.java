@@ -4,8 +4,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.arcanerelay.components.ArcaneSection;
-import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
@@ -19,7 +17,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
  * {@link com.arcanerelay.config.Activation#execute} individually.
  */
 public interface ArcaneActivationAccessor {
-    @Nonnull CommandBuffer<ChunkStore> getCommandBuffer();
+    @Nonnull ChunkStoreCommandBufferLike getCommandBuffer();
     
     @Nullable ArcaneSection getArcaneSection(int cx, int cy, int cz);
     @Nullable default ArcaneSection getArcaneSectionByBlock(int bx, int by, int bz) {

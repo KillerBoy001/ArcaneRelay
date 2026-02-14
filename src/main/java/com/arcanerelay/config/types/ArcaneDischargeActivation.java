@@ -101,7 +101,7 @@ public class ArcaneDischargeActivation extends Activation {
         int worldX, int worldY, int worldZ,
         @Nonnull List<int[]> sources
     ) {
-        // TODO: implement charge cycling and signal on max->off transition (use sources)
+        
         return ArcaneSection.BlockTickStrategy.PROCESSED;
     }
 }

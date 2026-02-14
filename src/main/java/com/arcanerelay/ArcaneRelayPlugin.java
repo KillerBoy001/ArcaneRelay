@@ -19,7 +19,6 @@ import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.resources.ArcaneState;
 import com.arcanerelay.resources.ArcaneTickMetricsResource;
-import com.arcanerelay.resources.ArcaneTickSchedule;
 import com.arcanerelay.resources.CustomHudRestoreState;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
 import com.arcanerelay.systems.ArcaneStaffHudSystem;
@@ -62,7 +61,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     private ComponentType<EntityStore, ArcaneStaffLegendVisible> arcaneStaffLegendVisibleComponentType;
     private ResourceType<ChunkStore, ArcaneState> arcaneStateResourceType;
     private ResourceType<ChunkStore, ArcaneMoveState> arcaneMoveStateResourceType;
-    private ResourceType<ChunkStore, ArcaneTickSchedule> arcaneTickScheduleResourceType;
     private ResourceType<ChunkStore, ArcaneTickMetricsResource> arcaneTickMetricsResourceType;
     private ResourceType<EntityStore, CustomHudRestoreState> customHudRestoreStateResourceType;
 
@@ -83,7 +81,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
         this.arcaneStateResourceType = chunkRegistry.registerResource(ArcaneState.class, ArcaneState::new);
         this.arcaneMoveStateResourceType = chunkRegistry.registerResource(ArcaneMoveState.class, ArcaneMoveState::new);
-        this.arcaneTickScheduleResourceType = chunkRegistry.registerResource(ArcaneTickSchedule.class, ArcaneTickSchedule::new);
         this.arcaneTickMetricsResourceType = chunkRegistry.registerResource(ArcaneTickMetricsResource.class, ArcaneTickMetricsResource::new);
         this.arcaneTriggerBlockComponentType = chunkRegistry.registerComponent(ArcaneTriggerBlock.class,
                 "ArcaneTrigger", ArcaneTriggerBlock.CODEC);
@@ -92,7 +89,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
         chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
         chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
-        chunkRegistry.registerSystem(new ArcaneSystems.TickRateLimit());
         chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
         chunkRegistry.registerSystem(new ArcaneSystems.FlushArcaneMetrics());
         chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
@@ -164,11 +160,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     @Nonnull
     public ComponentType<ChunkStore, ArcaneSection> getArcaneSectionComponentType() {
         return this.arcaneSectionComponentType;
-    }
-
-    @Nonnull
-    public ResourceType<ChunkStore, ArcaneTickSchedule> getArcaneTickScheduleResourceType() {
-        return this.arcaneTickScheduleResourceType;
     }
 
     @Nonnull

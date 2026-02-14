@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 
 import com.arcanerelay.components.ArcaneSection;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.chunk.AbstractCachedAccessor;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
@@ -26,7 +26,7 @@ public final class ArcaneCachedAccessor extends AbstractCachedAccessor implement
     protected ArcaneSection selfArcaneSection;
     protected BlockSection selfBlockSection;
     protected ChunkSection selfChunkSection;
-    protected CommandBuffer<ChunkStore> selfCommandBuffer;
+    protected ChunkStoreCommandBufferLike selfCommandBuffer;
 
     ArcaneCachedAccessor() {
         super(3);
@@ -34,24 +34,41 @@ public final class ArcaneCachedAccessor extends AbstractCachedAccessor implement
 
     @Nonnull
     public static ArcaneCachedAccessor of(
-        @Nonnull ComponentAccessor<ChunkStore> commandBuffer,
-        @Nonnull ArcaneSection section,
-        @Nonnull BlockSection blockSection, 
-        @Nonnull ChunkSection chunkSection,
-        int radius
-    ) {
-        ArcaneCachedAccessor accessor = THREAD_LOCAL.get();
-        accessor.init(commandBuffer, section, blockSection, chunkSection, radius);
-        return accessor;
-    }
-
-    private void init(
-        @Nonnull ComponentAccessor<ChunkStore> commandBuffer,
+        @Nonnull CommandBuffer<ChunkStore> commandBuffer,
         @Nonnull ArcaneSection section,
         @Nonnull BlockSection blockSection,
         @Nonnull ChunkSection chunkSection,
         int radius
     ) {
+        ArcaneCachedAccessor accessor = THREAD_LOCAL.get();
+        accessor.init(new CommandBufferChunkStoreAdapter(commandBuffer), section, blockSection, chunkSection, radius);
+        return accessor;
+    }
+
+    @Nonnull
+    public static ArcaneCachedAccessor ofForInteraction(
+        @Nonnull Store<ChunkStore> chunkStore,
+        @Nonnull ArcaneSection section,
+        @Nonnull BlockSection blockSection,
+        @Nonnull ChunkSection chunkSection,
+        int radius
+    ) {
+        ArcaneCachedAccessor accessor = THREAD_LOCAL.get();
+        accessor.init(new StoreBackedChunkStoreRunner(chunkStore), section, blockSection, chunkSection, radius);
+        return accessor;
+    }
+
+    private void init(
+        @Nonnull ChunkStoreCommandBufferLike commandBuffer,
+        @Nonnull ArcaneSection section,
+        @Nonnull BlockSection blockSection,
+        @Nonnull ChunkSection chunkSection,
+        int radius
+    ) {
+        this.selfArcaneSection = section;
+        this.selfBlockSection  = blockSection;
+        this.selfChunkSection  = chunkSection;
+        this.selfCommandBuffer = commandBuffer;
         super.init(commandBuffer, chunkSection.getX(), chunkSection.getY(), chunkSection.getZ(), radius);
         insertSectionComponent(ARCANE_COMPONENT, section, chunkSection.getX(), chunkSection.getY(), chunkSection.getZ());
         insertSectionComponent(BLOCK_COMPONENT, blockSection, chunkSection.getX(), chunkSection.getY(), chunkSection.getZ());
@@ -79,7 +96,7 @@ public final class ArcaneCachedAccessor extends AbstractCachedAccessor implement
 
     @Override
     @Nonnull
-    public CommandBuffer<ChunkStore> getCommandBuffer() {
+    public ChunkStoreCommandBufferLike getCommandBuffer() {
         return this.selfCommandBuffer;
     }
 }

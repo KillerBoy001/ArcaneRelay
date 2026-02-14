@@ -66,16 +66,10 @@
         "Failed": {
           "Type": "Serial",
           "Interactions": [
-          {
-            "Type": "ChangeState",
-            "Changes": {
-              "default": "Off",
-              "Off": "default"
+            {
+              "Type": "ArcaneActivator",
+              "Activator": "Arcane_Relay"
             }
-          },
-          {
-            "Type": "SendSignal"
-          }
         ]
         },
         "Next": {

@@ -8,7 +8,7 @@ import com.arcanerelay.resources.ArcaneMoveState;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.component.CommandBuffer;
+import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
@@ -165,7 +165,7 @@ public class MoveBlockActivation extends Activation {
         int worldX, int worldY, int worldZ,
         @Nonnull List<int[]> sources
     ) {
-        CommandBuffer<ChunkStore> commandBuffer = accessor.getCommandBuffer();
+        ChunkStoreCommandBufferLike commandBuffer = accessor.getCommandBuffer();
         commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
             World world = store.getExternalData().getWorld();
             Vector3i pusherPosition = new Vector3i(worldX, worldY, worldZ);
@@ -354,7 +354,7 @@ public class MoveBlockActivation extends Activation {
             Vector3i direction) {
         PlayerRef playerRef = entityStore.getComponent(ref, PlayerRef.getComponentType());
 
-        if (isPushUp(direction) && playerRef == null) {
+        if (isPushUp(direction) && playerRef != null) {
             teleportPlayerWithBlock(world, entityStore, ref, transform, direction);
         } else {
             applyKnockbackWithLimit(entityStore, ref, direction);

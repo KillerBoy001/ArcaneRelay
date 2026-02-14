@@ -1,14 +1,16 @@
 package com.arcanerelay.interactions;
 
 import com.arcanerelay.ArcaneRelayPlugin;
+import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationBinding;
+import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.BlockPosition;
@@ -24,10 +26,17 @@ import com.hypixel.hytale.server.core.modules.entity.component.TransformComponen
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -122,9 +131,45 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
             return;
         }
 
-        // need to add support for dynamic activation ids
-        String activationId = activation.getId();
-        ArcaneUtil.setTicking(cb.getExternalData().getWorld().getChunkStore().getStore(), blockX, blockY, blockZ);
+        Store<ChunkStore> store = world.getChunkStore().getStore();
+        Ref<ChunkStore> sectionRef = world.getChunkStore().getChunkSectionReference(
+            ChunkUtil.chunkCoordinate(blockX),
+            ChunkUtil.chunkCoordinate(blockY),
+            ChunkUtil.chunkCoordinate(blockZ));
+        if (sectionRef == null) {
+            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: section not found at (%d,%d,%d)", blockX, blockY, blockZ));
+            context.getState().state = InteractionState.Finished;
+            return;
+        }
+
+        ChunkSection chunkSection = store.getComponent(sectionRef, ChunkSection.getComponentType());
+        if (chunkSection == null) {
+            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: chunk section not found at (%d,%d,%d)", blockX, blockY, blockZ));
+            context.getState().state = InteractionState.Finished;
+            return;
+        }
+
+        ArcaneSection arcaneSection = store.getComponent(sectionRef, ArcaneSection.getComponentType());
+        if (arcaneSection == null) {
+            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: arcane section not found at (%d,%d,%d)", blockX, blockY, blockZ));
+            context.getState().state = InteractionState.Finished;
+            return;
+        }
+
+        BlockSection blockSection = store.getComponent(sectionRef, BlockSection.getComponentType());
+        if (blockSection == null) {
+            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: block section not found at (%d,%d,%d)", blockX, blockY, blockZ));
+            context.getState().state = InteractionState.Finished;
+            return;
+        }
+
+        BlockComponentChunk blockComponentChunk = store.getComponent(chunkSection.getChunkColumnReference(), BlockComponentChunk.getComponentType());
+        Ref<ChunkStore> blockRef = blockComponentChunk != null
+            ? blockComponentChunk.getEntityReference(ChunkUtil.indexBlockInColumn(blockX, blockY, blockZ))
+            : null;
+
+        ArcaneCachedAccessor accessor = ArcaneCachedAccessor.ofForInteraction(store, arcaneSection, blockSection, chunkSection, 1);
+        activation.execute(accessor, sectionRef, blockRef, blockX, blockY, blockZ, List.of());
 
         context.getState().state = InteractionState.Finished;
     }

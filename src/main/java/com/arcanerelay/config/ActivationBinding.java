@@ -32,6 +32,11 @@ public final class ActivationBinding implements JsonAssetWithMap<String, Default
                 obj -> obj.bindings)
             .add()
             .append(
+                new KeyedCodec<>("ContainsBindings", new MapCodec<>(Codec.STRING, HashMap::new), false),
+                (obj, contains) -> obj.containsBindings = contains != null ? contains : new HashMap<>(),
+                obj -> obj.containsBindings)
+            .add()
+            .append(
                 new KeyedCodec<>("Default", Codec.STRING, false),
                 (obj, defaultActivation) -> obj.defaultActivation = defaultActivation,
                 obj -> obj.defaultActivation)
@@ -40,9 +45,11 @@ public final class ActivationBinding implements JsonAssetWithMap<String, Default
 
     public static final String DEFAULT_ACTIVATION_ID = "use_block";
     private static final Map<String, String> blockToActivationId = new HashMap<>();
+    private static final Map<String, String> containsToActivationId = new HashMap<>();
     private static String defaultActivationId = DEFAULT_ACTIVATION_ID;
 
     private Map<String, String> bindings = new HashMap<>();
+    private Map<String, String> containsBindings = new HashMap<>();
     @Nullable
     private String defaultActivation;
     private AssetExtraInfo.Data data;
@@ -59,6 +66,12 @@ public final class ActivationBinding implements JsonAssetWithMap<String, Default
     @Nonnull
     public Map<String, String> getBindings() {
         return bindings != null ? bindings : Collections.emptyMap();
+    }
+
+    /** Substring → activation id; if block type key contains the substring, use this activation (longest match wins). */
+    @Nonnull
+    public Map<String, String> getContainsBindings() {
+        return containsBindings != null ? containsBindings : Collections.emptyMap();
     }
 
     /** Fallback activation id when a block type is not in bindings. */
@@ -88,15 +101,23 @@ public final class ActivationBinding implements JsonAssetWithMap<String, Default
         AssetStore<String, ActivationBinding, ? extends AssetMap<String, ActivationBinding>> store =
             AssetRegistry.getAssetStore(ActivationBinding.class);
         if (store == null) return;
+
         AssetMap<String, ActivationBinding> assetMap = store.getAssetMap();
         if (assetMap == null) return;
+
         Map<String, ActivationBinding> all = ((DefaultAssetMap<String, ActivationBinding>) assetMap).getAssetMap();
         blockToActivationId.clear();
+        containsToActivationId.clear();
+
         List<ActivationBinding> sorted = new ArrayList<>(all.values());
         sorted.sort(Comparator.comparing(ActivationBinding::getId));
+
         for (ActivationBinding binding : sorted) {
             for (Map.Entry<String, String> e : binding.getBindings().entrySet()) {
                 blockToActivationId.put(e.getKey(), e.getValue());
+            }
+            for (Map.Entry<String, String> e : binding.getContainsBindings().entrySet()) {
+                containsToActivationId.put(e.getKey(), e.getValue());
             }
             if (binding.getDefaultActivation() != null) {
                 defaultActivationId = binding.getDefaultActivation();
@@ -104,10 +125,20 @@ public final class ActivationBinding implements JsonAssetWithMap<String, Default
         }
     }
 
-    /** Returns activation id for a block type key (default if not bound). */
+    /** Returns activation id for a block type key (exact match, then longest contains match, then default). */
     @Nonnull
     public static String getActivationId(@Nonnull String blockTypeKey) {
-        return blockToActivationId.getOrDefault(blockTypeKey, defaultActivationId);
+        String exact = blockToActivationId.get(blockTypeKey);
+        if (exact != null) return exact;
+        String bestActivation = null;
+        int bestLen = -1;
+        for (Map.Entry<String, String> e : containsToActivationId.entrySet()) {
+            if (blockTypeKey.contains(e.getKey()) && e.getKey().length() > bestLen) {
+                bestActivation = e.getValue();
+                bestLen = e.getKey().length();
+            }
+        }
+        return bestActivation != null ? bestActivation : defaultActivationId;
     }
 
     /** Returns the merged bindings map (block type key → activation id). */

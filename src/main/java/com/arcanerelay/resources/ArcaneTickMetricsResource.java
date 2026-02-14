@@ -1,4 +1,4 @@
-package com.arcanerelay.state;
+package com.arcanerelay.resources;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;

@@ -2,17 +2,15 @@ package com.arcanerelay.components;
 
 import java.time.Instant;
 import java.util.BitSet;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.StampedLock;
 
 import javax.annotation.Nonnull;
 
 import com.arcanerelay.ArcaneRelayPlugin;
+import com.hypixel.hytale.codec.Codec;
+import com.hypixel.hytale.codec.ExtraInfo;
+import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.common.util.BitSetUtil;
 import com.hypixel.hytale.component.Component;
@@ -21,7 +19,12 @@ import com.hypixel.hytale.function.predicate.ObjectPositionBlockFunction;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
+import com.hypixel.hytale.server.core.util.io.ByteBufUtil;
+import com.hypixel.hytale.sneakythrow.SneakyThrow;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
 
 /**
@@ -29,7 +32,12 @@ import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
  * Uses ConcurrentHashMap for thread-safe updates from parallel tick threads.
  */
 public class ArcaneSection implements Component<ChunkStore> {
+    public static final int VERSION = 1;
     public static final BuilderCodec<ArcaneSection> CODEC = BuilderCodec.builder(ArcaneSection.class, ArcaneSection::new)
+        .versioned()
+        .codecVersion(VERSION)
+        .append(new KeyedCodec<>("Data", Codec.BYTE_ARRAY), ArcaneSection::deserialize, ArcaneSection::serialize)
+        .add()
         .build();
 
    private final StampedLock arcaneSectionLock;
@@ -98,6 +106,10 @@ public class ArcaneSection implements Component<ChunkStore> {
                     ticked++;
                     continue;
                 case WAIT_FOR_ADJACENT_CHUNK_LOAD:
+                case CONTINUE:
+                        this.setTicking(index, true);
+                        continue;
+                default:
                     continue;
             }
         }
@@ -141,6 +153,59 @@ public class ArcaneSection implements Component<ChunkStore> {
       return result;
     }
 
+    /** Serializes ticking state to the buffer (under read lock). */
+    private void serialize(@Nonnull ByteBuf buf) {
+        long lock = this.arcaneSectionLock.readLock();
+        try {
+            BitSet combined = (BitSet) this.tickingBlocks.clone();
+            combined.or(this.lastTickingBlocks);
+            buf.writeShort(combined.cardinality());
+            long[] data = combined.toLongArray();
+            buf.writeShort(data.length);
+            for (long l : data) {
+                buf.writeLong(l);
+            }
+        } finally {
+            this.arcaneSectionLock.unlockRead(lock);
+        }
+    }
+
+    /** Returns serialized payload for the codec. */
+    public byte[] serialize(@Nonnull ExtraInfo extraInfo) {
+        ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
+        try {
+            serialize(buf);
+            return ByteBufUtil.getBytesRelease(buf);
+        } catch (Throwable t) {
+            buf.release();
+            throw SneakyThrow.sneakyThrow(t);
+        }
+    }
+
+    /** Deserializes ticking state from the buffer (sets tickingBlocks and lastTickingBlocks under write lock). */
+    private void deserialize(@Nonnull ByteBuf buf, int version) {
+        buf.readUnsignedShort(); // cardinality (format compatibility with BlockSection)
+        int len = buf.readUnsignedShort();
+        long[] data = new long[len];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = buf.readLong();
+        }
+        BitSet restored = BitSet.valueOf(data);
+        long writeStamp = this.arcaneSectionLock.writeLock();
+        try {
+            this.tickingBlocks = restored;
+            this.lastTickingBlocks = (BitSet) restored.clone();
+        } finally {
+            this.arcaneSectionLock.unlockWrite(writeStamp);
+        }
+    }
+
+    /** Entry point for codec: restore state from saved bytes. */
+    public void deserialize(@Nonnull byte[] bytes, @Nonnull ExtraInfo extraInfo) {
+        ByteBuf buf = Unpooled.wrappedBuffer(bytes);
+        deserialize(buf, extraInfo.getVersion());
+    }
+
     @Override
     public Component<ChunkStore> clone() {
         return new ArcaneSection();
@@ -148,7 +213,8 @@ public class ArcaneSection implements Component<ChunkStore> {
 
     public static enum BlockTickStrategy {
         PROCESSED,
-        WAIT_FOR_ADJACENT_CHUNK_LOAD;
+        WAIT_FOR_ADJACENT_CHUNK_LOAD,
+        CONTINUE;
      
         private BlockTickStrategy() {
         }

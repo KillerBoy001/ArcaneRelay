@@ -1,9 +1,11 @@
 package com.arcanerelay.systems;
 
 import com.hypixel.hytale.component.system.HolderSystem;
+import com.hypixel.hytale.component.system.tick.DelayedEntitySystem;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
 import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.math.util.HashUtil;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
@@ -17,12 +19,10 @@ import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.blockmovement.BlockMovementExecutor;
-import com.arcanerelay.state.ArcaneMoveState;
-import com.arcanerelay.state.ArcaneTickMetricsResource;
-import com.arcanerelay.state.ArcaneTickSchedule;
+import com.arcanerelay.resources.ArcaneMoveState;
+import com.arcanerelay.resources.ArcaneTickMetricsResource;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationBinding;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
 import com.hypixel.hytale.builtin.blocktick.system.ChunkBlockTickSystem;
@@ -117,36 +117,6 @@ public class ArcaneSystems {
         }
     }
 
-    /**
-     * Runs once per world tick; updates {@link ArcaneTickSchedule} so that arcane block processing
-     * only runs when the configured interval (e.g. 250ms) has elapsed.
-     */
-    public static class TickRateLimit extends TickingSystem<ChunkStore> {
-        @Nonnull
-        private static final Set<Dependency<ChunkStore>> DEPENDENCIES = Set.of(
-            new SystemDependency<>(Order.AFTER, ArcaneSystems.PreTick.class),
-            new SystemDependency<>(Order.BEFORE, ArcaneSystems.Ticking.class)
-        );
-
-        @Override
-        public void tick(float dt, int index, @Nonnull Store<ChunkStore> store) {
-            var worldTime = store.getExternalData().getWorld().getEntityStore().getStore()
-                .getResource(WorldTimeResource.getResourceType());
-            if (worldTime == null) return;
-
-            ArcaneTickSchedule schedule = store.getResource(ArcaneTickSchedule.getResourceType());
-            if (schedule != null) {
-                schedule.update(worldTime.getGameTime());
-            }
-        }
-
-        @Nonnull
-        @Override
-        public Set<Dependency<ChunkStore>> getDependencies() {
-            return DEPENDENCIES;
-        }
-    }
-
     public static class Ticking extends EntityTickingSystem<ChunkStore> {
         @Nonnull
         private static final Query<ChunkStore> QUERY = Query.and(ChunkSection.getComponentType(), BlockSection.getComponentType(), ArcaneSection.getComponentType());
@@ -154,7 +124,6 @@ public class ArcaneSystems {
         @SuppressWarnings("null")
         @Nonnull
         private static final Set<Dependency<ChunkStore>> DEPENDENCIES = Set.of(
-            new SystemDependency<>(Order.AFTER, ArcaneSystems.TickRateLimit.class),
             new SystemDependency<>(Order.BEFORE, ChunkBlockTickSystem.Ticking.class)
         );
 
@@ -170,7 +139,7 @@ public class ArcaneSystems {
         /** Single-threaded to avoid deadlock: activations use world/commandBuffer in ways that are not safe from parallel workers. */
         @Override
         public boolean isParallel(int archetypeChunkSize, int taskCount) {
-           return false;
+           return EntityTickingSystem.useParallel(archetypeChunkSize, taskCount);
         }
 
         @Override
@@ -181,27 +150,37 @@ public class ArcaneSystems {
             @Nonnull Store<ChunkStore> store,
             @Nonnull CommandBuffer<ChunkStore> commandBuffer
         ) {
-            ArcaneTickSchedule schedule = store.getResource(ArcaneTickSchedule.getResourceType());
-            if (schedule == null || !schedule.isProcessingAllowed()) {
-                return;
-            }
-
             Ref<ChunkStore> sectionRef = archetypeChunk.getReferenceTo(index);
 
             BlockSection blockSection = commandBuffer.getComponent(sectionRef, BlockSection.getComponentType());
-            if (blockSection == null) return;
+            if (blockSection == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Block section not found");
+                return;
+            }
 
             ChunkSection chunkSection = commandBuffer.getComponent(sectionRef, ChunkSection.getComponentType());
-            if (chunkSection == null) return;
+            if (chunkSection == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Chunk section not found");
+                return;
+            }
 
             ArcaneSection arcaneSection = commandBuffer.getComponent(sectionRef, ArcaneSection.getComponentType());
-            if (arcaneSection == null) return;
+            if (arcaneSection == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Arcane section not found");
+                return;
+            }
 
             BlockComponentChunk blockComponentChunk = commandBuffer.getComponent(chunkSection.getChunkColumnReference(), BlockComponentChunk.getComponentType());
-            if (blockComponentChunk == null) return;
+            if (blockComponentChunk == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Block component chunk not found");
+                return;
+            }
 
             WorldChunk worldChunkComponent = commandBuffer.getComponent(chunkSection.getChunkColumnReference(), WorldChunk.getComponentType());
-            if (worldChunkComponent == null) return;
+            if (worldChunkComponent == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("World chunk component not found");
+                return;
+            }
 
             ArcaneCachedAccessor accessor = ArcaneCachedAccessor.of(
                 commandBuffer, 
@@ -210,15 +189,31 @@ public class ArcaneSystems {
                 chunkSection, 
                 1);
 
-            
+            var world = commandBuffer.getExternalData().getWorld();
+            long tick = world.getTick();
+            long rateLimitTicks = 10L; // process each block every 10 ticks
 
             int arcaneTicksProcessed = arcaneSection.forEachTicking(accessor, commandBuffer, blockSection, chunkSection.getY(),
                 (commandBuffer1, arcaneSection1, x, y, z, blockId) -> {
-                    BlockType blockType = accessor.getBlockType(x, y, z);
-                    if (blockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
+                    int worldX = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getX(), x);
+                    int worldZ = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getZ(), z);
+                    // long hash = HashUtil.rehash(worldX, y, worldZ, 4030921250L);
+                    if ((tick) % rateLimitTicks != 0L) {
+                        return ArcaneSection.BlockTickStrategy.CONTINUE; // keep ticking, process once per second
+                    }
+
+                    ArcaneRelayPlugin.LOGGER.atInfo().log("Executing activation for block at " + x + ", " + y + ", " + z);
+                    BlockType blockType = accessor.getBlockType(worldX, y, worldZ);
+                    if (blockType == null) {
+                        ArcaneRelayPlugin.LOGGER.atInfo().log("Block type not found for block at " + x + ", " + y + ", " + z);
+                        return ArcaneSection.BlockTickStrategy.PROCESSED;
+                    }
 
                     Activation activation = ArcaneUtil.getActivationForBlock(blockType);
-                    if (activation == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
+                    if (activation == null) {
+                        ArcaneRelayPlugin.LOGGER.atInfo().log("Activation not found for block type " + blockType.getId());
+                        return ArcaneSection.BlockTickStrategy.PROCESSED;
+                    }
 
                     // Block Reference may be null, as some blcoks do not have a corresponding entity
                     Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(ChunkUtil.indexBlockInColumn(x, y, z));
@@ -233,10 +228,9 @@ public class ArcaneSystems {
                     }
 
                     int sectionStartY = chunkSection.getY() << 5;
-                    int worldX = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getX(), x);
-                    int worldZ = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getZ(), z);
 
                     try {
+                        ArcaneRelayPlugin.LOGGER.atInfo().log("Executing activation " + activation.getId() + " at " + worldX + ", " + y + ", " + worldZ);
                         ArcaneSection.BlockTickStrategy strategy = activation.execute(
                             accessor, sectionRef, blockRef, worldX, y, worldZ,
                             // TODO: add source position
@@ -270,8 +264,7 @@ public class ArcaneSystems {
         @SuppressWarnings("null")
         @Nonnull
         private static final Set<Dependency<ChunkStore>> DEPENDENCIES = Set.of(
-            new SystemDependency<>(Order.AFTER, ArcaneSystems.Ticking.class),
-            new SystemDependency<>(Order.BEFORE, ArcaneSystems.MoveBlock.class)
+            new SystemDependency<>(Order.AFTER, ArcaneSystems.Ticking.class)
         );
 
         @Override
@@ -317,7 +310,6 @@ public class ArcaneSystems {
         @SuppressWarnings("null")
         @Nonnull
         private static final Set<Dependency<ChunkStore>> DEPENDENCIES = Set.of(
-            new SystemDependency<>(Order.AFTER, ArcaneSystems.FlushArcaneMetrics.class),
             new SystemDependency<>(Order.BEFORE, ChunkBlockTickSystem.Ticking.class)
         );
 

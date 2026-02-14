@@ -1,4 +1,4 @@
-package com.arcanerelay.state;
+package com.arcanerelay.resources;
 
 import com.hypixel.hytale.math.vector.Vector3i;
 

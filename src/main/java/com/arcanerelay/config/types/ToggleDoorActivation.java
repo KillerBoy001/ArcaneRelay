@@ -21,7 +21,7 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.component.CommandBuffer;
+import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
@@ -229,25 +229,38 @@ public class ToggleDoorActivation extends Activation {
         int worldX, int worldY, int worldZ,
         @Nonnull List<int[]> sources
     ) {
-        CommandBuffer<ChunkStore> commandBuffer = accessor.getCommandBuffer();
+        ChunkStoreCommandBufferLike commandBuffer = accessor.getCommandBuffer();
 
         // This ensures we are enqueing the block interaction state change on the correct thread
         // I need to review if operations such as retrieving a loaded chunk are thread safe
+        ArcaneRelayPlugin.LOGGER.atInfo().log("Executing toggle door activation at " + worldX + ", " + worldY + ", " + worldZ);
         commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
             World w = store.getExternalData().getWorld();
 
             WorldChunk doorChunk = w.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
-            if (doorChunk == null) return;
+            if (doorChunk == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Door chunk not found for block " + worldX + ", " + worldY + ", " + worldZ);
+                return;
+            }
 
             int[] main = BlockUtil.findMainBlock(w, doorChunk, worldX, worldY, worldZ);
-            if (main == null) return;
+            if (main == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Main block not found for block " + worldX + ", " + worldY + ", " + worldZ);
+                return;
+            }
 
             int mainX = main[0], mainY = main[1], mainZ = main[2];
             WorldChunk mainChunk = w.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(mainX, mainZ));
-            if (mainChunk == null) return;
+            if (mainChunk == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Main chunk not found for block " + worldX + ", " + worldY + ", " + worldZ);
+                return;
+            }
 
             BlockType mainBlockType = mainChunk.getBlockType(mainX, mainY, mainZ);
-            if (mainBlockType == null) return;
+            if (mainBlockType == null) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Main block type not found for block " + worldX + ", " + worldY + ", " + worldZ);
+                return;
+            }
 
             Vector3i mainPos = new Vector3i(mainX, mainY, mainZ);
             String blockState = mainBlockType.getStateForBlock(mainBlockType);
@@ -289,6 +302,7 @@ public class ToggleDoorActivation extends Activation {
                 ActivationExecutor.playEffects(w, mainX, mainY, mainZ, getEffects());
             }
 
+            ArcaneRelayPlugin.LOGGER.atInfo().log("Sending signals for block " + mainX + ", " + mainY + ", " + mainZ);
             ActivationExecutor.sendSignals(store, blockRef, mainX, mainY, mainZ);
         });
 

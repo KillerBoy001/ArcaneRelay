@@ -5,11 +5,9 @@ import com.arcanerelay.components.ArcaneTriggerBlock;
 import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionState;
@@ -18,14 +16,12 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import javax.annotation.Nonnull;
 
@@ -78,8 +74,6 @@ public class SendSignalInteraction extends SimpleInstantInteraction {
          if (blockRef == null) return;
 
          Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
-         if (chunkStore == null) return;
-
          ArcaneTriggerBlock trigger = chunkStore.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
          if (trigger == null) return;
 

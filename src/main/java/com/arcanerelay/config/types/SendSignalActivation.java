@@ -12,7 +12,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.hypixel.hytale.component.CommandBuffer;
+import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -39,7 +39,7 @@ public class SendSignalActivation extends Activation {
         int worldX, int worldY, int worldZ,
         @Nonnull List<int[]> sources
     ) {
-        CommandBuffer<ChunkStore> commandBuffer = accessor.getCommandBuffer();
+        ChunkStoreCommandBufferLike commandBuffer = accessor.getCommandBuffer();
 
         commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
             World world = store.getExternalData().getWorld();

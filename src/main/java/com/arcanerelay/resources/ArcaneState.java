@@ -1,4 +1,4 @@
-package com.arcanerelay.state;
+package com.arcanerelay.resources;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.hypixel.hytale.component.Resource;

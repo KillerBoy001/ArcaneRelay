@@ -20,7 +20,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.hypixel.hytale.component.CommandBuffer;
+import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -128,7 +128,7 @@ public class ToggleStateActivation extends Activation {
         int worldX, int worldY, int worldZ,
         @Nonnull List<int[]> sources
     ) {
-        CommandBuffer<ChunkStore> commandBuffer = accessor.getCommandBuffer();
+        ChunkStoreCommandBufferLike commandBuffer = accessor.getCommandBuffer();
 
         BlockType blockType = accessor.getBlockType(worldX, worldY, worldZ);
         if (blockType == null) {
@@ -148,8 +148,7 @@ public class ToggleStateActivation extends Activation {
             World world = store.getExternalData().getWorld();
             world.setBlockInteractionState(new Vector3i(worldX, worldY, worldZ), blockType, newState);
         });
-        // world.setBlockInteractionState(new Vector3i(worldX, worldY, worldZ), blockType, newState);
-
+    
         var newBlockType = blockType.getBlockForState(newState);
         if (newBlockType != null) {
             commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
@@ -174,7 +173,9 @@ public class ToggleStateActivation extends Activation {
 
         if (shouldSendSignal(state, newState)) {
             // MIGHT need to make adjustments here to ensure we are sending the signals to the correct blocks
-            ActivationExecutor.sendSignals(commandBuffer, blockRef, worldX, worldY, worldZ);
+            commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
+                ActivationExecutor.sendSignals(store, blockRef, worldX, worldY, worldZ);
+            });
         }
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;
