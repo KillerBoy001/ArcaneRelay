@@ -1,21 +1,16 @@
 package com.arcanerelay.interactions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationRegistry;
-import com.arcanerelay.systems.ArcaneTickSystem;
+import com.arcanerelay.config.ActivationBinding;
+import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.InteractionState;
@@ -30,7 +25,6 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHa
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
-import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -42,7 +36,6 @@ import javax.annotation.Nonnull;
  * Executes the activation immediately (e.g. Pusher_Chain for the pusher).
  */
 public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
-
     private static final double TARGET_DISTANCE = 10.0;
 
     @Nonnull
@@ -112,12 +105,11 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
             return;
         }
 
-        ActivationRegistry registry = ArcaneRelayPlugin.get().getActivationRegistry();
         Activation activation = (activator != null && !activator.isEmpty())
-                ? registry.getActivation(activator)
-                : registry.getActivationForBlock(blockType.getId());
+                ? Activation.getActivation(activator)
+                : ArcaneUtil.getActivationForBlock(blockType);
         if (activation == null) {
-            ArcaneRelayPlugin.get().getLogger().atFine().log(String.format("ArcaneActivator: no activation for block %s at (%d,%d,%d)", blockType.getId(), blockX, blockY, blockZ));
+            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: no activation for block %s at (%d,%d,%d)", blockType.getId(), blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
@@ -125,13 +117,14 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
         long chunkIndex = ChunkUtil.indexChunkFromBlock(blockX, blockZ);
         WorldChunk chunk = world.getChunk(chunkIndex);
         if (chunk == null) {
-            ArcaneRelayPlugin.get().getLogger().atWarning().log(String.format("ArcaneActivator: chunk not loaded at (%d,%d,%d)", blockX, blockY, blockZ));
+            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: chunk not loaded at (%d,%d,%d)", blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
 
+        // need to add support for dynamic activation ids
         String activationId = activation.getId();
-        ArcaneTickSystem.requestSignalNextTick(world, blockX, blockY, blockZ, blockX, blockY, blockZ, activationId);
+        ArcaneUtil.setTicking(cb.getExternalData().getWorld().getChunkStore().getStore(), blockX, blockY, blockZ);
 
         context.getState().state = InteractionState.Finished;
     }

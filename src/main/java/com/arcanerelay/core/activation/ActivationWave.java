@@ -3,8 +3,10 @@ package com.arcanerelay.core.activation;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneTriggerBlock;
 import com.arcanerelay.config.Activation;
+import com.arcanerelay.config.ActivationBinding;
 import com.arcanerelay.state.ArcaneState;
 import com.arcanerelay.state.TriggerEntry;
+import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -66,7 +68,7 @@ public final class ActivationWave {
             int blockId = chunk.getBlock(x, y, z);
             BlockType blockType = blockTypeMap.getAsset(blockId);
             if (blockType == null) {
-                ArcaneRelayPlugin.get().getLogger().atWarning().log("ActivationWave: block type not found at " + x + ", " + y + ", " + z);
+                ArcaneRelayPlugin.LOGGER.atWarning().log("ActivationWave: block type not found at " + x + ", " + y + ", " + z);
                 continue;
             }
 
@@ -100,15 +102,15 @@ public final class ActivationWave {
     ) {
         String blockTypeKey = blockType.getId();
         Activation activation = activatorId != null && !activatorId.isEmpty()
-            ? ArcaneRelayPlugin.get().getActivationRegistry().getActivation(activatorId)
-            : ArcaneRelayPlugin.get().getActivationRegistry().getActivationForBlock(blockTypeKey);
+            ? Activation.getActivation(activatorId)
+            : ArcaneUtil.getActivationForBlock(blockType);
         
         if (activation != null) {
             ActivationExecutor.execute(world, store, chunk, blockX, blockY, blockZ, blockType, activation, sources);
             return;
         }
 
-        ArcaneRelayPlugin.get().getLogger().atWarning().log("ActivationWave: no activation for block: "
+        ArcaneRelayPlugin.LOGGER.atWarning().log("ActivationWave: no activation for block: "
             + blockX + ", " + blockY + ", " + blockZ + " key: " + blockTypeKey);
     }
 

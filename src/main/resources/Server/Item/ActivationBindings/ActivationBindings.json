@@ -1,0 +1,28 @@
+{
+  "Bindings": {
+    "Brazier": "Toggle_Torch",
+    "Candle": "Toggle_Torch",
+    "Chandelier": "Toggle_Torch_Crude",
+    "Crude_Torch": "Toggle_Torch_Crude",
+    "Door": "Toggle_Door",
+    "Gate": "Toggle_Gate",
+    "GlowingRoyalMagicPotion": "Toggle_Torch_Crude",
+    "Lamp": "Toggle_Torch",
+    "Lantern": "Toggle_Torch",
+    "Pseudo_Arcane_Button": "Arcane_Button",
+    "Pseudo_Arcane_Discharge": "Arcane_Discharge",
+    "Pseudo_Arcane_Pusher": "Pusher_Chain",
+    "Pseudo_Arcane_Pusher_Wall": "Pusher_Chain_Wall",
+    "Pseudo_Arcane_Relay": "Arcane_Relay",
+    "Pseudo_Arcane_Toggle_Relay": "Toggle_Arcane_Relay",
+    "Torch": "Toggle_Torch",
+    "WinterHolidayGarland": "Toggle_Torch",
+    "WinterHolidayLights": "Toggle_Torch",
+    "WinterHolidayWreath": "Toggle_Torch",
+    "*Pseudo_Arcane_Button_State_Definitions_OpenDoorOut": "Arcane_Button",
+    "*Pseudo_Arcane_Button_State_Definitions_CloseDoorOut": "Arcane_Button",
+    "*Pseudo_Arcane_Button_State_Definitions_OpenDoorIn": "Arcane_Button",
+    "*Pseudo_Arcane_Button_State_Definitions_CloseDoorIn": "Arcane_Button"
+  },
+  "Default": "use_block"
+}

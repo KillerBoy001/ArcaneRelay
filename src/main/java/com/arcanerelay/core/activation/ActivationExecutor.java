@@ -3,9 +3,8 @@ package com.arcanerelay.core.activation;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneTriggerBlock;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationContext;
 import com.arcanerelay.config.ActivationEffects;
-import com.arcanerelay.systems.ArcaneTickSystem;
+import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.BlockUtil;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
@@ -48,26 +47,19 @@ public final class ActivationExecutor {
         BlockType mainBlockType = mainChunk.getBlockType(mainX, mainY, mainZ);
         if (mainBlockType == null) return;
 
-        ActivationContext ctx = new ActivationContext(world, store, mainChunk, mainX, mainY, mainZ, mainBlockType, sources);
-        activation.execute(ctx);
+
+        // activation.execute(commandBuffer, blockRef, sectionRef, mainX, mainY, mainZ);
     }
 
-    public static void sendSignals(@Nonnull ActivationContext ctx) {
-        World world = ctx.world();
-        Store<ChunkStore> store = ctx.store();
-        WorldChunk chunk = ctx.chunk();
-        int blockX = ctx.blockX();
-        int blockY = ctx.blockY();
-        int blockZ = ctx.blockZ();
-
-        Ref<ChunkStore> blockRef = chunk.getBlockComponentEntity(blockX, blockY, blockZ);
+    /** Sets each output block to ticking with (worldX, worldY, worldZ) as the source. */
+    public static void sendSignals(@Nonnull ComponentAccessor<ChunkStore> accessor, @Nullable Ref<ChunkStore> blockRef, int worldX, int worldY, int worldZ) {
         if (blockRef == null) return;
-
-        ArcaneTriggerBlock trigger = store.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
+        
+        ArcaneTriggerBlock trigger = accessor.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
         if (trigger == null) return;
 
         for (Vector3i out : trigger.getOutputPositions()) {
-            ArcaneTickSystem.requestSignal(world, out.getX(), out.getY(), out.getZ(), blockX, blockY, blockZ);
+            ArcaneUtil.setTicking(accessor, out.getX(), out.getY(), out.getZ(), worldX, worldY, worldZ);
         }
     }
 

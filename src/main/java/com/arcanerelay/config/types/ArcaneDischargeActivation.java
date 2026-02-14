@@ -1,20 +1,23 @@
 package com.arcanerelay.config.types;
 
-import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.components.ArcaneTriggerBlock;
+import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationContext;
-import com.arcanerelay.core.activation.ActivationExecutor;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
-import com.hypixel.hytale.math.vector.Vector3i;
+import com.arcanerelay.core.activation.ArcaneActivationAccessor;
+import com.arcanerelay.core.activation.ArcaneCachedAccessor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
+
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 public class ArcaneDischargeActivation extends Activation {
     public static final BuilderCodec<ArcaneDischargeActivation> CODEC = BuilderCodec.builder(
@@ -91,49 +94,14 @@ public class ArcaneDischargeActivation extends Activation {
     }
 
     @Override
-    public void execute(@Nonnull ActivationContext ctx) {
-        var blockRef = ctx.chunk().getBlockComponentEntity(ctx.blockX(), ctx.blockY(), ctx.blockZ());
-        if (blockRef == null) return;
-
-        ArcaneTriggerBlock trigger = ctx.store().getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
-        if (trigger == null) {
-            trigger = new ArcaneTriggerBlock();
-            ctx.store().putComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType(), trigger);
-        }
-
-        int newUniqueSources = 0;
-        for (int[] src : ctx.sources()) {
-            if (trigger.addChargeFrom(src[0], src[1], src[2])) newUniqueSources++;
-        }
-        if (newUniqueSources == 0) return;
-
-        Map<String, String> changes = getChanges();
-        if (changes == null || changes.isEmpty()) return;
-
-        String currentStateStr = ctx.blockType().getStateForBlock(ctx.blockType());
-        if (currentStateStr == null) currentStateStr = "default";
-
-        String newState = changes.get(currentStateStr);
-        if (newState == null) newState = changes.get("default");
-        if (newState == null) return;
-
-        String suffix = getMaxChargeStateSuffix();
-        boolean isResetState = "Off".equals(newState) || "default".equals(newState)
-            || (suffix != null && newState != null && newState.endsWith("_All_Off"));
-        if (isResetState) {
-            trigger.clearCharges();
-        }
-
-        ctx.world().setBlockInteractionState(new Vector3i(ctx.blockX(), ctx.blockY(), ctx.blockZ()), ctx.blockType(), newState);
-
-        var newBlockType = ctx.blockType().getBlockForState(newState);
-        if (newBlockType != null) {
-            ActivationExecutor.playBlockInteractionSound(ctx.world(), ctx.blockX(), ctx.blockY(), ctx.blockZ(), newBlockType);
-        }
-        ActivationExecutor.playEffects(ctx.world(), ctx.blockX(), ctx.blockY(), ctx.blockZ(), getEffects());
-
-        if (isMaxChargeState(currentStateStr) && isResetState) {
-            ActivationExecutor.sendSignals(ctx);
-        }
+    public ArcaneSection.BlockTickStrategy execute(
+        @Nonnull ArcaneCachedAccessor accessor,
+        @Nullable Ref<ChunkStore> sectionRef,
+        @Nullable Ref<ChunkStore> blockRef,
+        int worldX, int worldY, int worldZ,
+        @Nonnull List<int[]> sources
+    ) {
+        // TODO: implement charge cycling and signal on max->off transition (use sources)
+        return ArcaneSection.BlockTickStrategy.PROCESSED;
     }
 }

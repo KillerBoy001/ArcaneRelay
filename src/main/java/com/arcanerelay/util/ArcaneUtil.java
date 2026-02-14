@@ -1,0 +1,85 @@
+package com.arcanerelay.util;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.arcanerelay.components.ArcaneSection;
+import com.arcanerelay.config.Activation;
+import com.arcanerelay.config.ActivationBinding;
+import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
+
+public class ArcaneUtil {
+    
+    public static void setTicking(@Nonnull ComponentAccessor<ChunkStore> commandBuffer,  int worldX, int worldY, int worldZ) {
+        World world = commandBuffer.getExternalData().getWorld();
+        if (world == null) return;
+
+        long chunkIndex = ChunkUtil.indexChunkFromBlock(worldX, worldZ);
+        WorldChunk chunk = world.getChunkIfInMemory(chunkIndex);
+        if (chunk == null) return;
+
+        Ref<ChunkStore> sectionRef = world.getChunkStore()
+        .getChunkSectionReference(ChunkUtil.chunkCoordinate(worldX), ChunkUtil.chunkCoordinate(worldY), ChunkUtil.chunkCoordinate(worldZ));
+        
+
+        if (sectionRef == null) return;
+
+        ArcaneSection arcaneSection = commandBuffer.getComponent(sectionRef, ArcaneSection.getComponentType());
+        if (arcaneSection == null) return;
+
+        arcaneSection.setTicking(worldX, worldY, worldZ, true);
+    }
+
+    /** Sets a block to ticking and records the source position for when it is processed. */
+    public static void setTicking(@Nonnull ComponentAccessor<ChunkStore> accessor,
+            int worldX, int worldY, int worldZ,
+            int sourceX, int sourceY, int sourceZ) {
+        World world = accessor.getExternalData().getWorld();
+
+        long chunkIndex = ChunkUtil.indexChunkFromBlock(worldX, worldZ);
+        WorldChunk chunk = world.getChunkIfInMemory(chunkIndex);
+        if (chunk == null) return;
+
+        Ref<ChunkStore> sectionRef = world.getChunkStore()
+                .getChunkSectionReference(ChunkUtil.chunkCoordinate(worldX), ChunkUtil.chunkCoordinate(worldY), ChunkUtil.chunkCoordinate(worldZ));
+        if (sectionRef == null) return;
+
+        ArcaneSection arcaneSection = accessor.getComponent(sectionRef, ArcaneSection.getComponentType());
+        if (arcaneSection == null) return;
+
+        arcaneSection.setTicking(worldX, worldY, worldZ, true, sourceX, sourceY, sourceZ);
+    }
+
+    /**
+     * Returns the original/base block type ID for binding and lookup, instead of the state-specific ID.
+     * For blocks with an associated item (e.g. doors, gates), this is the item ID; otherwise the block's own ID.
+     */
+    @Nonnull
+    public static String getOriginalBlockTypeId(@Nonnull BlockType blockType) {
+        String id = blockType.getId();
+        if (id == null) return "";
+
+        var item = blockType.getItem();
+        if (item != null) {
+            String itemId = item.getId();
+            if (itemId != null) {
+                id = itemId;
+            }
+        }
+
+        return id;
+    }
+
+    /** Returns the Activation for a block type, or null if none. */
+    @Nullable
+    public static Activation getActivationForBlock(@Nonnull BlockType blockType) {
+        String blockTypeId = getOriginalBlockTypeId(blockType);
+        return Activation.getActivation(ActivationBinding.getActivationId(blockTypeId));
+    }
+}
