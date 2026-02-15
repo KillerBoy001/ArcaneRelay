@@ -3,7 +3,6 @@ package com.arcanerelay.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationBinding;
@@ -17,31 +16,18 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 public class ArcaneUtil {
     
-    public static void setTicking(@Nonnull ComponentAccessor<ChunkStore> store,  int worldX, int worldY, int worldZ) {
+    public static void setTicking(@Nonnull ComponentAccessor<ChunkStore> store, int worldX, int worldY, int worldZ) {
         World world = store.getExternalData().getWorld();
-
-        ArcaneRelayPlugin.LOGGER.atInfo().log("Setting ticking for block " + worldX + ", " + worldY + ", " + worldZ);
-
         long chunkIndex = ChunkUtil.indexChunkFromBlock(worldX, worldZ);
         WorldChunk chunk = world.getChunkIfInMemory(chunkIndex);
-        if (chunk == null) {
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Chunk not in memory for block " + worldX + ", " + worldY + ", " + worldZ);
-        }
+        if (chunk == null) return;
 
         Ref<ChunkStore> sectionRef = world.getChunkStore()
-        .getChunkSectionReference(ChunkUtil.chunkCoordinate(worldX), ChunkUtil.chunkCoordinate(worldY), ChunkUtil.chunkCoordinate(worldZ));
-        
-
-        if (sectionRef == null) {
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Section not found for block " + worldX + ", " + worldY + ", " + worldZ);
-            return;
-        }
+                .getChunkSectionReference(ChunkUtil.chunkCoordinate(worldX), ChunkUtil.chunkCoordinate(worldY), ChunkUtil.chunkCoordinate(worldZ));
+        if (sectionRef == null) return;
 
         ArcaneSection arcaneSection = store.getComponent(sectionRef, ArcaneSection.getComponentType());
-        if (arcaneSection == null) {
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Arcane section not found for block " + worldX + ", " + worldY + ", " + worldZ);
-            return;
-        }
+        if (arcaneSection == null) return;
 
         arcaneSection.setTicking(worldX, worldY, worldZ, true);
     }
@@ -51,9 +37,6 @@ public class ArcaneUtil {
             int worldX, int worldY, int worldZ,
             int sourceX, int sourceY, int sourceZ) {
         World world = accessor.getExternalData().getWorld();
-
-        ArcaneRelayPlugin.LOGGER.atInfo().log("Setting ticking for block " + worldX + ", " + worldY + ", " + worldZ + " with source " + sourceX + ", " + sourceY + ", " + sourceZ);
-
         long chunkIndex = ChunkUtil.indexChunkFromBlock(worldX, worldZ);
         WorldChunk chunk = world.getChunkIfInMemory(chunkIndex);
         if (chunk == null) return;

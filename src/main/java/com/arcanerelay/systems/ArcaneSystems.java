@@ -20,7 +20,6 @@ import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.blockmovement.BlockMovementExecutor;
 import com.arcanerelay.resources.ArcaneMoveState;
-import com.arcanerelay.resources.ArcaneTickMetricsResource;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.config.Activation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -56,7 +55,7 @@ public class ArcaneSystems {
 
         @Override
         public void onEntityRemoved(@Nonnull Holder<ChunkStore> holder, @Nonnull RemoveReason reason, @Nonnull Store<ChunkStore> store) {
-             holder.removeComponent(ArcaneSection.getComponentType());
+            holder.removeComponent(ArcaneSection.getComponentType());
         }
 
         @Override
@@ -153,34 +152,19 @@ public class ArcaneSystems {
             Ref<ChunkStore> sectionRef = archetypeChunk.getReferenceTo(index);
 
             BlockSection blockSection = commandBuffer.getComponent(sectionRef, BlockSection.getComponentType());
-            if (blockSection == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Block section not found");
-                return;
-            }
+            if (blockSection == null) return;
 
             ChunkSection chunkSection = commandBuffer.getComponent(sectionRef, ChunkSection.getComponentType());
-            if (chunkSection == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Chunk section not found");
-                return;
-            }
+            if (chunkSection == null) return;
 
             ArcaneSection arcaneSection = commandBuffer.getComponent(sectionRef, ArcaneSection.getComponentType());
-            if (arcaneSection == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Arcane section not found");
-                return;
-            }
+            if (arcaneSection == null) return;
 
             BlockComponentChunk blockComponentChunk = commandBuffer.getComponent(chunkSection.getChunkColumnReference(), BlockComponentChunk.getComponentType());
-            if (blockComponentChunk == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Block component chunk not found");
-                return;
-            }
+            if (blockComponentChunk == null) return;
 
             WorldChunk worldChunkComponent = commandBuffer.getComponent(chunkSection.getChunkColumnReference(), WorldChunk.getComponentType());
-            if (worldChunkComponent == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("World chunk component not found");
-                return;
-            }
+            if (worldChunkComponent == null) return;
 
             ArcaneCachedAccessor accessor = ArcaneCachedAccessor.of(
                 commandBuffer, 
@@ -202,39 +186,23 @@ public class ArcaneSystems {
                         return ArcaneSection.BlockTickStrategy.CONTINUE; // keep ticking, process once per second
                     }
 
-                    ArcaneRelayPlugin.LOGGER.atInfo().log("Executing activation for block at " + x + ", " + y + ", " + z);
                     BlockType blockType = accessor.getBlockType(worldX, y, worldZ);
-                    if (blockType == null) {
-                        ArcaneRelayPlugin.LOGGER.atInfo().log("Block type not found for block at " + x + ", " + y + ", " + z);
-                        return ArcaneSection.BlockTickStrategy.PROCESSED;
-                    }
+                    if (blockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
 
                     Activation activation = ArcaneUtil.getActivationForBlock(blockType);
-                    if (activation == null) {
-                        ArcaneRelayPlugin.LOGGER.atInfo().log("Activation not found for block type " + blockType.getId());
-                        return ArcaneSection.BlockTickStrategy.PROCESSED;
-                    }
+                    if (activation == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
 
-                    // Block Reference may be null, as some blcoks do not have a corresponding entity
                     Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(ChunkUtil.indexBlockInColumn(x, y, z));
-                    if (blockRef == null) 
-                    {
-                        ArcaneRelayPlugin.LOGGER.atWarning().log("Block reference is null for block at " + x + ", " + y + ", " + z + " with block type " + blockType.getId());
-                        Holder<ChunkStore> blockEntity = blockType.getBlockEntity();
-                        if (blockEntity == null) {
-                            // if we have we could create the holder upon adding the output collection
-                            ArcaneRelayPlugin.LOGGER.atInfo().log("And no block entity either");
-                        }
-                    }
 
                     int sectionStartY = chunkSection.getY() << 5;
+                    int blockIndex = ChunkUtil.indexBlock(x, y - sectionStartY, z);
+                    int[] lastSource = arcaneSection.getLastSource(blockIndex);
+                    List<int[]> sources = lastSource != null ? List.of(lastSource) : List.of();
 
                     try {
-                        ArcaneRelayPlugin.LOGGER.atInfo().log("Executing activation " + activation.getId() + " at " + worldX + ", " + y + ", " + worldZ);
                         ArcaneSection.BlockTickStrategy strategy = activation.execute(
                             accessor, sectionRef, blockRef, worldX, y, worldZ,
-                            // TODO: add source position
-                            List.of(new int[] { }));
+                            sources);
                         return strategy != null ? strategy : ArcaneSection.BlockTickStrategy.PROCESSED;
                     } catch (Throwable t) {
                         ArcaneRelayPlugin.LOGGER.atSevere().withCause(t).log("Activation %s failed at %d,%d,%d",
@@ -242,43 +210,12 @@ public class ArcaneSystems {
                         return ArcaneSection.BlockTickStrategy.PROCESSED;
                     }
                 });
-
-            ArcaneTickMetricsResource metrics = store.getResource(ArcaneTickMetricsResource.getResourceType());
-            if (metrics != null) {
-                metrics.recordArcaneTicksProcessed(arcaneTicksProcessed);
-            }
         }
 
         @Nonnull
         @Override
         public Query<ChunkStore> getQuery() {
            return QUERY;
-        }
-    }
-
-    /**
-     * Runs after Ticking to aggregate metrics recorded during the tick (e.g. from Ticking and any
-     * future parallel metric producers) and flush them into the historic metric set.
-     */
-    public static class FlushArcaneMetrics extends TickingSystem<ChunkStore> {
-        @SuppressWarnings("null")
-        @Nonnull
-        private static final Set<Dependency<ChunkStore>> DEPENDENCIES = Set.of(
-            new SystemDependency<>(Order.AFTER, ArcaneSystems.Ticking.class)
-        );
-
-        @Override
-        public void tick(float dt, int index, @Nonnull Store<ChunkStore> store) {
-            ArcaneTickMetricsResource metrics = store.getResource(ArcaneTickMetricsResource.getResourceType());
-            if (metrics != null) {
-                metrics.flushMetrics();
-            }
-        }
-
-        @Nonnull
-        @Override
-        public Set<Dependency<ChunkStore>> getDependencies() {
-            return DEPENDENCIES;
         }
     }
 

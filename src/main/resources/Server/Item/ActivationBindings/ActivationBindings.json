@@ -1,7 +1,5 @@
 {
   "Bindings": {
-
-
     "GlowingRoyalMagicPotion": "Toggle_Torch_Crude",
     "Pseudo_Arcane_Button": "Arcane_Button",
     "Pseudo_Arcane_Discharge": "Arcane_Discharge",

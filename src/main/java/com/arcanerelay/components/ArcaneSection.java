@@ -1,11 +1,16 @@
 package com.arcanerelay.components;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.StampedLock;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.hypixel.hytale.codec.Codec;
@@ -28,11 +33,13 @@ import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
 
 /**
- * Tracks ticking blocks and their sources. Source map: blockIdx -> list of source positions (as int[3] world coords).
- * Uses ConcurrentHashMap for thread-safe updates from parallel tick threads.
+ * Tracks ticking blocks and their sources. Source is stored as an index into a section-local pool
+ * (latest only per block). Snapshot at preTick for read during forEachTicking.
  */
 public class ArcaneSection implements Component<ChunkStore> {
     public static final int VERSION = 1;
+    private static final int MAX_SOURCE_POOL_SIZE = 256;
+
     public static final BuilderCodec<ArcaneSection> CODEC = BuilderCodec.builder(ArcaneSection.class, ArcaneSection::new)
         .versioned()
         .codecVersion(VERSION)
@@ -40,23 +47,24 @@ public class ArcaneSection implements Component<ChunkStore> {
         .add()
         .build();
 
-   private final StampedLock arcaneSectionLock;
-   private final ObjectHeapPriorityQueue<ArcaneSection.TickRequest> tickRequests;
-   private final static Comparator<ArcaneSection.TickRequest> TICK_REQUEST_COMPARATOR = Comparator.comparing(t -> t.requestedGameTime);
-   BitSet tickingBlocks;
-   BitSet lastTickingBlocks;
+    private final StampedLock arcaneSectionLock;
+    private final ObjectHeapPriorityQueue<ArcaneSection.TickRequest> tickRequests;
+    private static final Comparator<ArcaneSection.TickRequest> TICK_REQUEST_COMPARATOR = Comparator.comparing(t -> t.requestedGameTime);
+    BitSet tickingBlocks;
+    BitSet lastTickingBlocks;
 
-//    /** blockIdx -> list of source positions (int[]{x,y,z}). Concurrent for parallel addSource from multiple sections. */
-//    private final Map<Integer, List<int[]>> pendingSources;
-//    /** Snapshot of pendingSources at preTick; read-only during forEachTicking. */
-//    private Map<Integer, List<int[]>> lastSources;
+    /** Source positions for this tick; block index -> pool index (byte). */
+    private final List<int[]> pendingSourcePool = new ArrayList<>();
+    private final Map<Integer, Byte> pendingBlockToSourceIndex = new HashMap<>();
+    /** Snapshot at preTick; read-only during forEachTicking. */
+    private List<int[]> lastSourcePool = new ArrayList<>();
+    private Map<Integer, Byte> lastBlockToSourceIndex = new HashMap<>();
 
     public ArcaneSection() {
         this.arcaneSectionLock = new StampedLock();
         this.tickingBlocks = new BitSet();
         this.lastTickingBlocks = new BitSet();
         this.tickRequests = new ObjectHeapPriorityQueue<>(TICK_REQUEST_COMPARATOR);
-        // this.pendingSources = new ConcurrentHashMap<>();
     }
     
 
@@ -79,13 +87,15 @@ public class ArcaneSection implements Component<ChunkStore> {
 
         long writeStamp = this.arcaneSectionLock.writeLock();
         try {
-            if (this.tickingBlocks.isEmpty() && this.lastTickingBlocks.isEmpty()) {
+            if (this.tickingBlocks.isEmpty() && this.lastTickingBlocks.isEmpty() && this.pendingBlockToSourceIndex.isEmpty()) {
                 return;
             }
             BitSetUtil.copyValues(this.tickingBlocks, this.lastTickingBlocks);
             this.tickingBlocks.clear();
-            // this.lastSources = Map.copyOf(this.pendingSources);
-            // this.pendingSources.clear();
+            this.lastSourcePool = new ArrayList<>(this.pendingSourcePool);
+            this.lastBlockToSourceIndex = new HashMap<>(this.pendingBlockToSourceIndex);
+            this.pendingSourcePool.clear();
+            this.pendingBlockToSourceIndex.clear();
         } finally {
             this.arcaneSectionLock.unlockWrite(writeStamp);
         }
@@ -120,13 +130,44 @@ public class ArcaneSection implements Component<ChunkStore> {
          this.setTicking(ChunkUtil.indexBlock(x, y, z), ticking);
     }
 
-    /** Sets a block to ticking and records the source position for when it is processed. */
+    /** Sets a block to ticking and records the source position (latest only) for when it is processed. */
     public void setTicking(int x, int y, int z, boolean ticking, int sourceX, int sourceY, int sourceZ) {
-        int index = ChunkUtil.indexBlock(x, y, z);
-      
-        if (setTicking(index, ticking)) {
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Adding source for block " + index + " to " + sourceX + ", " + sourceY + ", " + sourceZ);
-            // addSource(index, sourceX, sourceY, sourceZ);
+        int blockIndex = ChunkUtil.indexBlock(x, y, z);
+        if (!setTicking(blockIndex, ticking)) return;
+        int[] source = new int[] { sourceX, sourceY, sourceZ };
+        long writeStamp = this.arcaneSectionLock.writeLock();
+        try {
+            int poolIndex = findOrAddSource(source);
+            if (poolIndex >= 0 && poolIndex < MAX_SOURCE_POOL_SIZE) {
+                this.pendingBlockToSourceIndex.put(blockIndex, (byte) poolIndex);
+            }
+        } finally {
+            this.arcaneSectionLock.unlockWrite(writeStamp);
+        }
+    }
+
+    private int findOrAddSource(int[] source) {
+        for (int i = 0; i < pendingSourcePool.size(); i++) {
+            int[] s = pendingSourcePool.get(i);
+            if (s[0] == source[0] && s[1] == source[1] && s[2] == source[2]) return i;
+        }
+        if (pendingSourcePool.size() >= MAX_SOURCE_POOL_SIZE) return -1;
+        pendingSourcePool.add(source);
+        return pendingSourcePool.size() - 1;
+    }
+
+    /** Returns the latest source position for a block index (from preTick snapshot), or null. */
+    @Nullable
+    public int[] getLastSource(int blockIndex) {
+        long readStamp = this.arcaneSectionLock.readLock();
+        try {
+            Byte idx = this.lastBlockToSourceIndex.get(blockIndex);
+            if (idx == null) return null;
+            int i = idx & 0xFF;
+            if (i >= lastSourcePool.size()) return null;
+            return lastSourcePool.get(i);
+        } finally {
+            this.arcaneSectionLock.unlockRead(readStamp);
         }
     }
 
@@ -202,13 +243,24 @@ public class ArcaneSection implements Component<ChunkStore> {
 
     /** Entry point for codec: restore state from saved bytes. */
     public void deserialize(@Nonnull byte[] bytes, @Nonnull ExtraInfo extraInfo) {
+        if (bytes == null || bytes.length == 0) {
+            return;
+        }
         ByteBuf buf = Unpooled.wrappedBuffer(bytes);
         deserialize(buf, extraInfo.getVersion());
     }
-
+ 
     @Override
     public Component<ChunkStore> clone() {
-        return new ArcaneSection();
+        ArcaneSection copy = new ArcaneSection();
+        long readStamp = this.arcaneSectionLock.readLock();
+        try {
+            copy.tickingBlocks = (BitSet) this.tickingBlocks.clone();
+            copy.lastTickingBlocks = (BitSet) this.lastTickingBlocks.clone();
+        } finally {
+            this.arcaneSectionLock.unlockRead(readStamp);
+        }
+        return copy;
     }
 
     public static enum BlockTickStrategy {

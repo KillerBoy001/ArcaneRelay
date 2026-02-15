@@ -10,7 +10,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 /** Wraps CommandBuffer as ChunkStoreCommandBufferLike for the tick path. */
 public final class CommandBufferChunkStoreAdapter implements ChunkStoreCommandBufferLike {
-
     private final CommandBuffer<ChunkStore> buffer;
 
     public CommandBufferChunkStoreAdapter(@Nonnull CommandBuffer<ChunkStore> buffer) {

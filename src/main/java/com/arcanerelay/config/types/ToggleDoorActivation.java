@@ -1,6 +1,5 @@
 package com.arcanerelay.config.types;
 
-import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationEffects;
@@ -233,34 +232,21 @@ public class ToggleDoorActivation extends Activation {
 
         // This ensures we are enqueing the block interaction state change on the correct thread
         // I need to review if operations such as retrieving a loaded chunk are thread safe
-        ArcaneRelayPlugin.LOGGER.atInfo().log("Executing toggle door activation at " + worldX + ", " + worldY + ", " + worldZ);
         commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
             World w = store.getExternalData().getWorld();
 
             WorldChunk doorChunk = w.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
-            if (doorChunk == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Door chunk not found for block " + worldX + ", " + worldY + ", " + worldZ);
-                return;
-            }
+            if (doorChunk == null) return;
 
             int[] main = BlockUtil.findMainBlock(w, doorChunk, worldX, worldY, worldZ);
-            if (main == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Main block not found for block " + worldX + ", " + worldY + ", " + worldZ);
-                return;
-            }
+            if (main == null) return;
 
             int mainX = main[0], mainY = main[1], mainZ = main[2];
             WorldChunk mainChunk = w.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(mainX, mainZ));
-            if (mainChunk == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Main chunk not found for block " + worldX + ", " + worldY + ", " + worldZ);
-                return;
-            }
+            if (mainChunk == null) return;
 
             BlockType mainBlockType = mainChunk.getBlockType(mainX, mainY, mainZ);
-            if (mainBlockType == null) {
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Main block type not found for block " + worldX + ", " + worldY + ", " + worldZ);
-                return;
-            }
+            if (mainBlockType == null) return;
 
             Vector3i mainPos = new Vector3i(mainX, mainY, mainZ);
             String blockState = mainBlockType.getStateForBlock(mainBlockType);
@@ -302,7 +288,6 @@ public class ToggleDoorActivation extends Activation {
                 ActivationExecutor.playEffects(w, mainX, mainY, mainZ, getEffects());
             }
 
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Sending signals for block " + mainX + ", " + mainY + ", " + mainZ);
             ActivationExecutor.sendSignals(store, blockRef, mainX, mainY, mainZ);
         });
 

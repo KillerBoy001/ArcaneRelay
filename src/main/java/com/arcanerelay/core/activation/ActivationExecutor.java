@@ -53,19 +53,12 @@ public final class ActivationExecutor {
 
     /** Sets each output block to ticking with (worldX, worldY, worldZ) as the source. */
     public static void sendSignals(@Nonnull ComponentAccessor<ChunkStore> accessor, @Nullable Ref<ChunkStore> blockRef, int worldX, int worldY, int worldZ) {
-        if (blockRef == null || !blockRef.isValid()) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log("Block reference is null or invalid for block at " + worldX + ", " + worldY + ", " + worldZ + " - signals will not propagate");
-            return;
-        }
+        if (blockRef == null || !blockRef.isValid()) return;
 
         ArcaneTriggerBlock trigger = accessor.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
-        if (trigger == null) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log("ArcaneTriggerBlock not found for block at " + worldX + ", " + worldY + ", " + worldZ + " - signals will not propagate");
-            return;
-        }
+        if (trigger == null) return;
 
         for (Vector3i out : trigger.getOutputPositions()) {
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Setting ticking for block " + out.getX() + ", " + out.getY() + ", " + out.getZ());
             ArcaneUtil.setTicking(accessor, out.getX(), out.getY(), out.getZ(), worldX, worldY, worldZ);
         }
     }

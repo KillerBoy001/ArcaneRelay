@@ -1,6 +1,5 @@
 package com.arcanerelay.interactions;
 
-import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
@@ -118,7 +117,6 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
                 ? Activation.getActivation(activator)
                 : ArcaneUtil.getActivationForBlock(blockType);
         if (activation == null) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: no activation for block %s at (%d,%d,%d)", blockType.getId(), blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
@@ -126,7 +124,6 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
         long chunkIndex = ChunkUtil.indexChunkFromBlock(blockX, blockZ);
         WorldChunk chunk = world.getChunk(chunkIndex);
         if (chunk == null) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: chunk not loaded at (%d,%d,%d)", blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
@@ -137,28 +134,24 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
             ChunkUtil.chunkCoordinate(blockY),
             ChunkUtil.chunkCoordinate(blockZ));
         if (sectionRef == null) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: section not found at (%d,%d,%d)", blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
 
         ChunkSection chunkSection = store.getComponent(sectionRef, ChunkSection.getComponentType());
         if (chunkSection == null) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: chunk section not found at (%d,%d,%d)", blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
 
         ArcaneSection arcaneSection = store.getComponent(sectionRef, ArcaneSection.getComponentType());
         if (arcaneSection == null) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: arcane section not found at (%d,%d,%d)", blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
 
         BlockSection blockSection = store.getComponent(sectionRef, BlockSection.getComponentType());
         if (blockSection == null) {
-            ArcaneRelayPlugin.LOGGER.atWarning().log(String.format("ArcaneActivator: block section not found at (%d,%d,%d)", blockX, blockY, blockZ));
             context.getState().state = InteractionState.Finished;
             return;
         }
