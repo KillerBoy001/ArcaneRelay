@@ -1,14 +1,20 @@
 package com.arcanerelay.config.types;
 
-import com.arcanerelay.ArcaneRelayPlugin;
+import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationContext;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
+import com.arcanerelay.core.activation.ArcaneCachedAccessor;
+
+import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 public class ChainActivation extends Activation {
     public static final BuilderCodec<ChainActivation> CODEC =
@@ -42,14 +48,21 @@ public class ChainActivation extends Activation {
     }
 
     @Override
-    public void execute(@Nonnull ActivationContext ctx) {
-        var registry = ArcaneRelayPlugin.get().getActivationRegistry();
+    public ArcaneSection.BlockTickStrategy execute(
+        @Nonnull ArcaneCachedAccessor accessor,
+        @Nullable Ref<ChunkStore> sectionRef,
+        @Nullable Ref<ChunkStore> blockRef,
+        int worldX, int worldY, int worldZ,
+        @Nonnull List<int[]> sources
+    ) {
         for (String id : getActivationIds()) {
             if (id == null || id.isEmpty()) continue;
-            Activation activation = registry.getActivation(id);
+            Activation activation = Activation.getActivation(id);
             if (activation != null) {
-                activation.execute(ctx);
+                activation.execute(accessor, sectionRef, blockRef, worldX, worldY, worldZ, sources);
             }
         }
+        
+        return ArcaneSection.BlockTickStrategy.PROCESSED;
     }
 }

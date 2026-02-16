@@ -82,9 +82,9 @@
             "Failed": {
               "Type": "Serial",
               "Interactions": [
-                "Door_Horizontal",
                 {
-                  "Type": "SendSignal"
+                  "Type": "ArcaneActivator",
+                  "Activator": "Arcane_Button"
                 }
               ]
             }

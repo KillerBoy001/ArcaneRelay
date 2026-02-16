@@ -2,13 +2,12 @@ package com.arcanerelay.interactions;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneTriggerBlock;
-import com.arcanerelay.systems.ArcaneTickSystem;
+import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionState;
@@ -17,14 +16,12 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.block.BlockModule;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import javax.annotation.Nonnull;
 
@@ -68,25 +65,23 @@ public class SendSignalInteraction extends SimpleInstantInteraction {
          return;
       }
 
-      World world = cb.getExternalData().getWorld();
+      cb.run((@Nonnull Store<EntityStore> store) -> {
+         World world = store.getExternalData().getWorld();
 
-      long chunkIndex = ChunkUtil.indexChunkFromBlock(target.x, target.z);
-      WorldChunk chunk = world.getChunk(chunkIndex);
-      ComponentAccessor<ChunkStore> chunkAccessor = world.getChunkStore().getStore();
-      Ref<ChunkStore> blockRef = chunk.getBlockComponentEntity(target.x, target.y, target.z);
-      if (blockRef == null) return;
+         long chunkIndex = ChunkUtil.indexChunkFromBlock(target.x, target.z);
+         WorldChunk chunk = world.getChunk(chunkIndex);
+         Ref<ChunkStore> blockRef = chunk.getBlockComponentEntity(target.x, target.y, target.z);
+         if (blockRef == null) return;
 
-      ArcaneTriggerBlock trigger = chunkAccessor.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
-      if (trigger == null) {
-         NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.targetMustBeArcaneTrigger"), NotificationStyle.Warning);
-         context.getState().state = InteractionState.Failed;
-         return;
-      }
-      final int tx = target.x, ty = target.y, tz = target.z;
+         Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
+         ArcaneTriggerBlock trigger = chunkStore.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
+         if (trigger == null) return;
+
+         ArcaneUtil.setTicking(chunkStore, target.x, target.y, target.z);
       
-      ArcaneTickSystem.requestSignalNextTick(world, tx, ty, tz, tx, ty, tz);
-   
-      NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.signalSentToTrigger"), NotificationStyle.Success);
+         NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.signalSentToTrigger"), NotificationStyle.Success);
+      });
+
       context.getState().state = InteractionState.Finished;
    }
 }

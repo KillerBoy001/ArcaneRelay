@@ -1,11 +1,8 @@
-package com.arcanerelay.state;
+package com.arcanerelay.resources;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.Nullable;
-
-import com.arcanerelay.ArcaneRelayPlugin;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Resource;
 import com.hypixel.hytale.component.ResourceType;

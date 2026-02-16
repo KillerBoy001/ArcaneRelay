@@ -1,5 +1,0 @@
-{
-  "Pattern": "contains:Pseudo_Arcane_Toggle_Relay",
-  "Activation": "Toggle_Arcane_Relay",
-  "Priority": 10
-}

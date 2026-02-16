@@ -1,6 +1,6 @@
 package com.arcanerelay.core.blockmovement;
 
-import com.arcanerelay.state.ArcaneMoveState.MoveEntry;
+import com.arcanerelay.resources.ArcaneMoveState.MoveEntry;
 import com.hypixel.hytale.math.vector.Vector3i;
 
 import javax.annotation.Nonnull;

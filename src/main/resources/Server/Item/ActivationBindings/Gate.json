@@ -1,4 +1,0 @@
-{
-  "Pattern": "contains:Gate",
-  "Activation": "Toggle_Gate"
-}

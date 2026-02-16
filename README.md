@@ -99,19 +99,41 @@ public class MyCustomActivation extends Activation {
 
 #### Bindings
 
-Bindings decide **which activation runs for which block**. They live under `Server/Item/ActivationBindings/` as JSON. Each file has:
+Bindings decide **which activation runs for which block**. They live under `Server/Item/ActivationBindings/` as JSON.
 
-- **Pattern** – How to match block type keys (e.g. `Hytale:Pseudo_Arcane_Relay`). Syntax: `exact:key`, `contains:sub`, `startsWith:prefix`, `endsWith:suffix`, `regex:pattern`. First match wins.
-- **Activation** – Activation ID (filename of an activation under `Item/Activations/`).
-- **Priority** (optional) – If `true`, this binding is checked before others.
+- **Bindings** – Object mapping block type key → **reference or inline activation** (like interactions: either an id or Type + params).
+  - **Reference:** `{ "Id": "Arcane_Relay" }` (reference to Item/Activations asset).
+  - **Inline (Type + params):** `{ "Activation": { "Type": "SendSignal" } }` or `{ "Activation": { "Type": "ToggleDoor", "OpenIn": false, "Horizontal": true } }` (same shape as `Item/Activations/*.json`).
+- **Default** (optional) – Fallback activation ID when a block type is not in Bindings.
 
-Example: any block whose key contains `Pseudo_Arcane_Relay` uses the `Arcane_Relay` activation:
+You can use **one file** with all keys, or **multiple files**; multiple files are merged and **later files (by asset id / filename) override earlier** for the same key.
+
+Example – references only:
 
 ```json
 {
-  "Pattern": "contains:Pseudo_Arcane_Relay",
-  "Activation": "Arcane_Relay",
-  "Priority": true
+  "Bindings": {
+    "Pseudo_Arcane_Relay": { "Id": "Arcane_Relay" },
+    "Torch": { "Id": "Toggle_Torch" }
+  },
+  "Default": "use_block"
+}
+```
+
+Example – **inline activation** (Type + params, no separate asset):
+
+```json
+{
+  "Bindings": {
+    "Pseudo_Arcane_Relay": { "Id": "Arcane_Relay" },
+    "Some_Custom_Block": {
+      "Activation": { "Type": "SendSignal" }
+    },
+    "Another_Block": {
+      "Activation": { "Type": "ToggleDoor", "OpenIn": false, "Horizontal": true }
+    }
+  },
+  "Default": "use_block"
 }
 ```
 
