@@ -54,10 +54,11 @@
       "Color": "#046"
     },
     "PlacementSettings": {
-      "AllowRotationKey": false,
+      "AllowRotationKey": true,
       "PlaceInEmptyBlocks": true,
-      "RotationMode": "Default",
-      "WallPlacementOverrideBlockId": "Pseudo_Arcane_Pusher_Wall"
+      "RotationMode": "FacingPlayer",
+      "WallPlacementOverrideBlockId": "Pseudo_Arcane_Pusher_Wall",
+      "BlockPreviewVisibility": "AlwaysVisible"
     },
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",
