@@ -61,6 +61,13 @@
         "ItemId": "Pseudo_Arcane_Pusher",
         "GatherType": "Rocks"
       }
+    },
+    "PlacementSettings": {
+      "AllowRotationKey": true,
+      "RotationMode": "StairFacingPlayer",
+      "BlockPreviewVisibility": "AlwaysVisible",
+      "FloorPlacementOverrideBlockId": "Pseudo_Arcane_Pusher",
+      "PlaceInEmptyBlocks": true
     }
   },
   "PlayerAnimationsId": "Block",
