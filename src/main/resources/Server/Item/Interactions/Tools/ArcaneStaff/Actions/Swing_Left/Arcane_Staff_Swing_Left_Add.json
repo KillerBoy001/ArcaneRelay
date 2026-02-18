@@ -1,0 +1,17 @@
+{
+  "Type": "Simple",
+  "Effects": {
+    "ItemAnimationId": "SwingLeft"
+  },
+  "$Comment": "Prepare Delay",
+  "RunTime": 0.223,
+  "Next":  {
+    "Type": "Replace",
+    "DefaultValue": {
+      "Interactions": [
+        "Arcane_Staff_Swing_Left_Add_Effect"
+      ]
+    },
+    "Var": "Arcane_Staff_Swing_Left_Add_Effect"
+  }
+}
