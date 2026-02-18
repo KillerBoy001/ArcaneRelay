@@ -8,7 +8,7 @@
         {"Name": "Fanzy"}
     ],
     "Website": "",
-    "ServerVersion": ">= 2026.02.06-aa1b071c2",
+    "ServerVersion": "~2026.02.17-48a5aed",
     "Dependencies": {},
     "OptionalDependencies": {},
     "DisabledByDefault": false,

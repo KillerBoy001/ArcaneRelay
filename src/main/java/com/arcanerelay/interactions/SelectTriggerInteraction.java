@@ -48,16 +48,26 @@ public class SelectTriggerInteraction extends SimpleInstantInteraction {
     @Override
     protected void firstRun(@Nonnull InteractionType type, @Nonnull InteractionContext context, @Nonnull CooldownHandler cooldownHandler) {
         CommandBuffer<EntityStore> cb = context.getCommandBuffer();
-        if (cb == null) return;
+        if (cb == null) {
+            context.getState().state = InteractionState.Failed; 
+            return;
+        };
 
         Ref<EntityStore> ref = context.getEntity();
         Player player = cb.getComponent(ref, Player.getComponentType());
 
         PlayerRef playerRef = cb.getComponent(ref, PlayerRef.getComponentType());
-        if (playerRef == null) return;
+        if (playerRef == null) 
+        {
+            context.getState().state = InteractionState.Failed; 
+            return;
+        }
 
         ArcaneConfiguratorComponent configurator = cb.getComponent(ref, ArcaneConfiguratorComponent.getComponentType());
-        if (player == null || configurator == null) return;
+        if (player == null || configurator == null) {
+            context.getState().state = InteractionState.Failed; 
+            return;
+        };
 
         BlockPosition targetPosition = context.getTargetBlock();
         if (targetPosition == null) {
@@ -70,10 +80,17 @@ public class SelectTriggerInteraction extends SimpleInstantInteraction {
         
         World world = cb.getExternalData().getWorld();
         WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(target.x, target.z));
-        if (chunk == null) return;
+        if (chunk == null) {
+            context.getState().state = InteractionState.Failed; 
+            return;
+        }
 
         Ref<ChunkStore> blockRef = chunk.getBlockComponentEntity(target.x, target.y, target.z);
-        if (blockRef == null || !blockRef.isValid()) return;
+        if (blockRef == null || !blockRef.isValid()) {
+            NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.targetMustBeArcaneTrigger"), NotificationStyle.Warning);
+            context.getState().state = InteractionState.Failed; 
+            return;
+        }
 
         Store<ChunkStore> store = world.getChunkStore().getStore();
 

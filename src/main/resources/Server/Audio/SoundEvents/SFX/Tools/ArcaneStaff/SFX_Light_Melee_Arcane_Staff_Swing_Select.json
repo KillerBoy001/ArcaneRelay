@@ -47,30 +47,16 @@
     },
     {
       "Files": [
-        "Sounds/Blocks/Sticks/Sticks_Break_01.ogg"
-      ],
-      "RandomSettings": {
-        "MinVolume": -5,
-        "MinPitch": -2,
-        "MaxPitch": 5
-      },
-      "Volume": 0.5,
-      "StartDelay": 0
-    },
-    {
-      "Files": [
         "Sounds/Tools/ArcaneStaff/Arcane_Staff_Select.ogg"
       ],
       "RandomSettings": {
         "MinPitch": 0,
-        "MaxPitch": 0,
-        "MinVolume": 0,
-        "MaxVolume": 0
+        "MinVolume": -2
       },
-      "Volume": 0.5
+      "Volume": 4
     }
   ],
-  "Volume": 0,
+  "Volume": 1,
   "PreventSoundInterruption": true,
   "AudioCategory": "AudioCat_Sword",
   "Parent": "SFX_Attn_Moderate"

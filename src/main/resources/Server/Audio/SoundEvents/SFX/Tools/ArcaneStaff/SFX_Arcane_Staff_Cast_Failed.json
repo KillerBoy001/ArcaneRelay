@@ -19,15 +19,15 @@
       "RandomSettings": {
         "MinPitch": 0,
         "MaxPitch": 0,
-        "MinVolume": 0,
+        "MinVolume": -2,
         "MaxVolume": 0
       },
-      "Volume": 0.5
+      "Volume": 4
     }
   ],
   "MaxInstance": 32,
   "PreventSoundInterruption": true,
-  "Volume": -9.0,
+  "Volume": 1,
   "AudioCategory": "AudioCat_Shortbow",
   "Parent": "SFX_Attn_Moderate"
 }
