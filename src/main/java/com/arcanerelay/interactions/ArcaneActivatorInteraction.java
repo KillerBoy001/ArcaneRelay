@@ -161,7 +161,7 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
             ? blockComponentChunk.getEntityReference(ChunkUtil.indexBlockInColumn(blockX, blockY, blockZ))
             : null;
 
-        ArcaneCachedAccessor accessor = ArcaneCachedAccessor.ofForInteraction(store, arcaneSection, blockSection, chunkSection, 1);
+        ArcaneCachedAccessor accessor = ArcaneCachedAccessor.ofForInteraction(cb, arcaneSection, blockSection, chunkSection, 1);
         activation.execute(accessor, sectionRef, blockRef, blockX, blockY, blockZ, List.of());
 
         context.getState().state = InteractionState.Finished;

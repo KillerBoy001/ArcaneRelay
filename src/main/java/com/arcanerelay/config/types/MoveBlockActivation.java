@@ -250,7 +250,6 @@ public class MoveBlockActivation extends Activation {
                 ActivationExecutor.playEffects(world, destinationPosition.x, destinationPosition.y, destinationPosition.z,
                     getEffects());
             }
-
         });
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;

@@ -5,11 +5,11 @@ import javax.annotation.Nullable;
 
 import com.arcanerelay.components.ArcaneSection;
 import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.chunk.AbstractCachedAccessor;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 /**
  * Cached accessor for activations. Mirrors
@@ -41,20 +41,20 @@ public final class ArcaneCachedAccessor extends AbstractCachedAccessor implement
         int radius
     ) {
         ArcaneCachedAccessor accessor = THREAD_LOCAL.get();
-        accessor.init(new CommandBufferChunkStoreAdapter(commandBuffer), section, blockSection, chunkSection, radius);
+        accessor.init(new ChunkStoreCommandBufferAdapter(commandBuffer), section, blockSection, chunkSection, radius);
         return accessor;
     }
 
     @Nonnull
     public static ArcaneCachedAccessor ofForInteraction(
-        @Nonnull Store<ChunkStore> chunkStore,
+        @Nonnull CommandBuffer<EntityStore> commandBuffer,
         @Nonnull ArcaneSection section,
         @Nonnull BlockSection blockSection,
         @Nonnull ChunkSection chunkSection,
         int radius
     ) {
         ArcaneCachedAccessor accessor = THREAD_LOCAL.get();
-        accessor.init(new StoreBackedChunkStoreRunner(chunkStore), section, blockSection, chunkSection, radius);
+        accessor.init(new EntityStoreChunkStoreAdapter(commandBuffer), section, blockSection, chunkSection, radius);
         return accessor;
     }
 

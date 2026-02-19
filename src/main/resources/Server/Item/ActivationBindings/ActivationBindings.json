@@ -5,7 +5,9 @@
     "Pseudo_Arcane_Pusher": "Pusher_Chain",
     "Pseudo_Arcane_Pusher_Wall": "Pusher_Chain_Wall",
     "Pseudo_Arcane_Relay": "Arcane_Relay",
-    "Pseudo_Arcane_Toggle_Relay": "Toggle_Arcane_Relay"
+    "Pseudo_Arcane_Toggle_Relay": "Toggle_Arcane_Relay",
+    "Furniture_Village_Brazier": "Toggle_Torch_Crude",
+    "Furniture_Royal_Magic_Potion_Glow": "Toggle_Torch_Crude"
   },
   "ContainsBindings": {
     "Door": "Toggle_Door",
@@ -17,10 +19,10 @@
     "Brazier": "Toggle_Torch",
     "Candle": "Toggle_Torch",
     "Chandelier": "Toggle_Torch_Crude",
+    "Trapdoor": "Toggle_Door_Horizontal",
     "WinterHoliday_Garland": "Toggle_Torch",
     "WinterHoliday_Lights": "Toggle_Torch",
-    "Winter_Holiday_Wreath": "Toggle_Torch",
-    "Royal_Magic_Potion_Glow": "Toggle_Torch_Crude"
+    "Winter_Holiday_Wreath": "Toggle_Torch"
   },
   "Default": "use_block"
 }
