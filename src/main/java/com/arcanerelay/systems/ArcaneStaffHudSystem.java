@@ -1,8 +1,12 @@
 package com.arcanerelay.systems;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneStaffLegendVisible;
+import com.arcanerelay.externalplugins.MultipleHudBridge;
 import com.arcanerelay.ui.ArcaneStaffHud;
 import com.arcanerelay.ui.EmptyHud;
+import com.hypixel.hytale.common.plugin.PluginIdentifier;
+import com.hypixel.hytale.common.semver.SemverRange;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -12,6 +16,7 @@ import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.HudManager;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.plugin.PluginManager;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
@@ -52,12 +57,29 @@ public class ArcaneStaffHudSystem extends EntityTickingSystem<EntityStore> {
 
         if (isHoldingStaff && !hasLegendVisible) {
             commandBuffer.addComponent(ref, ArcaneStaffLegendVisible.getComponentType(), new ArcaneStaffLegendVisible());
+            
+            // IF MULTI HUD
+            if (PluginManager.get().hasPlugin(new PluginIdentifier("Buuz135", "MultipleHUD"), SemverRange.WILDCARD)) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("MultipleHUD found, setting ArcaneStaffLegend HUD");
+                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new ArcaneStaffHud(playerRef));
+                return;
+            } 
+            
             hudManager.setCustomHud(playerRef, new ArcaneStaffHud(playerRef));
+            
+        
             return;
         }
         
         if (!isHoldingStaff && hasLegendVisible) {
             commandBuffer.removeComponent(ref, ArcaneStaffLegendVisible.getComponentType());
+            // IF MULTI HUD
+            if (PluginManager.get().hasPlugin(new PluginIdentifier("Buuz135", "MultipleHUD"), SemverRange.WILDCARD)) {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("MultipleHUD found, setting EmptyHUD");
+                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new EmptyHud(playerRef));
+                return;
+            } 
+            
             hudManager.setCustomHud(playerRef, new EmptyHud(playerRef));
         }
     }
