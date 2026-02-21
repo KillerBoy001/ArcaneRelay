@@ -3,12 +3,14 @@ package com.arcanerelay;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationBinding;
 import com.arcanerelay.config.types.ArcaneDischargeActivation;
+import com.arcanerelay.config.types.ArcanePullerActivation;
 import com.arcanerelay.config.types.ChainActivation;
 import com.arcanerelay.config.types.MoveBlockActivation;
 import com.arcanerelay.config.types.SendSignalActivation;
 import com.arcanerelay.config.types.ToggleDoorActivation;
 import com.arcanerelay.config.types.ToggleStateActivation;
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
+import com.arcanerelay.components.ArcanePullerBlock;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.components.ArcaneStaffLegendVisible;
 import com.arcanerelay.components.ArcaneTriggerBlock;
@@ -55,6 +57,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
     private ComponentType<ChunkStore, ArcaneTriggerBlock> arcaneTriggerBlockComponentType;
     private ComponentType<ChunkStore, ArcaneSection> arcaneSectionComponentType;
+    private ComponentType<ChunkStore, ArcanePullerBlock> arcanePullerBlockComponentType;
     private ComponentType<EntityStore, ArcaneConfiguratorComponent> arcaneConfiguratorComponentType;
     private ComponentType<EntityStore, ArcaneStaffLegendVisible> arcaneStaffLegendVisibleComponentType;
     private ResourceType<ChunkStore, ArcaneMoveState> arcaneMoveStateResourceType;
@@ -79,11 +82,15 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 "ArcaneTrigger", ArcaneTriggerBlock.CODEC);
         this.arcaneSectionComponentType = chunkRegistry.registerComponent(ArcaneSection.class, "ArcaneSection",
                 ArcaneSection.CODEC);
+        this.arcanePullerBlockComponentType = chunkRegistry.registerComponent(ArcanePullerBlock.class,
+                "ArcanePuller", ArcanePullerBlock.CODEC);
 
         chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
         chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
         chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
+        chunkRegistry.registerSystem(new ArcaneSystems.PullerTick());
         chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
+
 
         ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
         this.arcaneConfiguratorComponentType = entityRegistry.registerComponent(ArcaneConfiguratorComponent.class,
@@ -112,6 +119,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 .register("SendSignal", SendSignalActivation.class, SendSignalActivation.CODEC)
                 .register("ArcaneDischarge", ArcaneDischargeActivation.class, ArcaneDischargeActivation.CODEC)
                 .register("MoveBlock", MoveBlockActivation.class, MoveBlockActivation.CODEC)
+                .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
                 .register("Chain", ChainActivation.class, ChainActivation.CODEC)
                 .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC);
 
@@ -127,6 +135,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     public ResourceType<ChunkStore, ArcaneMoveState> getArcaneMoveStateResourceType() {
         return this.arcaneMoveStateResourceType;
     }
+
 
     @Nonnull
     public ComponentType<EntityStore, ArcaneStaffLegendVisible> getArcaneStaffLegendVisibleComponentType() {
@@ -145,5 +154,10 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     @Nonnull
     public ComponentType<ChunkStore, ArcaneSection> getArcaneSectionComponentType() {
         return this.arcaneSectionComponentType;
+    }
+
+    @Nonnull
+    public ComponentType<ChunkStore, ArcanePullerBlock> getArcanePullerBlockComponentType() {
+        return this.arcanePullerBlockComponentType;
     }
 }
