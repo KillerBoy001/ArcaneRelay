@@ -7,21 +7,18 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.arcanerelay.ArcaneRelayPlugin;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.component.Component;
-import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.VariantRotation;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -39,15 +36,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
     }
 
     private Phase phase = Phase.IDLE;
-    /** When PULLING_BACK: block we hit and are dragging back. */
-    private int pulledBlockId;
-    private int pulledBlockRotation;
-    private int pulledBlockFiller;
-    @Nullable
-    private Holder<ChunkStore> pulledBlockHolder;
-    /** Hit position (world) when we collided with a block. */
-    private int pulledFromX, pulledFromY, pulledFromZ;
-
     @Nonnull
     public static final BuilderCodec<ArcanePullerBlock> CODEC = BuilderCodec.builder(ArcanePullerBlock.class, ArcanePullerBlock::new)
         .append(new KeyedCodec<>("ExtensionPositions", new ArrayCodec<>(Codec.INTEGER, Integer[]::new)),
@@ -64,13 +52,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         clone.extensionPositions = new ArrayList<>(extensionPositions);
         clone.extensionBlockKey = extensionBlockKey;
         clone.phase = phase;
-        clone.pulledBlockId = pulledBlockId;
-        clone.pulledBlockRotation = pulledBlockRotation;
-        clone.pulledBlockFiller = pulledBlockFiller;
-        clone.pulledBlockHolder = pulledBlockHolder != null ? pulledBlockHolder.clone() : null;
-        clone.pulledFromX = pulledFromX;
-        clone.pulledFromY = pulledFromY;
-        clone.pulledFromZ = pulledFromZ;
         return clone;
     }
 
@@ -79,7 +60,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
     }
 
     public void setPhase(Phase phase) {
-        ArcaneRelayPlugin.LOGGER.atInfo().log("Setting phase to %s for block %d", phase, this.getExtensionLength());
         this.phase = phase;
     }
 
@@ -101,43 +81,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         extensionPositions.remove(extensionPositions.size() - 1);
         return true;
     }
-
-    /** Store the block we hit for pull-back. */
-    public void setPulledBlock(int blockId, int rotation, int filler, @Nullable Holder<ChunkStore> holder, int worldX, int worldY, int worldZ) {
-        this.pulledBlockId = blockId;
-        this.pulledBlockRotation = rotation;
-        this.pulledBlockFiller = filler;
-        this.pulledBlockHolder = holder != null ? holder.clone() : null;
-        this.pulledFromX = worldX;
-        this.pulledFromY = worldY;
-        this.pulledFromZ = worldZ;
-    }
-
-    /** Update the stored pulled block position after a step. */
-    public void updatePulledFrom(int worldX, int worldY, int worldZ) {
-        this.pulledFromX = worldX;
-        this.pulledFromY = worldY;
-        this.pulledFromZ = worldZ;
-    }
-
-    /** Clear stored pulled block info after completion. */
-    public void clearPulledBlock() {
-        this.pulledBlockId = 0;
-        this.pulledBlockRotation = 0;
-        this.pulledBlockFiller = 0;
-        this.pulledBlockHolder = null;
-        this.pulledFromX = 0;
-        this.pulledFromY = 0;
-        this.pulledFromZ = 0;
-    }
-
-    public int getPulledBlockId() { return pulledBlockId; }
-    public int getPulledBlockRotation() { return pulledBlockRotation; }
-    public int getPulledBlockFiller() { return pulledBlockFiller; }
-    @Nullable public Holder<ChunkStore> getPulledBlockHolder() { return pulledBlockHolder; }
-    public int getPulledFromX() { return pulledFromX; }
-    public int getPulledFromY() { return pulledFromY; }
-    public int getPulledFromZ() { return pulledFromZ; }
 
     public String getExtensionBlockKey() {
         return extensionBlockKey;
@@ -185,7 +128,7 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         int extensionBlockID = extensionBlockType.DEBUG_MODEL_ID;
         // int extensionBlockIndex = BlockType.getAssetMap().getIndex(extensionBlockType.getId());
         chunk.setBlock(posX, posY, posZ, extensionBlockID, extensionBlockType, rotationIndex, 0, 4);
-        this.extensionPositions.add(existingId);
+        this.extensionPositions.add(chainLen);
         return true;
     }
 
