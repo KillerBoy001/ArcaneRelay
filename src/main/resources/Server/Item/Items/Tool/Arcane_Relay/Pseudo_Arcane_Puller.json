@@ -48,10 +48,10 @@
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
     "Opacity": "Solid",
-    "CustomModel": "Blocks/Functional/Relay.blockymodel",
+    "CustomModel": "Blocks/Functional/Puller_Collapsed.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Functional/Relay_Texture.png",
+        "Texture": "Blocks/Functional/Puller_Texture.png",
         "Weight": 1
       }
     ],
@@ -71,24 +71,7 @@
     },
     "State": {
       "Definitions": {
-        "Off": {
-          "InteractionHint": "server.interactionHints.relay",
-          "Light": {
-            "Color": "#279"
-          },
-          "Particles": null,
-          "AmbientSoundEventId": null,
-          "Material": "Solid",
-          "CustomModelTexture": [
-            {
-              "Texture": "Blocks/Functional/Relay_Texture.png"
-            }
-          ],
-          "CubeShadingMode": "Standard",
-          "DrawType": "Model",
-          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Relay/Relay.blockyanim"
-        }
+        
       }
     },
     "ParticleColor": "#bbac72",
@@ -98,6 +81,13 @@
         "GatherType": "Rocks",
         "ItemId": "Pseudo_Arcane_Puller"
       }
+    },
+    "FlipType": "Symmetric",
+    "PlacementSettings": {
+      "AllowRotationKey": true,
+      "RotationMode": "FacingPlayer",
+      "BlockPreviewVisibility": "AlwaysVisible",
+      "PlaceInEmptyBlocks": true
     },
     "CubeShadingMode": "Flat",
     "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",

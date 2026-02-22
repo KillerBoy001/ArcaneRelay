@@ -17,10 +17,10 @@
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
     "Opacity": "Solid",
-    "CustomModel": "Blocks/Functional/Relay.blockymodel",
+    "CustomModel": "Blocks/Functional/Puller_Arm_Middle.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Functional/Relay_Texture.png",
+        "Texture": "Blocks/Functional/Puller_Texture.png",
         "Weight": 1
       }
     ],
@@ -32,24 +32,7 @@
     },
     "State": {
       "Definitions": {
-        "Off": {
-          "InteractionHint": "server.interactionHints.relay",
-          "Light": {
-            "Color": "#279"
-          },
-          "Particles": null,
-          "AmbientSoundEventId": null,
-          "Material": "Solid",
-          "CustomModelTexture": [
-            {
-              "Texture": "Blocks/Functional/Relay_Texture.png"
-            }
-          ],
-          "CubeShadingMode": "Standard",
-          "DrawType": "Model",
-          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Relay/Relay.blockyanim"
-        }
+       
       }
     },
     "ParticleColor": "#bbac72",
@@ -57,8 +40,7 @@
     "Gathering": {
     },
     "CubeShadingMode": "Flat",
-    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
-    "CustomModelAnimation": "Blocks/Animations/Functional/Relay/Relay.blockyanim"
+    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
   },
   "PlayerAnimationsId": "Block",
   "IconProperties": {

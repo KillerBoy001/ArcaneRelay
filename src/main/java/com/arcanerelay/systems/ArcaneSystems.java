@@ -22,7 +22,6 @@ import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.types.ArcanePullerActivation;
 import com.arcanerelay.components.ArcanePullerBlock;
-import com.hypixel.hytale.server.core.asset.type.blocktick.BlockTickStrategy;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
 import com.hypixel.hytale.builtin.blocktick.system.ChunkBlockTickSystem;
@@ -126,8 +125,7 @@ public class ArcaneSystems {
         @SuppressWarnings("null")
         @Nonnull
         private static final Set<Dependency<ChunkStore>> DEPENDENCIES = Set.of(
-            new SystemDependency<>(Order.BEFORE, ChunkBlockTickSystem.Ticking.class),
-            new SystemDependency<>(Order.AFTER, ArcaneSystems.PullerBlockTick.class)
+            new SystemDependency<>(Order.BEFORE, ChunkBlockTickSystem.Ticking.class)
         );
 
         @Nonnull
@@ -194,6 +192,10 @@ public class ArcaneSystems {
                     if (activation == null) {
                         return ArcaneSection.BlockTickStrategy.PROCESSED;
                     }
+                    
+                    if (tick % rateLimitTicks == 0) {
+                        return ArcaneSection.BlockTickStrategy.CONTINUE;
+                    }
 
                     Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(ChunkUtil.indexBlockInColumn(x, y, z));
 
@@ -234,7 +236,8 @@ public class ArcaneSystems {
         @Nonnull
         private static final Set<Dependency<ChunkStore>> DEPENDENCIES = Set.of(
             new SystemDependency<>(Order.AFTER, ChunkBlockTickSystem.PreTick.class),
-            new SystemDependency<>(Order.BEFORE, ChunkBlockTickSystem.Ticking.class)
+            new SystemDependency<>(Order.BEFORE, ChunkBlockTickSystem.Ticking.class),
+            new SystemDependency<>(Order.AFTER, ArcaneSystems.Ticking.class)
         );
 
         @Nonnull
@@ -284,44 +287,31 @@ public class ArcaneSystems {
 
             World world = commandBuffer.getExternalData().getWorld();
 
-            blockSection.forEachTicking(accessor, commandBuffer, chunkSection.getY(),
+            arcaneSection.forEachTicking(accessor, commandBuffer, blockSection, chunkSection.getY(),
                 (accessor1, commandBuffer1, x, y, z, blockId) -> {
                     int worldX = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getX(), x);
                     int worldZ = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getZ(), z);
 
                     BlockType blockType = worldChunkComponent.getBlockType(worldX, y, worldZ);
-                    if (blockType == null) return BlockTickStrategy.IGNORED;
-
-                    if (!ArcanePullerActivation.isExtensionBlock(blockType)) {
-                        Activation activation = ArcaneUtil.getActivationForBlock(blockType);
-                        if (!(activation instanceof ArcanePullerActivation)) {
-                            return BlockTickStrategy.IGNORED;
-                        }
-                    }
+                    if (blockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
 
                     Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(ChunkUtil.indexBlockInColumn(x, y, z));
                     if (blockRef == null || !blockRef.isValid()) {
-                        return BlockTickStrategy.IGNORED;
+                        return ArcaneSection.BlockTickStrategy.PROCESSED;
                     }
 
                     ArcanePullerBlock puller = commandBuffer.getComponent(blockRef, ArcaneRelayPlugin.get().getArcanePullerBlockComponentType());
                     if (puller == null) {
-                        ArcaneSection.BlockTickStrategy orphan = ArcanePullerActivation.handleOrphanExtension(
-                            new ChunkStoreCommandBufferAdapter(commandBuffer1),
-                            store,
-                            world,
-                            worldChunkComponent,
-                            blockType,
-                            worldX,
-                            y,
-                            worldZ);
-                        return mapTickStrategy(orphan);
+                        return ArcaneSection.BlockTickStrategy.PROCESSED;
                     }
 
                     if (puller.getPhase() == ArcanePullerBlock.Phase.IDLE) {
-                        blockSection.setTicking(worldX, y, worldZ, false);
-                        return BlockTickStrategy.IGNORED;
+                        return ArcaneSection.BlockTickStrategy.PROCESSED;
                     }
+
+                    int sectionStartY = chunkSection.getY() << 5;
+                    int blockIndex = ChunkUtil.indexBlock(x, y - sectionStartY, z);
+                    int[] source = arcaneSection.getLastSource(blockIndex);
 
                     ArcaneSection.BlockTickStrategy result = ArcanePullerActivation.tickPuller(
                         new ChunkStoreCommandBufferAdapter(commandBuffer1),
@@ -329,20 +319,12 @@ public class ArcaneSystems {
                         worldChunkComponent,
                         blockType,
                         puller,
+                        source,
                         worldX,
                         y,
                         worldZ);
-                    return mapTickStrategy(result);
+                    return result;
                 });
-        }
-
-        private static BlockTickStrategy mapTickStrategy(ArcaneSection.BlockTickStrategy strategy) {
-            if (strategy == null) return BlockTickStrategy.IGNORED;
-            return switch (strategy) {
-                case PROCESSED -> BlockTickStrategy.IGNORED;
-                case CONTINUE -> BlockTickStrategy.CONTINUE;
-                case WAIT_FOR_ADJACENT_CHUNK_LOAD -> BlockTickStrategy.WAIT_FOR_ADJACENT_CHUNK_LOAD;
-            };
         }
     }
 
