@@ -48,7 +48,7 @@
         "unwrapMode": "custom",
         "visible": true,
         "doubleSided": false,
-        "shadingMode": "flat"
+        "shadingMode": "fullbright"
       },
       "children": [
         {
@@ -73,8 +73,8 @@
               },
               "right": {
                 "offset": {"x": 90, "y": 25},
-                "mirror": {"x": true, "y": true},
-                "angle": 90
+                "mirror": {"x": false, "y": false},
+                "angle": 270
               },
               "front": {
                 "offset": {"x": 90, "y": 32},
