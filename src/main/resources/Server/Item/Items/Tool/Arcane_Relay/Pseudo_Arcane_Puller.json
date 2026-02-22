@@ -9,14 +9,14 @@
   },
   "Recipe": {
     "TimeSeconds": 0.5,
-   "Input": [
+    "Input": [
       {
-        "Quantity": 16,
+        "Quantity": 8,
         "ItemId": "Ingredient_Crystal_Cyan"
       },
       {
         "ItemId": "Ingredient_Bar_Iron",
-        "Quantity": 1
+        "Quantity": 15
       },
       {
         "ResourceTypeId": "Rock",
@@ -38,7 +38,15 @@
     "Items.Tools"
   ],
   "BlockType": {
-   "BlockEntity": {
+    "ConnectedBlockRuleSet": {
+      "Type": "CustomTemplate",
+      "TemplateShapeAssetId": "Pseudo_Arcane_Puller_Rules",
+      "TemplateShapeBlockPatterns": {
+        "Collapsed": "Pseudo_Arcane_Puller",
+        "Extended": "*Pseudo_Arcane_Puller_State_Definitions_Extended"
+      }
+    },
+    "BlockEntity": {
       "Components": {
         "ArcanePuller": {
           "ExtensionBlockKey": "Pseudo_Arcane_Puller_Extension"
@@ -56,16 +64,16 @@
       }
     ],
     "Supporting": {
-      "Up" : [
+      "Up": [
         {
-        "FaceType": "Puller"
+          "FaceType": "Puller"
         }
       ]
     },
     "CustomModelScale": 1,
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",
-    "InteractionHint": "server.interactionHints.relay",
+    "InteractionHint": "server.interactionHints.generic",
     "Interactions": {
       "Use": {
         "Interactions": [
@@ -78,7 +86,9 @@
     },
     "State": {
       "Definitions": {
-        
+        "Extended": {
+          "CustomModel": "Blocks/Functional/Puller_Extended.blockymodel"
+        }
       }
     },
     "ParticleColor": "#bbac72",
@@ -92,13 +102,12 @@
     "FlipType": "Symmetric",
     "PlacementSettings": {
       "AllowRotationKey": true,
-      "RotationMode": "FacingPlayer",
+      "RotationMode": "Default",
       "BlockPreviewVisibility": "AlwaysVisible",
       "PlaceInEmptyBlocks": true
     },
     "CubeShadingMode": "Flat",
-    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
-    "CustomModelAnimation": "Blocks/Animations/Functional/Relay/Relay.blockyanim"
+    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
   },
   "PlayerAnimationsId": "Block",
   "IconProperties": {
@@ -113,7 +122,7 @@
       -14
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Relay.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Puller.png",
   "Scale": 1,
   "Tags": {
     "Type": [

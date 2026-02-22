@@ -7,17 +7,23 @@
     "Primary": "Block_Primary",
     "Secondary": "Block_Secondary"
   },
-  "Categories": [
-  ],
+  "Categories": [],
   "BlockType": {
-   "BlockEntity": {
-      "Components": {
+    "ConnectedBlockRuleSet": {
+      "Type": "CustomTemplate",
+      "TemplateShapeAssetId": "Pseudo_Arcane_Puller_Extension_Rules",
+      "TemplateShapeBlockPatterns": {
+        "End": "Pseudo_Arcane_Puller_Extension",
+        "Middle": "*Pseudo_Arcane_Puller_Extension_State_Definitions_Middle"
       }
+    },
+   "BlockEntity": {
+      "Components": {}
     },
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
     "Opacity": "Solid",
-    "CustomModel": "Blocks/Functional/Puller_Arm_Middle.blockymodel",
+    "CustomModel": "Blocks/Functional/Puller_Arm_End.blockymodel",
     "CustomModelTexture": [
       {
         "Texture": "Blocks/Functional/Puller_Texture.png",
@@ -44,32 +50,26 @@
         {
         "FaceType": "PullerExtension"
         }
-      ],
-      "Down" : [
-        {
-        "FaceType": "PullerExtension"
-        }
       ]
     },
     "CustomModelScale": 1,
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",
-    "InteractionHint": "server.interactionHints.relay",
-    "Interactions": {
-    },
     "State": {
       "Definitions": {
-       
+        "Middle": {
+          "CustomModel": "Blocks/Functional/Puller_Arm_Middle.blockymodel"
+        }
       }
     },
+    "HitboxType": "Beam_Thin",
     "ParticleColor": "#bbac72",
     "VariantRotation": "DoublePipe",
-    "CubeShadingMode": "Flat",
-    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
+    "CubeShadingMode": "Flat"
   },
   "PlayerAnimationsId": "Block",
   "IconProperties": {
-    "Scale": 0.5,
+    "Scale": 0.7,
     "Rotation": [
       22.5,
       47,
@@ -77,10 +77,10 @@
     ],
     "Translation": [
       0,
-      -14
+      -16
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Relay.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Puller_Extension.png",
   "Scale": 1,
   "Tags": {
     "Type": [

@@ -142,7 +142,8 @@ public class ArcaneSystems {
         /** Single-threaded to avoid deadlock: activations use world/commandBuffer in ways that are not safe from parallel workers. */
         @Override
         public boolean isParallel(int archetypeChunkSize, int taskCount) {
-           return EntityTickingSystem.useParallel(archetypeChunkSize, taskCount);
+        //    return EntityTickingSystem.useParallel(archetypeChunkSize, taskCount);
+            return false;
         }
 
         @Override

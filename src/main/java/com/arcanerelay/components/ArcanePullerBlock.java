@@ -25,6 +25,7 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
+import com.hypixel.hytale.server.core.universe.world.connectedblocks.ConnectedBlocksUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 public class ArcanePullerBlock implements Component<ChunkStore> {
@@ -143,11 +144,19 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         if (!isEmpty(existingType, existingId)) return false;
 
         int extensionBlockIndex = BlockType.getAssetMap().getIndex(extensionBlockType.getId());
-
-        chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, 4);
         Store<ChunkStore> store = world.getChunkStore().getStore();
+        BlockChunk blockChunk = store.getComponent(chunk.getReference(), BlockChunk.getComponentType());
+
+        int noParticles = 4;
+        int applyPhysics = 32;
+        int maybeConnectedComponents = 132;
+        chunk.placeBlock(posX, posY, posZ, extensionBlockKey, rotationTuple.yaw(), rotationTuple.pitch(), rotationTuple.roll());
+        // chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, noParticles | applyPhysics | maybeConnectedComponents | 2048);
+        // chunk.setTicking(posX, posY, posZ, true);
+        // ConnectedBlocksUtil.setConnectedBlockAndNotifyNeighbors(extensionBlockIndex, rotationTuple, up, new Vector3i(posX, posY, posZ), chunk, blockChunk);
+        // world.performBlockUpdate(posX, posY, posZ, false);
+
         if (store != null) {
-            BlockChunk blockChunk = store.getComponent(chunk.getReference(), BlockChunk.getComponentType());
             if (blockChunk != null) {
                 BlockSection blockSection = blockChunk.getSectionAtBlockY(posY);
                 if (blockSection != null) {
