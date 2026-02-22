@@ -55,6 +55,13 @@
         "Weight": 1
       }
     ],
+    "Supporting": {
+      "Up" : [
+        {
+        "FaceType": "Puller"
+        }
+      ]
+    },
     "CustomModelScale": 1,
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",

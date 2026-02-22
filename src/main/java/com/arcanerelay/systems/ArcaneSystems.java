@@ -4,7 +4,9 @@ import com.hypixel.hytale.component.system.HolderSystem;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
 import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.ChunkFlag;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -140,8 +142,7 @@ public class ArcaneSystems {
         /** Single-threaded to avoid deadlock: activations use world/commandBuffer in ways that are not safe from parallel workers. */
         @Override
         public boolean isParallel(int archetypeChunkSize, int taskCount) {
-        //    return EntityTickingSystem.useParallel(archetypeChunkSize, taskCount);
-           return false;
+           return EntityTickingSystem.useParallel(archetypeChunkSize, taskCount);
         }
 
         @Override
@@ -192,7 +193,7 @@ public class ArcaneSystems {
                     if (activation == null) {
                         return ArcaneSection.BlockTickStrategy.PROCESSED;
                     }
-                    
+
                     if (tick % rateLimitTicks == 0) {
                         return ArcaneSection.BlockTickStrategy.CONTINUE;
                     }
@@ -275,6 +276,9 @@ public class ArcaneSystems {
             BlockComponentChunk blockComponentChunk = commandBuffer.getComponent(chunkSection.getChunkColumnReference(), BlockComponentChunk.getComponentType());
             if (blockComponentChunk == null) return;
 
+            BlockChunk blockChunkComponent = (BlockChunk)commandBuffer.getComponent(chunkSection.getChunkColumnReference(), BlockChunk.getComponentType());
+            if (blockChunkComponent == null) return;
+
             WorldChunk worldChunkComponent = commandBuffer.getComponent(chunkSection.getChunkColumnReference(), WorldChunk.getComponentType());
             if (worldChunkComponent == null) return;
 
@@ -287,7 +291,7 @@ public class ArcaneSystems {
 
             World world = commandBuffer.getExternalData().getWorld();
 
-            arcaneSection.forEachTicking(accessor, commandBuffer, blockSection, chunkSection.getY(),
+            int tickingCount = arcaneSection.forEachTicking(accessor, commandBuffer, blockSection, chunkSection.getY(),
                 (accessor1, commandBuffer1, x, y, z, blockId) -> {
                     int worldX = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getX(), x);
                     int worldZ = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getZ(), z);
@@ -325,13 +329,16 @@ public class ArcaneSystems {
                         worldZ);
                     return result;
                 });
+
+                if (tickingCount > 0) {
+                    commandBuffer.run((Store<ChunkStore> s) -> {
+                        worldChunkComponent.setFlag(ChunkFlag.TICKING, true);
+                        blockChunkComponent.markNeedsPhysics();
+                    });
+                }
+                
         }
     }
-
-    /**
-     * Runs after Ticking to execute block moves queued by MoveBlockActivation.
-     * Processes ArcaneMoveState entries via BlockMovementExecutor and clears the state.
-     */
     public static class MoveBlock extends TickingSystem<ChunkStore> {
         @Override
         public void tick(

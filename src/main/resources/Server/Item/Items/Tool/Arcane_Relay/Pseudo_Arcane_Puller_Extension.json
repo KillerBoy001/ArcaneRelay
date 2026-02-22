@@ -24,6 +24,33 @@
         "Weight": 1
       }
     ],
+    "SupportDropType": "Destroy",
+    "Support": {
+      "Down" : [
+        {
+        "FaceType": "Puller",
+        "Support": "Required",
+        "Rotate": true
+        },
+        {
+          "FaceType": "PullerExtension",
+          "IgnoreSupport": true,
+          "Rotate": true
+        }
+      ]
+    },
+    "Supporting": {
+      "Up" : [
+        {
+        "FaceType": "PullerExtension"
+        }
+      ],
+      "Down" : [
+        {
+        "FaceType": "PullerExtension"
+        }
+      ]
+    },
     "CustomModelScale": 1,
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",
@@ -37,8 +64,6 @@
     },
     "ParticleColor": "#bbac72",
     "VariantRotation": "DoublePipe",
-    "Gathering": {
-    },
     "CubeShadingMode": "Flat",
     "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
   },

@@ -14,6 +14,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3i;
@@ -21,7 +22,9 @@ import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 public class ArcanePullerBlock implements Component<ChunkStore> {
@@ -110,7 +113,8 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
      * Uses isEmpty as "test place" validation.
      * @return true if placement succeeded.
      */
-    public boolean extend(World world, int pullerX, int pullerY, int pullerZ, @Nonnull BlockType pullerBlockType, int rotationIndex) {
+    public boolean extend(@Nonnull World world,
+        int pullerX, int pullerY, int pullerZ, @Nonnull BlockType pullerBlockType, int rotationIndex) {
         if (extensionBlockKey == null || extensionBlockKey.isEmpty()) return false;
 
         BlockTypeAssetMap<String, BlockType> assetMap = BlockType.getAssetMap();
@@ -139,7 +143,18 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         if (!isEmpty(existingType, existingId)) return false;
 
         int extensionBlockIndex = BlockType.getAssetMap().getIndex(extensionBlockType.getId());
+
         chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, 4);
+        Store<ChunkStore> store = world.getChunkStore().getStore();
+        if (store != null) {
+            BlockChunk blockChunk = store.getComponent(chunk.getReference(), BlockChunk.getComponentType());
+            if (blockChunk != null) {
+                BlockSection blockSection = blockChunk.getSectionAtBlockY(posY);
+                if (blockSection != null) {
+                    blockSection.setTicking(posX, posY, posZ, true);
+                }
+            }
+        }
         this.extensionPositions.add(chainLen);
         return true;
     }
