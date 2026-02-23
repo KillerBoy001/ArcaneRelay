@@ -8,7 +8,6 @@ import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
-import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 /**
  * Accessor for activation execution. Same pattern as

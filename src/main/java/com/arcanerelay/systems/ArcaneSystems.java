@@ -25,6 +25,7 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.types.ArcanePullerActivation;
 import com.arcanerelay.components.ArcanePullerBlock;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.modules.interaction.system.InteractionSystems;
 import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
 import com.hypixel.hytale.builtin.blocktick.system.ChunkBlockTickSystem;
 import com.hypixel.hytale.component.AddReason;

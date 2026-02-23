@@ -1,8 +1,11 @@
 package com.arcanerelay.components;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Vector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,6 +17,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3d;
@@ -21,11 +25,11 @@ import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
+import com.hypixel.hytale.server.core.blocktype.component.BlockPhysics;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.ChunkColumn;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
-import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
-import com.hypixel.hytale.server.core.universe.world.connectedblocks.ConnectedBlocksUtil;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 public class ArcanePullerBlock implements Component<ChunkStore> {
@@ -41,7 +45,7 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         PULLING_BACK
     }
 
-    private Phase phase = Phase.IDLE;
+    private Phase phase = Phase.PULLING_BACK;
     @Nonnull
     public static final BuilderCodec<ArcanePullerBlock> CODEC = BuilderCodec.builder(ArcanePullerBlock.class, ArcanePullerBlock::new)
         .append(new KeyedCodec<>("ExtensionPositions", new ArrayCodec<>(Codec.INTEGER, Integer[]::new)),
@@ -52,14 +56,18 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         .add()
         .append(new KeyedCodec<>("PullingTarget", Codec.BOOLEAN, true), (o, v) -> o.pullingTarget = v, o -> o.pullingTarget)
         .add()
+        .append(new KeyedCodec<>("Phase", Codec.INTEGER), (o, v) -> o.phase = Phase.values()[v], o -> o.phase.ordinal())
+        .add()
         .build();
 
     @Override
     public Component<ChunkStore> clone() {
+        ArcaneRelayPlugin.LOGGER.atInfo().log("Cloning ArcanePullerBlock %s", this.phase);
         ArcanePullerBlock clone = new ArcanePullerBlock();
-        clone.extensionPositions = new ArrayList<>(extensionPositions);
-        clone.extensionBlockKey = extensionBlockKey;
-        clone.phase = phase;
+        clone.extensionPositions = new ArrayList<>(this.extensionPositions);
+        clone.extensionBlockKey = this.extensionBlockKey;
+        clone.phase = this.phase;
+        clone.pullingTarget = this.pullingTarget;
         return clone;
     }
 
@@ -150,21 +158,27 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         int noParticles = 4;
         int applyPhysics = 32;
         int maybeConnectedComponents = 132;
-        chunk.placeBlock(posX, posY, posZ, extensionBlockKey, rotationTuple.yaw(), rotationTuple.pitch(), rotationTuple.roll());
-        // chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, noParticles | applyPhysics | maybeConnectedComponents | 2048);
+        // chunk.placeBlock(posX, posY, posZ, extensionBlockKey, rotationTuple.yaw(), rotationTuple.pitch(), rotationTuple.roll());
+        //chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, noParticles | applyPhysics | maybeConnectedComponents | 2048);
         // chunk.setTicking(posX, posY, posZ, true);
-        // ConnectedBlocksUtil.setConnectedBlockAndNotifyNeighbors(extensionBlockIndex, rotationTuple, up, new Vector3i(posX, posY, posZ), chunk, blockChunk);
-        // world.performBlockUpdate(posX, posY, posZ, false);
+        chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, noParticles);
+        ChunkColumn column = (ChunkColumn)store.getComponent(chunk.getReference(), ChunkColumn.getComponentType());
+        Ref<ChunkStore> section = column.getSection(ChunkUtil.chunkCoordinate(posY));
 
-        if (store != null) {
-            if (blockChunk != null) {
-                BlockSection blockSection = blockChunk.getSectionAtBlockY(posY);
-                if (blockSection != null) {
-                    blockSection.setTicking(posX, posY, posZ, true);
-                }
-            }
-        }
+        BlockPhysics.reset(store, section, posX, posY, posZ);
+
         this.extensionPositions.add(chainLen);
+
+        // if (store != null) {
+        //     if (blockChunk != null) {
+        //         BlockSection blockSection = blockChunk.getSectionAtBlockY(posY);
+        //         if (blockSection != null) {
+        //             blockSection.scheduleTick(ChunkUtil.indexBlock(posX, posY, posZ), Instant.now().plus(Duration.ofMillis(100)));
+        //             blockSection.invalidate();
+        //         }
+        //     }
+        // }
+
         return true;
     }
 
