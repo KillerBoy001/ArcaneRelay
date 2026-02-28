@@ -11,7 +11,9 @@ items.Pseudo_Arcane_Pusher.description = Used to push blocks forwards. Blocks wi
 items.Pseudo_Arcane_Staff.name = Arcane Staff
 items.Pseudo_Arcane_Staff.description = Required to configure Arcane Artifacts. Used to setup connections within Arcane blocks.
 items.Pseudo_Arcane_Puller.name = Arcane Puller
-items.Pseudo_Arcane_Puller.description = Arcane Puller
+items.Pseudo_Arcane_Puller.description = Used to pull back a block from far away. When a signal is received it will either extend to reach a target or pull back once it has one.
+items.Pseudo_Arcane_Puller_Extension.name = Arcane Puller Extension
+items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling back entities and blocks with the Puller.
 
 # === interactionHints ===
 
