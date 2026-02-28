@@ -46,6 +46,9 @@
         "Extended": "*Pseudo_Arcane_Puller_State_Definitions_Extended"
       }
     },
+    "Light": {
+      "Color": "#279"
+    },
     "BlockEntity": {
       "Components": {
         "ArcanePuller": {
