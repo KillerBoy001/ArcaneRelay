@@ -111,7 +111,11 @@ public final class ArcaneConnectedBlocksUtil {
             chunk.setState(blockPos.x, blockPos.y, blockPos.z, holder);
         }
 
-        BlockPhysics.reset(store, sectionRef, blockPos.x, blockPos.y, blockPos.z);
+        if (blockType.hasSupport()) {
+            BlockPhysics.reset(store, sectionRef, blockPos.x, blockPos.y, blockPos.z);
+        } else {
+            BlockPhysics.clear(store, sectionRef, blockPos.x, blockPos.y, blockPos.z);
+        }
         world.performBlockUpdate(blockPos.x, blockPos.y, blockPos.z, true);
     }
 }
