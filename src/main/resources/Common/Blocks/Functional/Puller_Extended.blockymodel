@@ -278,8 +278,8 @@
         },
         "textureLayout": {
           "front": {
-            "offset": {"x": 73, "y": 32},
-            "mirror": {"x": false, "y": true},
+            "offset": {"x": 73, "y": 0},
+            "mirror": {"x": false, "y": false},
             "angle": 0
           }
         },
@@ -306,8 +306,8 @@
         },
         "textureLayout": {
           "front": {
-            "offset": {"x": 73, "y": 32},
-            "mirror": {"x": false, "y": true},
+            "offset": {"x": 73, "y": 0},
+            "mirror": {"x": false, "y": false},
             "angle": 0
           }
         },
