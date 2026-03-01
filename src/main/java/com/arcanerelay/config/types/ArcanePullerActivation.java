@@ -148,7 +148,7 @@ public class ArcanePullerActivation extends Activation {
              if (extLen == 0) {
                 puller.setIDLE();
                 commandBuffer.run((Store<ChunkStore> s) -> {
-                    int rotationIndex = tipChunk.getRotationIndex(tipX, tipY, tipZ);
+                    int rotationIndex = pullerChunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
                     ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(s, world, pullerPos, globalForward, RotationTuple.get(rotationIndex));
                 });
                 return ArcaneSection.BlockTickStrategy.PROCESSED;
