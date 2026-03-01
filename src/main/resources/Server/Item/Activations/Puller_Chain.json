@@ -1,1 +1,7 @@
-{"Type":"ArcanePuller","Range":15}
+{
+  "Type": "ArcanePuller",
+  "Range": 15,
+  "Effects": {
+    "WorldSoundEventId": "SFX_Pseudo_Arcane_Puller"
+  }
+}

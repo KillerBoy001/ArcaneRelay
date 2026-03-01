@@ -61,7 +61,8 @@
     "State": {
       "Definitions": {
         "Middle": {
-          "CustomModel": "Blocks/Functional/Puller_Arm_Middle.blockymodel"
+          "CustomModel": "Blocks/Functional/Puller_Arm_Middle.blockymodel",
+          "Light": null
         }
       }
     },
