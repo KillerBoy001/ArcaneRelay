@@ -104,9 +104,12 @@ public class ArcanePullerActivation extends Activation {
         int[] source = sources.isEmpty() ? null : sources.get(0);
 
         // syncExtensionChain(commandBuffer, world, puller, pullerPos, globalUp, maxRange);
-        
 
-        if (puller.getPhase() == ArcanePullerBlock.Phase.EXTENDING || puller.getPhase() == ArcanePullerBlock.Phase.IDLE) {
+        if (puller.getExtensionLength() == 0) {
+            puller.toEXTENDING();
+        }
+
+        if (puller.getPhase() == ArcanePullerBlock.Phase.EXTENDING) {
             handleExtending(commandBuffer, world, puller, pullerPos, chunk, globalUp, pullerBlockType, maxRange);
             return ArcaneSection.BlockTickStrategy.PROCESSED;
         }
@@ -159,6 +162,8 @@ public class ArcanePullerActivation extends Activation {
                     this.getEffects());
             });
             puller.setPULLING_BACK();
+            handlePullingBack(commandBuffer, world, puller, pullerPos, globalForward);
+
             ArcaneRelayPlugin.LOGGER.atInfo().log(
                 "Puller hit block %d at %d,%d,%d; starting pull-back",
                 tipBlockId, tipX, tipY, tipZ);
@@ -188,6 +193,7 @@ public class ArcanePullerActivation extends Activation {
                     "Puller hit %d entities at %d,%d,%d; applied knockback",
                     entitiesInTip.size(), tipX, tipY, tipZ);
                 puller.setPULLING_BACK();
+                handlePullingBack(commandBuffer, world, puller, pullerPos, globalForward);
                 return ArcaneSection.BlockTickStrategy.CONTINUE;
             }
         }
@@ -195,6 +201,7 @@ public class ArcanePullerActivation extends Activation {
         if (isEmpty(tipBlockType, tipBlockId)) {
             if (extLen >= maxExtend) {
                 puller.setPULLING_BACK();
+                handlePullingBack(commandBuffer, world, puller, pullerPos, globalForward);
                 return ArcaneSection.BlockTickStrategy.CONTINUE;
             }
             commandBuffer.run((Store<ChunkStore> s) -> {
@@ -304,6 +311,13 @@ public class ArcanePullerActivation extends Activation {
         });
 
         puller.removeLastExtensionPosition();
+
+        if (puller.getExtensionLength() == 0) {
+            puller.setIDLE();
+            return ArcaneSection.BlockTickStrategy.PROCESSED;
+        }
+
+
         return ArcaneSection.BlockTickStrategy.PROCESSED;
     }
 
