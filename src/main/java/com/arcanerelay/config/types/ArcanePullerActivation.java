@@ -305,8 +305,7 @@ public class ArcanePullerActivation extends Activation {
                             applyKnockbackToward(entityStore, ref, knockbackDir, duration);
                         });
                     }
-                ActivationExecutor.playEffects(world, pullerPos.x, pullerPos.y, pullerPos.z,
-                    this.getEffects());
+             
                 ArcaneRelayPlugin.LOGGER.atInfo().log(
                     "Puller hit %d entities at %d,%d,%d; applied knockback",
                     entitiesInTip.size(), tipPos.x, tipPos.y, tipPos.z);
@@ -315,6 +314,8 @@ public class ArcanePullerActivation extends Activation {
             
         }
 
+        ActivationExecutor.playEffects(world, pullerPos.x, pullerPos.y, pullerPos.z,
+            this.getEffects());
         puller.removeLastExtensionPosition();
 
         if (puller.getExtensionLength() == 0) {
@@ -351,6 +352,9 @@ public class ArcanePullerActivation extends Activation {
     private static boolean isPullable(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0) return false;
         if (blockType == null) return false;
+
+        if (isExtensionBlock(blockType)) return false;
+
         return blockType.getMaterial() == BlockMaterial.Solid;
     }
 
