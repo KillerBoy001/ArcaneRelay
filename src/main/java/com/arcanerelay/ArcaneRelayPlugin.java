@@ -88,7 +88,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
         chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
         chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
-        chunkRegistry.registerSystem(new ArcaneSystems.PullerBlockTick());
         chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
 
 

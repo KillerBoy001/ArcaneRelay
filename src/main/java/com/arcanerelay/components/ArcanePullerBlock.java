@@ -36,7 +36,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
     /** Indices along the chain (0 = in front of puller). Used for pull-back ordering. */
     private List<Integer> extensionPositions = new ArrayList<>();
     private String extensionBlockKey = "";
-    private boolean pullingTarget = false;
 
     /** Phase of the puller state machine. */
     public enum Phase {
@@ -54,8 +53,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         .add()
         .append(new KeyedCodec<>("ExtensionBlockKey", Codec.STRING), (o, v) -> o.extensionBlockKey = v, o -> o.extensionBlockKey)
         .add()
-        .append(new KeyedCodec<>("PullingTarget", Codec.BOOLEAN, true), (o, v) -> o.pullingTarget = v, o -> o.pullingTarget)
-        .add()
         .append(new KeyedCodec<>("Phase", Codec.INTEGER), (o, v) -> o.phase = Phase.values()[v], o -> o.phase.ordinal())
         .add()
         .build();
@@ -67,7 +64,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         clone.extensionPositions = new ArrayList<>(this.extensionPositions);
         clone.extensionBlockKey = this.extensionBlockKey;
         clone.phase = this.phase;
-        clone.pullingTarget = this.pullingTarget;
         return clone;
     }
 
@@ -92,6 +88,19 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         extensionPositions.clear();
     }
 
+    public void setIDLE() {
+        this.phase = Phase.IDLE;
+        this.extensionPositions.clear();
+    }
+
+    public void toEXTENDING() {
+        this.phase = Phase.EXTENDING;
+    }
+
+    public void setPULLING_BACK() {
+        this.phase = Phase.PULLING_BACK;
+    }
+
     /** Remove the last extension index (furthest from puller). */
     public boolean removeLastExtensionPosition() {
         if (extensionPositions.isEmpty()) return false;
@@ -101,14 +110,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
 
     public String getExtensionBlockKey() {
         return extensionBlockKey;
-    }
-
-    public boolean isPullingTarget() {
-        return pullingTarget;
-    }
-
-    public void setPullingTarget(boolean pullingTarget) {
-        this.pullingTarget = pullingTarget;
     }
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
