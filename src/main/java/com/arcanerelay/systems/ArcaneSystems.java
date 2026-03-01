@@ -196,7 +196,7 @@ public class ArcaneSystems {
                         return ArcaneSection.BlockTickStrategy.PROCESSED;
                     }
 
-                    if (tick % rateLimitTicks == 0) {
+                    if (tick % rateLimitTicks != 0) {
                         return ArcaneSection.BlockTickStrategy.CONTINUE;
                     }
 

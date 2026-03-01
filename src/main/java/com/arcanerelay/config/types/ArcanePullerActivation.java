@@ -445,7 +445,7 @@ public class ArcanePullerActivation extends Activation {
         int z = pullerPos.z + forward.z * newLen;
         WorldChunk pullerChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(pullerPos.x, pullerPos.z));
         if (pullerChunk == null) return;
-        int rotationIndex = pullerChunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
+        int rotationIndex = pullerChunk.getRotationIndex(x, y, z);
         Holder<ChunkStore> pullerHolder = pullerChunk.getBlockComponentHolder(
             pullerPos.x, pullerPos.y, pullerPos.z);
 
