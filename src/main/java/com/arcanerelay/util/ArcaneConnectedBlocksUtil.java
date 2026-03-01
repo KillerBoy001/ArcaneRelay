@@ -5,13 +5,16 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.component.Holder;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
+import com.hypixel.hytale.server.core.blocktype.component.BlockPhysics;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.ChunkColumn;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.connectedblocks.ConnectedBlocksUtil;
@@ -98,10 +101,17 @@ public final class ArcaneConnectedBlocksUtil {
         int newId = BlockType.getAssetMap().getIndex(result.blockTypeKey());
         BlockType newType = BlockType.getAssetMap().getAsset(newId);
         Holder<ChunkStore> holder = chunk.getBlockComponentHolder(blockPos.x, blockPos.y, blockPos.z);
+       
+        ChunkColumn column = (ChunkColumn)store.getComponent(chunk.getReference(), ChunkColumn.getComponentType());
+        Ref<ChunkStore> sectionRef = column.getSection(ChunkUtil.chunkCoordinate(blockPos.y));
+
+    
         chunk.setBlock(blockPos.x, blockPos.y, blockPos.z, newId, newType, result.rotationIndex(), 0, SETTINGS);
         if (holder != null) {
             chunk.setState(blockPos.x, blockPos.y, blockPos.z, holder);
         }
+
+        BlockPhysics.reset(store, sectionRef, blockPos.x, blockPos.y, blockPos.z);
         world.performBlockUpdate(blockPos.x, blockPos.y, blockPos.z, true);
     }
 }
