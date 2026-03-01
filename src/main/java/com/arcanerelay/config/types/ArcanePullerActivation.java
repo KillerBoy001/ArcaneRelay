@@ -227,6 +227,10 @@ public class ArcanePullerActivation extends Activation {
 
             return ArcaneSection.BlockTickStrategy.PROCESSED;
         }
+
+        puller.setPULLING_BACK();
+        handlePullingBack(commandBuffer, world, puller, pullerPos, globalForward);
+
         return ArcaneSection.BlockTickStrategy.CONTINUE;
     }
 

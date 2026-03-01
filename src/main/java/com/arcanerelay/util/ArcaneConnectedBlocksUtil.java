@@ -37,14 +37,27 @@ public final class ArcaneConnectedBlocksUtil {
         updateSingle(store, world, blockPos, extendDir, rotation);
         Vector3i back = extendDir.clone().scale(-1);
         Vector3i prev = blockPos.clone().add(back);
-        updateSingle(store, world, prev, extendDir, rotation);
+
+        WorldChunk prevChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(prev.x, prev.z));
+        if (prevChunk == null) return;
+        int prevRotationIndex = prevChunk.getRotationIndex(prev.x, prev.y, prev.z);
+        RotationTuple prevRotation = RotationTuple.get(prevRotationIndex);
+
+        updateSingle(store, world, prev, extendDir, prevRotation);
         prev.add(back);
-        updateSingle(store, world, prev, extendDir, rotation);
+        WorldChunk prevChunk2 = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(prev.x, prev.z));
+        if (prevChunk2 == null) return;
+        int prevRotationIndex2 = prevChunk2.getRotationIndex(prev.x, prev.y, prev.z);
+        RotationTuple prevRotation2 = RotationTuple.get(prevRotationIndex2);
+        updateSingle(store, world, prev, extendDir, prevRotation2);
         // update 1 forward
         Vector3i forward = extendDir.clone();
         Vector3i next = blockPos.clone().add(forward);
-        updateSingle(store, world, next, extendDir, rotation);
-
+        WorldChunk nextChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(next.x, next.z));
+        if (nextChunk == null) return;
+        int nextRotationIndex = nextChunk.getRotationIndex(next.x, next.y, next.z);
+        RotationTuple nextRotation = RotationTuple.get(nextRotationIndex);
+        updateSingle(store, world, next, extendDir, nextRotation);
     }
 
     private static void updateSingle(
