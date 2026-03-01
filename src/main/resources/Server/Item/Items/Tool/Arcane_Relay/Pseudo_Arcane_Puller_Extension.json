@@ -52,6 +52,9 @@
       "Up" : [
         {
         "FaceType": "PullerExtension"
+        },
+        {
+          "FaceType": "Full"
         }
       ]
     },
