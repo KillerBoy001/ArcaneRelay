@@ -99,7 +99,6 @@ public class ArcanePullerActivation extends Activation {
         int[] source = sources.isEmpty() ? null : sources.get(0);
 
         syncExtensionChain(commandBuffer, world, puller, pullerPos, globalUp, maxRange);
-        // syncExtensionChain(commandBuffer, world, puller, pullerPos, globalUp, maxRange);
 
         if (puller.getExtensionLength() == 0) {
             puller.toEXTENDING();
@@ -149,7 +148,8 @@ public class ArcanePullerActivation extends Activation {
              if (extLen == 0) {
                 puller.setIDLE();
                 commandBuffer.run((Store<ChunkStore> s) -> {
-                    ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(s, world, pullerPos, globalForward, RotationTuple.get(pullerChunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z)));
+                    int rotationIndex = tipChunk.getRotationIndex(tipX, tipY, tipZ);
+                    ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(s, world, pullerPos, globalForward, RotationTuple.get(rotationIndex));
                 });
                 return ArcaneSection.BlockTickStrategy.PROCESSED;
              }
@@ -197,7 +197,7 @@ public class ArcanePullerActivation extends Activation {
                     "Puller extended to %d,%d,%d (len=%d)",
                     tipX, tipY, tipZ, puller.getExtensionLength());
 
-                int rotationIndex = pullerChunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
+                int rotationIndex = tipChunk.getRotationIndex(tipX, tipY, tipZ);
                 Holder<ChunkStore> pullerHolder = pullerChunk.getBlockComponentHolder(
                     pullerPos.x, pullerPos.y, pullerPos.z);
             puller.setPhase(ArcanePullerBlock.Phase.EXTENDING);
@@ -445,7 +445,12 @@ public class ArcanePullerActivation extends Activation {
         int z = pullerPos.z + forward.z * newLen;
         WorldChunk pullerChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(pullerPos.x, pullerPos.z));
         if (pullerChunk == null) return;
-        int rotationIndex = pullerChunk.getRotationIndex(x, y, z);
+
+        WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(x, z));
+        if (chunk == null) return;
+        int rotationIndex = chunk.getRotationIndex(x, y, z);
+
+
         Holder<ChunkStore> pullerHolder = pullerChunk.getBlockComponentHolder(
             pullerPos.x, pullerPos.y, pullerPos.z);
 
