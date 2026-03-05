@@ -11,11 +11,11 @@
     "TimeSeconds": 0.5,
     "Input": [
       {
-        "Quantity": 8,
+        "Quantity": 4,
         "ItemId": "Ingredient_Crystal_Cyan"
       },
       {
-        "ItemId": "Ingredient_Bar_Iron",
+        "ItemId": "Deco_Iron_Chain_Small",
         "Quantity": 15
       },
       {

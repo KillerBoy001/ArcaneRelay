@@ -69,6 +69,12 @@
         }
       }
     },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "DropList": "Empty_Drop"
+      }
+    },
     "HitboxType": "Beam_Thin",
     "ParticleColor": "#4b4b4b",
     "VariantRotation": "DoublePipe",
