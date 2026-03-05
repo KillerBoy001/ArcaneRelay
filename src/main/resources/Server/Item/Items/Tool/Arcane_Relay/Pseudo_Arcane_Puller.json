@@ -1,0 +1,140 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Puller.name",
+    "Description": "server.items.Pseudo_Arcane_Puller.description"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Recipe": {
+    "TimeSeconds": 0.5,
+    "Input": [
+      {
+        "Quantity": 4,
+        "ItemId": "Ingredient_Crystal_Cyan"
+      },
+      {
+        "ItemId": "Deco_Iron_Chain_Small",
+        "Quantity": 15
+      },
+      {
+        "ResourceTypeId": "Rock",
+        "Quantity": 1
+      }
+    ],
+    "OutputQuantity": 1,
+    "BenchRequirement": [
+      {
+        "Id": "Arcanebench",
+        "Type": "Crafting",
+        "Categories": [
+          "Arcane_Artifacts"
+        ]
+      }
+    ]
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "BlockType": {
+    "ConnectedBlockRuleSet": {
+      "Type": "CustomTemplate",
+      "TemplateShapeAssetId": "Pseudo_Arcane_Puller_Rules",
+      "TemplateShapeBlockPatterns": {
+        "Collapsed": "Pseudo_Arcane_Puller",
+        "Extended": "*Pseudo_Arcane_Puller_State_Definitions_Extended"
+      }
+    },
+    "Light": {
+      "Color": "#279"
+    },
+    "BlockEntity": {
+      "Components": {
+        "ArcanePuller": {
+          "ExtensionBlockKey": "Pseudo_Arcane_Puller_Extension"
+        }
+      }
+    },
+    "DrawType": "Model",
+    "BlockSoundSetId": "Stone",
+    "Opacity": "Solid",
+    "CustomModel": "Blocks/Functional/Puller_Collapsed.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Puller_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "Supporting": {
+      "Up": [
+        {
+          "FaceType": "Puller"
+        },
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "CustomModelScale": 1,
+    "BlockParticleSetId": "Crystal",
+    "Material": "Solid",
+    "InteractionHint": "server.interactionHints.generic",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "ArcaneActivator",
+            "Activator": "Puller_Chain"
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "Extended": {
+          "CustomModel": "Blocks/Functional/Puller_Extended.blockymodel"
+        }
+      }
+    },
+    "ParticleColor": "#bbac72",
+    "VariantRotation": "DoublePipe",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "ItemId": "Pseudo_Arcane_Puller"
+      }
+    },
+    "FlipType": "Symmetric",
+    "PlacementSettings": {
+      "AllowRotationKey": true,
+      "RotationMode": "Default",
+      "BlockPreviewVisibility": "AlwaysVisible",
+      "PlaceInEmptyBlocks": true
+    },
+    "CubeShadingMode": "Flat",
+    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      22.5,
+      47,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -14
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Puller.png",
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "Quality": "Tool"
+}

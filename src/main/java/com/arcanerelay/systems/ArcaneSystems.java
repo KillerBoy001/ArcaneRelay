@@ -1,13 +1,12 @@
 package com.arcanerelay.systems;
 
 import com.hypixel.hytale.component.system.HolderSystem;
-import com.hypixel.hytale.component.system.tick.DelayedEntitySystem;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.component.system.tick.TickingSystem;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.util.HashUtil;
+import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.chunk.ChunkFlag;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -18,11 +17,15 @@ import com.hypixel.hytale.component.query.Query;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
+import com.arcanerelay.core.activation.ChunkStoreCommandBufferAdapter;
 import com.arcanerelay.core.blockmovement.BlockMovementExecutor;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.config.Activation;
+import com.arcanerelay.config.types.ArcanePullerActivation;
+import com.arcanerelay.components.ArcanePullerBlock;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.modules.interaction.system.InteractionSystems;
 import com.hypixel.hytale.server.core.modules.time.WorldTimeResource;
 import com.hypixel.hytale.builtin.blocktick.system.ChunkBlockTickSystem;
 import com.hypixel.hytale.component.AddReason;
@@ -33,6 +36,8 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.RemoveReason;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.dependency.Dependency;
+import com.hypixel.hytale.server.core.universe.world.World;
+import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 
 import javax.annotation.Nonnull;
 
@@ -138,7 +143,8 @@ public class ArcaneSystems {
         /** Single-threaded to avoid deadlock: activations use world/commandBuffer in ways that are not safe from parallel workers. */
         @Override
         public boolean isParallel(int archetypeChunkSize, int taskCount) {
-           return EntityTickingSystem.useParallel(archetypeChunkSize, taskCount);
+        //    return EntityTickingSystem.useParallel(archetypeChunkSize, taskCount);
+            return false;
         }
 
         @Override
@@ -182,15 +188,17 @@ public class ArcaneSystems {
                     int worldX = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getX(), x);
                     int worldZ = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getZ(), z);
                     // long hash = HashUtil.rehash(worldX, y, worldZ, 4030921250L);
-                    if ((tick) % rateLimitTicks != 0L) {
-                        return ArcaneSection.BlockTickStrategy.CONTINUE; // keep ticking, process once per second
-                    }
-
                     BlockType blockType = accessor.getBlockType(worldX, y, worldZ);
                     if (blockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
 
                     Activation activation = ArcaneUtil.getActivationForBlock(blockType);
-                    if (activation == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
+                    if (activation == null) {
+                        return ArcaneSection.BlockTickStrategy.PROCESSED;
+                    }
+
+                    if (tick % rateLimitTicks != 0) {
+                        return ArcaneSection.BlockTickStrategy.CONTINUE;
+                    }
 
                     Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(ChunkUtil.indexBlockInColumn(x, y, z));
 
@@ -200,6 +208,7 @@ public class ArcaneSystems {
                     List<int[]> sources = lastSource != null ? List.of(lastSource) : List.of();
 
                     try {
+                        ArcaneRelayPlugin.LOGGER.atInfo().log("Executing activation %s at %d,%d,%d", activation.getId(), worldX, y, worldZ);
                         ArcaneSection.BlockTickStrategy strategy = activation.execute(
                             accessor, sectionRef, blockRef, worldX, y, worldZ,
                             sources);
@@ -219,10 +228,6 @@ public class ArcaneSystems {
         }
     }
 
-    /**
-     * Runs after Ticking to execute block moves queued by MoveBlockActivation.
-     * Processes ArcaneMoveState entries via BlockMovementExecutor and clears the state.
-     */
     public static class MoveBlock extends TickingSystem<ChunkStore> {
         @Override
         public void tick(

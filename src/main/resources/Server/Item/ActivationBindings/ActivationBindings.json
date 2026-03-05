@@ -2,6 +2,7 @@
   "Bindings": {
     "Pseudo_Arcane_Button": "Arcane_Button",
     "Pseudo_Arcane_Discharge": "Arcane_Discharge",
+    "Pseudo_Arcane_Puller": "Puller_Chain",
     "Pseudo_Arcane_Pusher": "Pusher_Chain",
     "Pseudo_Arcane_Pusher_Wall": "Pusher_Chain_Wall",
     "Pseudo_Arcane_Relay": "Arcane_Relay",

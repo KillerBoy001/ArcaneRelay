@@ -1,0 +1,82 @@
+{
+  "MaterialName": "Pseudo_Arcane_Puller_Extension",
+  "ConnectsToOtherMaterials": true,
+  "DefaultShape": "Collapsed",
+  "Shapes": {
+    "Collapsed": {
+      "FaceTags": {
+        "Up": [
+          "ExtensionConnection"
+        ]
+      },
+      "PatternsToMatchAnyOf": [
+        {
+          "Type": "Custom",
+          "TransformRulesToOrientation": true,
+          "RulesToMatch": [
+            {
+              "Position": {
+                "X": 0,
+                "Y": 1,
+                "Z": 0
+              },
+              "IncludeOrExclude": "Exclude",
+              "FaceTags": {
+                "Down": [
+                  "ExtensionConnection"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "Type": "Custom",
+          "TransformRulesToOrientation": true,
+          "RulesToMatch": [
+            {
+              "Position": {
+                "X": 0,
+                "Y": 1,
+                "Z": 0
+              },
+              "IncludeOrExclude": "Exclude",
+              "Shapes": [
+                "End",
+                "Middle"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Extended": {
+      "FaceTags": {
+        "Up": [
+          "ExtensionConnection"
+        ]
+      },
+      "PatternsToMatchAnyOf": [
+        {
+          "Type": "Custom",
+          "RequireFaceTagsMatchingRoll": true,
+          "TransformRulesToOrientation": true,
+          "RulesToMatch": [
+            {
+              "Position": {
+                "X": 0,
+                "Y": 1,
+                "Z": 0
+              },
+              "IncludeOrExclude": "Include",
+              "FaceTags": {
+                "Down": [
+                  "ExtensionConnection"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

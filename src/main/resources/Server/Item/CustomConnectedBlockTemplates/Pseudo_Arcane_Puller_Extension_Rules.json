@@ -1,0 +1,39 @@
+{
+  "MaterialName": "Pseudo_Arcane_Puller_Extension",
+  "ConnectsToOtherMaterials": false,
+  "DefaultShape": "End",
+  "Shapes": {
+    "End": {
+      "FaceTags": {
+        "Down": [
+          "ExtensionConnection"
+        ]
+      }
+    },
+    "Middle": {
+      "FaceTags": {
+        "Down": [
+          "ExtensionConnection"
+        ]
+      },
+      "PatternsToMatchAnyOf": [
+        {
+          "Type": "Custom",
+          "TransformRulesToOrientation": true,
+          "RulesToMatch": [
+            {
+              "Position": {
+                "Y": 1
+              },
+              "IncludeOrExclude": "Include",
+              "Shapes": [
+                "End",
+				        "Middle"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Puller_Extension.name",
+    "Description": "server.items.Pseudo_Arcane_Puller_Extension.description"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Categories": [],
+  "BlockType": {
+    "ConnectedBlockRuleSet": {
+      "Type": "CustomTemplate",
+      "TemplateShapeAssetId": "Pseudo_Arcane_Puller_Extension_Rules",
+      "TemplateShapeBlockPatterns": {
+        "End": "Pseudo_Arcane_Puller_Extension",
+        "Middle": "*Pseudo_Arcane_Puller_Extension_State_Definitions_Middle"
+      }
+    },
+    "Light": {
+      "Color": "#279"
+    },
+   "BlockEntity": {
+      "Components": {}
+    },
+    "DrawType": "Model",
+    "BlockSoundSetId": "Metal",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/Functional/Puller_Arm_End.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Puller_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "SupportDropType": "Destroy",
+    "Support": {
+      "Down" : [
+        {
+        "FaceType": "Puller",
+        "Support": "Required",
+        "Rotate": true
+        },
+        {
+          "FaceType": "PullerExtension",
+          "IgnoreSupport": true,
+          "Rotate": true
+        }
+      ]
+    },
+    "Supporting": {
+      "Up" : [
+        {
+        "FaceType": "PullerExtension"
+        },
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "CustomModelScale": 1,
+    "BlockParticleSetId": "Metal",
+    "Material": "Solid",
+    "State": {
+      "Definitions": {
+        "Middle": {
+          "CustomModel": "Blocks/Functional/Puller_Arm_Middle.blockymodel",
+          "Light": null
+        }
+      }
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "DropList": "Empty_Drop"
+      }
+    },
+    "HitboxType": "Beam_Thin",
+    "ParticleColor": "#4b4b4b",
+    "VariantRotation": "DoublePipe",
+    "CubeShadingMode": "Flat"
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.7,
+    "Rotation": [
+      22.5,
+      47,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -16
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Puller_Extension.png",
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Items_Metal",
+  "Quality": "Tool"
+}

@@ -10,7 +10,10 @@ items.Pseudo_Arcane_Pusher.name = Pusher
 items.Pseudo_Arcane_Pusher.description = Used to push blocks forwards. Blocks will be moved in the direction at which the Pusher is facing.\n\nInteract to activate.
 items.Pseudo_Arcane_Staff.name = Arcane Staff
 items.Pseudo_Arcane_Staff.description = Required to configure Arcane Artifacts. Used to setup connections within Arcane blocks.
-items.Ingredient_Crystal_Cyan.name=Any Crystal Shards
+items.Pseudo_Arcane_Puller.name = Arcane Puller
+items.Pseudo_Arcane_Puller.description = Used to pull back a block from far away. When a signal is received it will either extend to reach a target or pull back once it has one.
+items.Pseudo_Arcane_Puller_Extension.name = Arcane Puller Extension
+items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling back entities and blocks with the Puller.
 
 # === interactionHints ===
 
@@ -40,6 +43,7 @@ arcanerelay.notifications.outputRemoved = Output removed.
 arcanerelay.notifications.outputAdded = Output has been added.
 arcanerelay.notifications.signalSentToTrigger = Signal sent to trigger.
 arcanerelay.notifications.blockActivationNotSupported = Block activation not supported for this block.
+arcanerelay.notifications.pullerChainResynced = Puller chain resynced.
 
 # === UI ===
 

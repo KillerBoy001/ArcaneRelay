@@ -3,6 +3,7 @@ package com.arcanerelay.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationBinding;
@@ -30,6 +31,23 @@ public class ArcaneUtil {
         if (arcaneSection == null) return;
 
         arcaneSection.setTicking(worldX, worldY, worldZ, true);
+    }
+
+    public static void clearTicking(@Nonnull ComponentAccessor<ChunkStore> store, int worldX, int worldY, int worldZ) {
+        World world = store.getExternalData().getWorld();
+        long chunkIndex = ChunkUtil.indexChunkFromBlock(worldX, worldZ);
+        WorldChunk chunk = world.getChunkIfInMemory(chunkIndex);
+        if (chunk == null) return;
+
+        Ref<ChunkStore> sectionRef = world.getChunkStore()
+                .getChunkSectionReference(ChunkUtil.chunkCoordinate(worldX), ChunkUtil.chunkCoordinate(worldY), ChunkUtil.chunkCoordinate(worldZ));
+        if (sectionRef == null) return;
+
+        ArcaneSection arcaneSection = store.getComponent(sectionRef, ArcaneSection.getComponentType());
+        if (arcaneSection == null) return;
+
+        ArcaneRelayPlugin.LOGGER.atInfo().log("Clearing ticking at %d,%d,%d", worldX, worldY, worldZ);
+        arcaneSection.setTicking(worldX, worldY, worldZ, false);
     }
 
     /** Sets a block to ticking and records the source position for when it is processed. */
