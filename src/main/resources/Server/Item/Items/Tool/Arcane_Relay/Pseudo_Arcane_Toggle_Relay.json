@@ -11,7 +11,7 @@
     "TimeSeconds": 0.5,
     "Input": [
       {
-        "Quantity": 20,
+        "Quantity": 8,
         "ItemId": "Ingredient_Crystal_Cyan"
       },
       {
