@@ -231,7 +231,7 @@
         {
           "id": "6",
           "name": "Gem-1",
-          "position": {"x": 0, "y": 10, "z": 0},
+          "position": {"x": 0, "y": 8, "z": 0},
           "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
           "shape": {
             "type": "none",
@@ -304,7 +304,7 @@
         {
           "id": "8",
           "name": "Gem-2",
-          "position": {"x": 0, "y": 10, "z": 0},
+          "position": {"x": 0, "y": 8, "z": 0},
           "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
           "shape": {
             "type": "none",
