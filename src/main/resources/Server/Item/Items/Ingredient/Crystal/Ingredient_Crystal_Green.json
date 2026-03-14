@@ -40,6 +40,26 @@
   "ItemEntity": {
     "ParticleSystemId": null
   },
+  "Recipe": {
+    "Input": [
+      {
+        "ResourceTypeId": "Crystal",
+        "Quantity": 1
+      },
+      {
+        "Quantity": 1,
+        "ItemId": "Ingredient_Ice_Essence"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Categories": [
+          "Arcane_Artifacts"
+        ],
+        "Id": "Arcanebench"
+      }
+    ]
+  },
   "ItemSoundSetId": "ISS_Items_Gems",
   "DropOnDeath": true
 }

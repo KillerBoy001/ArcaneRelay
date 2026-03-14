@@ -12,7 +12,7 @@
     "Input": [
       {
         "Quantity": 4,
-        "ItemId": "Ingredient_Crystal_Cyan"
+        "ItemId": "Ingredient_Crystal_Green"
       },
       {
         "ItemId": "Ingredient_Bar_Iron",
@@ -51,7 +51,7 @@
     "CustomModelScale": 1,
     "Light": {
       "Radius": 0,
-      "Color": "#046"
+      "Color": "#141"
     },
     "PlacementSettings": {
       "AllowRotationKey": true,

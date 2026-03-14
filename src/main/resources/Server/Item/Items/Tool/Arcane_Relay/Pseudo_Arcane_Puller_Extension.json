@@ -18,7 +18,7 @@
       }
     },
     "Light": {
-      "Color": "#279"
+      "Color": "#141"
     },
    "BlockEntity": {
       "Components": {}
@@ -101,5 +101,5 @@
     ]
   },
   "ItemSoundSetId": "ISS_Items_Metal",
-  "Quality": "Tool"
+  "Quality": "Developer"
 }
