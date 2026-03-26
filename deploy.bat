@@ -5,10 +5,13 @@ if exist .env (
     for /f "delims=" %%i in (.env) do set %%i
 )
 
-mvn clean install
+call mvn clean install
 
 REM Extract version from pom.xml using PowerShell
-for /f "delims=" %%i in ('powershell -Command "(Select-Xml -Path pom.xml -XPath '//version').Node.InnerText"') do set VERSION=%%i
+for /f "delims=" %%i in ('powershell -Command "([xml](Get-Content .\pom.xml)).project.version"') do set VERSION=%%i
 
-del /q "%HYTALE_MODS%\arcanerelay-*.jar"
-copy "target\arcanerelay-%VERSION%.jar" "%HYTALE_MODS%\"
+if exist "%HYTALE_MODS%\arcanerelay-*.jar" (
+    del /q "%HYTALE_MODS%\arcanerelay-*.jar"
+)
+
+copy ".\target\arcanerelay-%VERSION%.jar" "%HYTALE_MODS%\"
