@@ -81,9 +81,10 @@ public final class BlockMovementExecutor {
                         moveEntry.blockType,
                         moveEntry.blockRotation,
                         moveEntry.blockFiller,
-                        4); // 
+                        4
+                    ); 
 
-                    futureChunk.setState(tx, ty, tz, moveEntry.componentHolder);
+                    futureChunk.setState(tx, ty, tz, moveEntry.blockType, moveEntry.blockRotation, moveEntry.componentHolder);
 
                     dirtyChunks.add(futureChunkIndex);
 
@@ -92,8 +93,13 @@ public final class BlockMovementExecutor {
             }
         }
 
-        world.execute(() ->{
-            dirtyChunks.forEach(idx -> world.getChunkLighting().invalidateLightInChunk(world.getChunk(idx)));
+        world.execute(() -> {
+            dirtyChunks.forEach(idx -> {
+                ChunkStore chunckStore = world.getChunkStore();
+                WorldChunk worldChunk = world.getChunk(idx);
+                world.getChunkLighting().invalidateLightInChunk(chunckStore, worldChunk.getX(), worldChunk.getZ());
+            });
+
             dirtyChunks.forEach(idx -> world.getNotificationHandler().updateChunk(idx));
         });
     }
