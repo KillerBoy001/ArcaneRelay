@@ -131,7 +131,7 @@ public class SelectTriggerInteraction extends SimpleInstantInteraction {
             Vector3d to = new Vector3d(out.x + 0.5, out.y + 0.5, out.z + 0.5);
             Vector3d direction = to.clone().subtract(from);
             if (direction.squaredLength() < 0.01) continue;
-            DebugUtils.addArrow(world, from, direction, color, time, true);
+            DebugUtils.addArrow(world, from, direction, color, time, DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME);
         }
     }
 }

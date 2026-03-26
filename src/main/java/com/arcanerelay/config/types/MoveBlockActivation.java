@@ -132,7 +132,7 @@ public class MoveBlockActivation extends Activation {
         int pusherRotationIndex = pusherChunk.getRotationIndex(pusherPosition.x, pusherPosition.y, pusherPosition.z);
         RotationTuple pusherRotationTuple = RotationTuple.get(pusherRotationIndex);
         Vector3d localForward = getForwardFromBlockType(pusherBlockType, isWallPusher);
-        Vector3d globalForwardDouble = pusherRotationTuple.rotate(localForward.clone());
+        Vector3d globalForwardDouble = pusherRotationTuple.rotatedVector(localForward.clone());
         return new Vector3i(
             (int) Math.round(globalForwardDouble.getX()),
             (int) Math.round(globalForwardDouble.getY()),
@@ -149,7 +149,7 @@ public class MoveBlockActivation extends Activation {
         int pusherRotationIndex = pusherChunk.getRotationIndex(pusherPosition.x, pusherPosition.y, pusherPosition.z);
         Vector3d localUp = getUpFromBlockType(pusherBlockType, isWallPusher);
         RotationTuple upRotationTuple = RotationTuple.get(pusherRotationIndex);
-        Vector3d upDirection = upRotationTuple.rotate(localUp.clone());
+        Vector3d upDirection = upRotationTuple.rotatedVector(localUp.clone());
         return new Vector3i(
             (int) Math.round(upDirection.getX()),
             (int) Math.round(upDirection.getY()),

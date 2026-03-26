@@ -17,6 +17,7 @@ import com.hypixel.hytale.component.Resource;
 import com.hypixel.hytale.component.ResourceType;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.event.EntityEventType;
+import com.hypixel.hytale.component.event.EntityHolderEventType;
 import com.hypixel.hytale.component.event.WorldEventType;
 import com.hypixel.hytale.component.system.EcsEvent;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -129,5 +130,15 @@ public final class EntityStoreChunkStoreAdapter implements ChunkStoreCommandBuff
     @Override
     public <Event extends EcsEvent> void invoke(@Nonnull WorldEventType<ChunkStore, Event> eventType, @Nonnull Event event) {
         chunkStore.invoke(eventType, event);
+    }
+
+    @Override
+    public <Event extends EcsEvent> void invoke(Holder<ChunkStore> holder, Event event) {
+        chunkStore.invoke(holder, event);
+    }
+
+    @Override
+    public <Event extends EcsEvent> void invoke(EntityHolderEventType<ChunkStore, Event> entityHolderEventType, Holder<ChunkStore> holder, Event event) {
+        chunkStore.invoke(entityHolderEventType, holder, event);
     }
 }

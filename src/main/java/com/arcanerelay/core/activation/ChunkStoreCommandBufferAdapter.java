@@ -5,7 +5,10 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 
 import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.event.EntityHolderEventType;
+import com.hypixel.hytale.component.system.EcsEvent;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 
 /** Wraps CommandBuffer as ChunkStoreCommandBufferLike for the tick path. */
@@ -140,5 +143,15 @@ public final class ChunkStoreCommandBufferAdapter implements ChunkStoreCommandBu
             @Nonnull com.hypixel.hytale.component.event.WorldEventType<ChunkStore, Event> eventType,
             @Nonnull Event event) {
         buffer.invoke(eventType, event);
+    }
+
+    @Override
+    public <Event extends EcsEvent> void invoke(Holder<ChunkStore> holder, Event event) {
+        buffer.invoke(holder, event);
+    }
+
+    @Override
+    public <Event extends EcsEvent> void invoke(EntityHolderEventType<ChunkStore, Event> entityHolderEventType, Holder<ChunkStore> holder, Event event) {
+        buffer.invoke(entityHolderEventType, holder, event);
     }
 }

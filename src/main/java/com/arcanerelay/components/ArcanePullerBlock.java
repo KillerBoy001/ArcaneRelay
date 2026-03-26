@@ -133,7 +133,7 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
 
         RotationTuple rotationTuple = RotationTuple.get(rotationIndex);
         Vector3d localUp = getLocalUpVector(pullerBlockType);
-        Vector3d rotatedUp = rotationTuple.rotate(localUp);
+        Vector3d rotatedUp = rotationTuple.rotatedVector(localUp);
         Vector3i up = new Vector3i(
             (int) Math.round(rotatedUp.getX()),
             (int) Math.round(rotatedUp.getY()),
