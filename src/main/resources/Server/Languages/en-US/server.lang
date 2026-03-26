@@ -24,11 +24,6 @@ interactionHints.toggle = Press [{key}] to toggle
 interactionHints.cycle = Press [{key}] to cycle
 interactionHints.relay = Press [{key}] to relay
 
-# === bench ===
-
-benchCategories.artifacts = Artifacts
-resourceType.Crystal.name = Any Crystal
-
 # === Arcane Relay notifications (interactions / activation) ===
 
 arcanerelay.activationExecutor.executed=Activation Executed at [{blockX}],[{blockY}],[{blockZ}] with activation: [{activation}]
