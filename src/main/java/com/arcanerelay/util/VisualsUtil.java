@@ -1,8 +1,5 @@
 package com.arcanerelay.util;
 
-import java.util.Vector;
-import java.util.function.BiConsumer;
-
 import com.arcanerelay.components.ArcaneTriggerBlock;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -110,7 +107,7 @@ public class VisualsUtil {
     }
 
     private static void showInputWireframe(World world, Vector3i triggerPos) {
-        drawCornerOnlyBoxWireframe(world, triggerPos, colors[colorIndex]);
+        drawBoxWireframe(world, triggerPos, colors[colorIndex]);
     }
 
     private static void showOutputWireframes(World world, Vector3i triggerPos) {
@@ -126,7 +123,7 @@ public class VisualsUtil {
 
         Vector3f color = colors[colorIndex];
         for (Vector3i out : triggerBlock.getOutputPositions()) {
-            drawBoxWireframe(world, out, color);
+            drawCornerOnlyBoxWireframe(world, out, color);
         }
     }
 
