@@ -106,11 +106,10 @@ public class SelectTriggerInteraction extends SimpleInstantInteraction {
         updated.setConfiguredBlock(target);
         cb.putComponent(ref, ArcaneConfiguratorComponent.getComponentType(), updated);
 
-        VisualsUtil.displayTriggerConnections(world, target);
+        boolean cycleColor = true;
+        VisualsUtil.displayTriggerConnections(world, target, cycleColor);
 
         NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.triggerSelected"), NotificationStyle.Success);
         context.getState().state = InteractionState.Finished;
     }
-
-    
 }
