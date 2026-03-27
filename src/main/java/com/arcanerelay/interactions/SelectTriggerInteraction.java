@@ -2,6 +2,7 @@ package com.arcanerelay.interactions;
 
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.components.ArcaneTriggerBlock;
+import com.arcanerelay.util.VisualsUtil;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -105,33 +106,11 @@ public class SelectTriggerInteraction extends SimpleInstantInteraction {
         updated.setConfiguredBlock(target);
         cb.putComponent(ref, ArcaneConfiguratorComponent.getComponentType(), updated);
 
-        addTriggerToOutputArrows(world, target);
+        VisualsUtil.displayTriggerConnections(world, target);
 
         NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.triggerSelected"), NotificationStyle.Success);
         context.getState().state = InteractionState.Finished;
     }
 
-    /** Draw debug arrows from trigger to each output; call after updating trigger outputs (e.g. from AddOutputInteraction). */
-    public static void addTriggerToOutputArrows(World world, Vector3i triggerPos) {
-        WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(triggerPos.x, triggerPos.z));
-        if (chunk == null) return;
-
-        Ref<ChunkStore> blockRef = chunk.getBlockComponentEntity(triggerPos.x, triggerPos.y, triggerPos.z);
-        if (blockRef == null || !blockRef.isValid()) return;
-
-        Store<ChunkStore> store = world.getChunkStore().getStore();
-        ArcaneTriggerBlock triggerBlock = store.getComponent(blockRef, ArcaneTriggerBlock.getComponentType());
-        if (triggerBlock == null || !triggerBlock.hasOutputPositions()) return;
-
-        Vector3d from = new Vector3d(triggerPos.x + 0.5, triggerPos.y + 0.5, triggerPos.z + 0.5);
-        Vector3f color = new Vector3f(0.2f, 0.8f, 1.0f);
-        float time = 10.0f;
-
-        for (Vector3i out : triggerBlock.getOutputPositions()) {
-            Vector3d to = new Vector3d(out.x + 0.5, out.y + 0.5, out.z + 0.5);
-            Vector3d direction = to.clone().subtract(from);
-            if (direction.squaredLength() < 0.01) continue;
-            DebugUtils.addArrow(world, from, direction, color, time, DebugUtils.FLAG_FADE | DebugUtils.FLAG_NO_WIREFRAME);
-        }
-    }
+    
 }
