@@ -1,14 +1,14 @@
 {
     "Group": "PseudoElephant",
     "Name": "ArcaneRelay",
-    "Version": "1.1.0",
+    "Version": "1.1.1",
     "Description": "Arcane Relay allows you to create and play with a magical automation and logic system in Hytale. Craft weird machines and try to figure out how you can use them to make a bunch of cool stuff. Activate interactions from a distance, move blocks, create circuits, or try anything else you might think of.",
     "Authors": [
         {"Name": "PseudoAle"},
         {"Name": "Fanzy"}
     ],
     "Website": "",
-    "ServerVersion": "2026.02.19-1a311a592",
+    "ServerVersion": "2026.03.26-89796e57b",
     "Dependencies": {},
     "OptionalDependencies": {},
     "DisabledByDefault": false,

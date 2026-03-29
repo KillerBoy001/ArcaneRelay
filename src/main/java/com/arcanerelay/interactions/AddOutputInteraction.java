@@ -2,6 +2,7 @@ package com.arcanerelay.interactions;
 
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.components.ArcaneTriggerBlock;
+import com.arcanerelay.util.VisualsUtil;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -107,7 +108,7 @@ public class AddOutputInteraction extends SimpleInstantInteraction {
         world.execute(() -> {
             comp.addOutputPosition(outputPos);
             store.putComponent(blockRef, ArcaneTriggerBlock.getComponentType(), comp);
-            SelectTriggerInteraction.addTriggerToOutputArrows(world, triggerPos);
+            VisualsUtil.displayTriggerConnections(world, triggerPos);
         });
 
         NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.outputAdded"), NotificationStyle.Success);

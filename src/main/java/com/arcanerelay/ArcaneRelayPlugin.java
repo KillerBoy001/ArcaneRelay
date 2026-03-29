@@ -2,7 +2,6 @@ package com.arcanerelay;
 
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationBinding;
-import com.arcanerelay.config.types.ArcaneDischargeActivation;
 import com.arcanerelay.config.types.ArcanePullerActivation;
 import com.arcanerelay.config.types.ChainActivation;
 import com.arcanerelay.config.types.MoveBlockActivation;
@@ -116,7 +115,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         this.getCodecRegistry(Activation.CODEC)
                 .register("ToggleState", ToggleStateActivation.class, ToggleStateActivation.CODEC)
                 .register("SendSignal", SendSignalActivation.class, SendSignalActivation.CODEC)
-                .register("ArcaneDischarge", ArcaneDischargeActivation.class, ArcaneDischargeActivation.CODEC)
                 .register("MoveBlock", MoveBlockActivation.class, MoveBlockActivation.CODEC)
                 .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
                 .register("Chain", ChainActivation.class, ChainActivation.CODEC)

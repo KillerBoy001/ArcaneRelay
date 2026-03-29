@@ -200,18 +200,20 @@ public class ArcanePullerActivation extends Activation {
                 int rotationIndex = tipChunk.getRotationIndex(tipX, tipY, tipZ);
                 Holder<ChunkStore> pullerHolder = pullerChunk.getBlockComponentHolder(
                     pullerPos.x, pullerPos.y, pullerPos.z);
-            puller.setPhase(ArcanePullerBlock.Phase.EXTENDING);
+                
+                puller.setPhase(ArcanePullerBlock.Phase.EXTENDING);
                 ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(
                     s,
                     world,
                     new Vector3i(tipX, tipY, tipZ),
                     globalForward,
-                    RotationTuple.get(rotationIndex));
-
+                    RotationTuple.get(rotationIndex)
+                );
     
                 pullerHolder.putComponent(ArcaneRelayPlugin.get().getArcanePullerBlockComponentType(), puller);
                 if (pullerHolder != null) {
-                    pullerChunk.setState(pullerPos.x, pullerPos.y, pullerPos.z, pullerHolder);
+                    BlockType blockType = pullerChunk.getBlockType(pullerPos.x, pullerPos.y, pullerPos.z);
+                    pullerChunk.setState(pullerPos.x, pullerPos.y, pullerPos.z, blockType, rotationIndex, pullerHolder);
                 }
             });
          
@@ -335,7 +337,7 @@ public class ArcanePullerActivation extends Activation {
         int rotationIndex = chunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
         RotationTuple rotationTuple = RotationTuple.get(rotationIndex);
         Vector3d localUp = getLocalUp(blockType);
-        Vector3d global = rotationTuple.rotate(localUp);
+        Vector3d global = rotationTuple.rotatedVector(localUp);
         return new Vector3i((int) Math.round(global.getX()), (int) Math.round(global.getY()), (int) Math.round(global.getZ()));
     }
 
@@ -454,18 +456,21 @@ public class ArcanePullerActivation extends Activation {
         if (chunk == null) return;
         int rotationIndex = chunk.getRotationIndex(x, y, z);
 
-
         Holder<ChunkStore> pullerHolder = pullerChunk.getBlockComponentHolder(
-            pullerPos.x, pullerPos.y, pullerPos.z);
+            pullerPos.x, pullerPos.y, pullerPos.z
+        );
 
         ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(
             store,
             world,
             new Vector3i(x, y, z),
             forward,
-            RotationTuple.get(rotationIndex));
+            RotationTuple.get(rotationIndex)
+        );
+        
         if (pullerHolder != null) {
-            pullerChunk.setState(pullerPos.x, pullerPos.y, pullerPos.z, pullerHolder);
+            BlockType blockType = chunk.getBlockType(pullerPos.x, pullerPos.y, pullerPos.z);
+            pullerChunk.setState(pullerPos.x, pullerPos.y, pullerPos.z, blockType, rotationIndex, pullerHolder);
         }
     }
 

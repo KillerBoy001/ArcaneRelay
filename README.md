@@ -1,5 +1,5 @@
 # Arcane Relay
-This is a Hytale mod that attempts to add our own take at a custom logic system. 
+This is a Hytale mod that attempts to add our own take at a custom logic system.
 
 The repository is open source so feel free to use our code or assets in any other project. We also have the `./art` directory which includes all of our raw art files. Have fun!
 
@@ -138,21 +138,62 @@ Example – **inline activation** (Type + params, no separate asset):
 ```
 
 
-## Building the Project 
-You will need to have Maven installed on your machine. 
+## Building the Project
+You will need to have Maven installed on your machine.
+
+### Prerequisites
+- Java 25 (or compatible)
+- Maven 3.x
+- Hytale game installed
 
 ### Dependencies
-To build the project make sure to go to `./pom.xml` and under dependencies ensure that the com.hypixel.hytale `<version>{hytale_version}</version>` has the latest release version of the game. 
+To build the project make sure to go to `./pom.xml` and under dependencies ensure that the com.hypixel.hytale `<version>{hytale_version}</version>` has the latest release version of the game.
 
-Then you can run the following: 
+Then you can run the following:
 ```
 mvn -U -X dependency:resolve
 ```
 
-### Building and Installing
-The process is a little bit manual at the moment, but you can run the following command to generate the `arcanerelay-X.Y.Z.jar` file:
+### Building and Installing Manually
+Run the following command to generate the `arcanerelay-X.Y.Z.jar` file:
 ```
 mvn clean install
 ```
+You can then copy it manually into your mod folder.
 
-You will then need to move the .jar from `./tagert` to your Hytale mods folder yourself. 
+### Deploy
+Alternativley, you can do the following to build and move the JAR automatically to your mod folder:
+1. Copy `.env.example` to `.env` and update the `HYTALE_MODS` path to your Hytale mods directory.
+   - Mac: `/Users/username/Library/Application Support/Hytale/UserData/Mods`
+   - Windows: `C:\Users\username\AppData\Roaming\Hytale\UserData\Mods`
+2. Run the deploy script:
+   - Mac/Linux: `./deploy.sh`
+   - Windows: `deploy.bat`
+
+### VS Code Task
+You can setup the following vscode task to deploy it:
+```json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Deploy ArcaneRelay",
+            "type": "shell",
+            "command": "if [ -f deploy.sh ]; then ./deploy.sh; else deploy.bat; fi",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        }
+    ]
+}
+``` 

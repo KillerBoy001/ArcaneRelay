@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Pseudo_Arcane_Pusher.name",
-    "Description": "server.items.Pseudo_Arcane_Pusher.description"
+    "Name": "server.items.Pseudo_Arcane_Pusher_Wall.name",
+    "Description": "server.items.Pseudo_Arcane_Pusher_Wall.description"
   },
   "Interactions": {
     "Primary": "Block_Primary",
@@ -91,5 +91,5 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone",
-  "Quality": "Tool"
+  "Quality": "Developer"
 }
