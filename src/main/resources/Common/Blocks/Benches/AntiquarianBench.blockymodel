@@ -210,7 +210,7 @@
         {
           "id": "5",
           "name": "cube--C4",
-          "position": {"x": -0.5, "y": -16, "z": 0},
+          "position": {"x": 0, "y": -16, "z": 0},
           "orientation": {"x": 0.65328, "y": 0.2706, "z": 0.2706, "w": 0.65328},
           "shape": {
             "type": "box",
@@ -243,12 +243,12 @@
                 "angle": 0
               },
               "top": {
-                "offset": {"x": 17, "y": 8},
+                "offset": {"x": 43, "y": 7},
                 "mirror": {"x": true, "y": true},
                 "angle": 0
               },
               "bottom": {
-                "offset": {"x": 17, "y": 1},
+                "offset": {"x": 43, "y": 0},
                 "mirror": {"x": true, "y": false},
                 "angle": 0
               }

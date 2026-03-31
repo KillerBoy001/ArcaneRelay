@@ -3,10 +3,11 @@
     "Name": "server.items.Antiquarian_Bench.name",
     "Description": "server.items.Antiquarian_Bench.description"
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Button.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Antiquarian_Bench.png",
   "Categories": [
     "Furniture.Benches"
   ],
+  "Quality": "Tool",
   "Recipe": {
     "TimeSeconds": 3,
     "Input": [

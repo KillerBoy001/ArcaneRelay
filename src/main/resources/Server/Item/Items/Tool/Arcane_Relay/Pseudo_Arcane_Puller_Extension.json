@@ -75,7 +75,7 @@
         "DropList": "Empty_Drop"
       }
     },
-    "HitboxType": "Beam_Thin",
+    "HitboxType": "Pseudo_Arcane_Puller_Extension",
     "ParticleColor": "#4b4b4b",
     "VariantRotation": "DoublePipe",
     "CubeShadingMode": "Flat"
