@@ -18,7 +18,7 @@
       }
     },
     "Light": {
-      "Color": "#279"
+      "Color": "#141"
     },
    "BlockEntity": {
       "Components": {}
@@ -75,7 +75,7 @@
         "DropList": "Empty_Drop"
       }
     },
-    "HitboxType": "Beam_Thin",
+    "HitboxType": "Pseudo_Arcane_Puller_Extension",
     "ParticleColor": "#4b4b4b",
     "VariantRotation": "DoublePipe",
     "CubeShadingMode": "Flat"
@@ -101,5 +101,5 @@
     ]
   },
   "ItemSoundSetId": "ISS_Items_Metal",
-  "Quality": "Tool"
+  "Quality": "Developer"
 }

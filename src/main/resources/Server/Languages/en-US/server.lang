@@ -16,6 +16,8 @@ items.Pseudo_Arcane_Puller.name = Arcane Puller
 items.Pseudo_Arcane_Puller.description = Used to pull back a block from far away. When a signal is received it will either extend to reach a target or pull back once it has one.
 items.Pseudo_Arcane_Puller_Extension.name = Arcane Puller Extension
 items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling back entities and blocks with the Puller.
+items.Antiquarian_Bench.name = Antiquarian's Workbench
+items.Antiquarian_Bench.description = Used to craft ancient mechanism that allow for logic and automation.
 
 # === interactionHints ===
 
@@ -70,5 +72,9 @@ customUi.ArcaneTrigger.connectionCountSingular = 1 connection
 customUi.ArcaneTrigger.connectionCountPlural = {amount} connections
 customUI.ArcaneTrigger.buttonClearAllTitle = Clear All
 
-
 customUI.ConnectionRow.buttonRemoveTitle = Remove
+
+# === Benches ===
+
+benchCategories.relayArtifacts = Relay Artifacts
+benchCategories.shiftArtifacts = Shift Artifacts

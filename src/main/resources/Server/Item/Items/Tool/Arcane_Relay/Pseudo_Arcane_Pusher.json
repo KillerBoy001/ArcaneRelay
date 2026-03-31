@@ -12,7 +12,7 @@
     "Input": [
       {
         "Quantity": 4,
-        "ItemId": "Ingredient_Crystal_Cyan"
+        "ItemId": "Ingredient_Crystal_Green"
       },
       {
         "ItemId": "Ingredient_Bar_Iron",
@@ -26,10 +26,10 @@
     "OutputQuantity": 1,
     "BenchRequirement": [
       {
-        "Id": "Arcanebench",
+        "Id": "Antiquarianbench",
         "Type": "Crafting",
         "Categories": [
-          "Arcane_Artifacts"
+          "Shift_Artifacts"
         ]
       }
     ]
@@ -37,6 +37,7 @@
   "Categories": [
     "Items.Tools"
   ],
+  "ItemLevel": 10,
   "BlockType": {
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
@@ -51,7 +52,7 @@
     "CustomModelScale": 1,
     "Light": {
       "Radius": 0,
-      "Color": "#046"
+      "Color": "#141"
     },
     "PlacementSettings": {
       "AllowRotationKey": true,

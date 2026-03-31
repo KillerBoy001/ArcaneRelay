@@ -1,10 +1,10 @@
 {
   "Parent": "Ingredient_Crystal_White",
   "TranslationProperties": {
-    "Name": "server.items.Ingredient_Crystal_Cyan.name"
+    "Name": "server.items.Ingredient_Crystal_Green.name"
   },
   "Model": "Resources/Crystals/Crystal_Fragment.blockymodel",
-  "Texture": "Resources/Crystals/Crystal_Fragment_Textures/Cyan.png",
+  "Texture": "Resources/Crystals/Crystal_Fragment_Textures/Green.png",
   "IconProperties": {
     "Scale": 0.75,
     "Translation": [
@@ -25,18 +25,18 @@
       },
       {
         "Quantity": 1,
-        "ItemId": "Ingredient_Ice_Essence"
+        "ItemId": "Ingredient_Life_Essence"
       }
     ],
     "BenchRequirement": [
       {
         "Categories": [
-          "Relay_Artifacts"
+          "Shift_Artifacts"
         ],
         "Id": "Antiquarianbench"
       }
     ]
   },
   "ItemLevel": 100,
-  "Icon": "Icons/ItemsGenerated/Ingredient_Crystal_Fragments_Cyan.png"
+  "Icon": "Icons/ItemsGenerated/Ingredient_Crystal_Fragments_Green.png"
 }

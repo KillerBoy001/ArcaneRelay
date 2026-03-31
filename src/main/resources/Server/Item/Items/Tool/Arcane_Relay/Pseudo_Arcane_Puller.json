@@ -12,7 +12,7 @@
     "Input": [
       {
         "Quantity": 4,
-        "ItemId": "Ingredient_Crystal_Cyan"
+        "ItemId": "Ingredient_Crystal_Green"
       },
       {
         "ItemId": "Deco_Iron_Chain_Small",
@@ -26,10 +26,10 @@
     "OutputQuantity": 1,
     "BenchRequirement": [
       {
-        "Id": "Arcanebench",
+        "Id": "Antiquarianbench",
         "Type": "Crafting",
         "Categories": [
-          "Arcane_Artifacts"
+          "Shift_Artifacts"
         ]
       }
     ]
@@ -37,6 +37,7 @@
   "Categories": [
     "Items.Tools"
   ],
+  "ItemLevel": 20,
   "BlockType": {
     "ConnectedBlockRuleSet": {
       "Type": "CustomTemplate",
@@ -47,7 +48,7 @@
       }
     },
     "Light": {
-      "Color": "#279"
+      "Color": "#141"
     },
     "BlockEntity": {
       "Components": {

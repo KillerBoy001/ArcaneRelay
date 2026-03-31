@@ -26,10 +26,10 @@
     "OutputQuantity": 1,
     "BenchRequirement": [
       {
-        "Id": "Arcanebench",
+        "Id": "Antiquarianbench",
         "Type": "Crafting",
         "Categories": [
-          "Arcane_Artifacts"
+          "Relay_Artifacts"
         ]
       }
     ]
@@ -142,5 +142,6 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone",
-  "Quality": "Tool"
+  "Quality": "Tool",
+  "ItemLevel": 20
 }

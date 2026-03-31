@@ -7,7 +7,7 @@
     "Items.Tools"
   ],
   "Quality": "Tool",
-  "ItemLevel": 20,
+  "ItemLevel": 10,
   "Model": "Items/Tools/Arcane_Staff/Arcane_Staff.blockymodel",
   "Texture": "Items/Tools/Arcane_Staff/Arcane_Staff_Texture.png",
   "PlayerAnimationsId": "Staff",
@@ -57,10 +57,10 @@
     "OutputQuantity": 1,
     "BenchRequirement": [
       {
-        "Id": "Arcanebench",
+        "Id": "Antiquarianbench",
         "Type": "Crafting",
         "Categories": [
-          "Arcane_Artifacts"
+          "Relay_Artifacts"
         ]
       }
     ]
