@@ -26,10 +26,10 @@
     "OutputQuantity": 1,
     "BenchRequirement": [
       {
-        "Id": "Arcanebench",
+        "Id": "Antiquarianbench",
         "Type": "Crafting",
         "Categories": [
-          "Arcane_Artifacts"
+          "Shift_Artifacts"
         ]
       }
     ]
@@ -37,6 +37,7 @@
   "Categories": [
     "Items.Tools"
   ],
+  "ItemLevel": 20,
   "BlockType": {
     "ConnectedBlockRuleSet": {
       "Type": "CustomTemplate",

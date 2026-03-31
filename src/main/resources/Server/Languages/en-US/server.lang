@@ -72,7 +72,6 @@ customUi.ArcaneTrigger.connectionCountSingular = 1 connection
 customUi.ArcaneTrigger.connectionCountPlural = {amount} connections
 customUI.ArcaneTrigger.buttonClearAllTitle = Clear All
 
-
 customUI.ConnectionRow.buttonRemoveTitle = Remove
 
 # === Benches ===

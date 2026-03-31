@@ -31,11 +31,12 @@
     "BenchRequirement": [
       {
         "Categories": [
-          "Arcane_Artifacts"
+          "Relay_Artifacts"
         ],
-        "Id": "Arcanebench"
+        "Id": "Antiquarianbench"
       }
     ]
   },
+  "ItemLevel": 100,
   "Icon": "Icons/ItemsGenerated/Ingredient_Crystal_Fragments_Cyan.png"
 }
