@@ -108,7 +108,7 @@ public final class ArcaneConnectedBlocksUtil {
     
         chunk.setBlock(blockPos.x, blockPos.y, blockPos.z, newId, newType, result.rotationIndex(), 0, SETTINGS);
         if (holder != null) {
-            chunk.setState(blockPos.x, blockPos.y, blockPos.z, holder);
+            chunk.setState(blockPos.x, blockPos.y, blockPos.z, newType, result.rotationIndex(), holder);
         }
 
         if (blockType.hasSupport()) {

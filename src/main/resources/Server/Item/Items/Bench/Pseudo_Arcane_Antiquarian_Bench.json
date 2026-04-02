@@ -1,26 +1,31 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Bench_Arcane.name",
-    "Description": "server.items.Bench_Arcane.description"
+    "Name": "server.items.Antiquarian_Bench.name",
+    "Description": "server.items.Antiquarian_Bench.description"
   },
-  "Icon": "Icons/ItemsGenerated/Bench_Arcane.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Antiquarian_Bench.png",
   "Categories": [
     "Furniture.Benches"
   ],
+  "Quality": "Tool",
   "Recipe": {
     "TimeSeconds": 3,
     "Input": [
       {
-        "ItemId": "Ingredient_Bar_Thorium",
+        "ItemId": "Ingredient_Bar_Iron",
         "Quantity": 10
       },
       {
-        "ItemId": "Ingredient_Fabric_Scrap_Linen",
+        "ResourceTypeId": "Rock",
+        "Quantity": 20
+      },
+      {
+        "ResourceTypeId": "Crystal_Shards",
         "Quantity": 30
       },
       {
-        "ItemId": "Ingredient_Void_Essence",
-        "Quantity": 20
+        "ItemId": "Ingredient_Fabric_Scrap_Linen",
+        "Quantity": 10
       }
     ],
     "BenchRequirement": [
@@ -38,10 +43,10 @@
     "Material": "Solid",
     "DrawType": "Model",
     "Opacity": "Transparent",
-    "CustomModel": "Blocks/Benches/ArcaneTable.blockymodel",
+    "CustomModel": "Blocks/Benches/AntiquarianBench.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Benches/ArcaneTable_Texture.png",
+        "Texture": "Blocks/Benches/AntiquarianBench_Texture.png",
         "Weight": 1
       }
     ],
@@ -54,32 +59,31 @@
       "CompletedSoundEventId": "SFX_Arcane_Workbench_Craft",
       "Categories": [
         {
-          "Id": "Arcane_Portals",
-          "Icon": "Icons/CraftingCategories/Arcane/Portal_Device.png",
-          "Name": "server.benchCategories.portals"
+          "Id": "Relay_Artifacts",
+          "Icon": "Icons/CraftingCategories/Arcane/Relay_Artifacts.png",
+          "Name": "server.benchCategories.relayArtifacts"
         },
         {
-          "Id": "Arcane_Artifacts",
-          "Icon": "Icons/CraftingCategories/Arcane/Artifacts.png",
-          "Name": "server.benchCategories.artifacts"
-        },
-        {
-          "Id": "Arcane_Misc",
-          "Icon": "Icons/CraftingCategories/Arcane/Bench_Memories.png",
-          "Name": "server.benchCategories.misc"
+          "Id": "Shift_Artifacts",
+          "Icon": "Icons/CraftingCategories/Arcane/Shift_Artifacts.png",
+          "Name": "server.benchCategories.shiftArtifacts"
         }
       ],
-      "Id": "Arcanebench"
+      "Id": "Antiquarianbench"
+    },
+    "BlockEntity": {
+      "Components": {
+        "BenchBlock": {}
+      }
     },
     "State": {
-      "Id": "crafting",
       "Definitions": {
         "CraftCompleted": {
-          "CustomModelAnimation": "Blocks/Benches/Alchemy_Crafting.blockyanim",
+          "CustomModelAnimation": "Blocks/Benches/AntiquarianBench_Idle.blockyanim",
           "Looping": true
         },
         "CraftCompletedInstant": {
-          "CustomModelAnimation": "Blocks/Benches/Alchemy_Crafting.blockyanim"
+          "CustomModelAnimation": "Blocks/Benches/AntiquarianBench_Idle.blockyanim"
         }
       }
     },
@@ -88,8 +92,8 @@
         "GatherType": "Benches"
       }
     },
-    "BlockParticleSetId": "Wood",
-    "ParticleColor": "#6e4a2f",
+    "BlockParticleSetId": "Crystal",
+    "ParticleColor": "#bbac72",
     "Support": {
       "Down": [
         {
@@ -119,5 +123,5 @@
   },
   "MaxStack": 1,
   "ItemLevel": 10,
-  "ItemSoundSetId": "ISS_Blocks_Wood"
+  "ItemSoundSetId": "ISS_Blocks_Stone"
 }

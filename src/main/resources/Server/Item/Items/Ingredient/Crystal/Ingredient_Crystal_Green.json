@@ -1,15 +1,10 @@
 {
+  "Parent": "Ingredient_Crystal_White",
   "TranslationProperties": {
     "Name": "server.items.Ingredient_Crystal_Green.name"
   },
-  "Categories": [
-    "Items.Ingredients"
-  ],
   "Model": "Resources/Crystals/Crystal_Fragment.blockymodel",
   "Texture": "Resources/Crystals/Crystal_Fragment_Textures/Green.png",
-  "Quality": "Common",
-  "ItemLevel": 10,
-  "PlayerAnimationsId": "Item",
   "IconProperties": {
     "Scale": 0.75,
     "Translation": [
@@ -22,24 +17,26 @@
       22.5
     ]
   },
-  "Scale": 1.2,
-  "Icon": "Icons/ItemsGenerated/Ingredient_Crystal_Fragments_Green.png",
-  "ResourceTypes": [
-    {
-      "Id": "Crystal"
-    }
-  ],
-  "Tags": {
-    "Type": [
-      "Ingredient"
+  "Recipe": {
+    "Input": [
+      {
+        "ResourceTypeId": "Crystal_Shards",
+        "Quantity": 1
+      },
+      {
+        "Quantity": 1,
+        "ItemId": "Ingredient_Life_Essence"
+      }
     ],
-    "Family": [
-      "Crystal"
+    "BenchRequirement": [
+      {
+        "Categories": [
+          "Shift_Artifacts"
+        ],
+        "Id": "Antiquarianbench"
+      }
     ]
   },
-  "ItemEntity": {
-    "ParticleSystemId": null
-  },
-  "ItemSoundSetId": "ISS_Items_Gems",
-  "DropOnDeath": true
+  "ItemLevel": 100,
+  "Icon": "Icons/ItemsGenerated/Ingredient_Crystal_Fragments_Green.png"
 }
