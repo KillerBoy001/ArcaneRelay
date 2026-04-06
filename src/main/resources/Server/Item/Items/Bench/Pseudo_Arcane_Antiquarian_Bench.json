@@ -64,9 +64,9 @@
           "Name": "server.benchCategories.relayArtifacts"
         },
         {
-          "Id": "Shift_Artifacts",
-          "Icon": "Icons/CraftingCategories/Arcane/Shift_Artifacts.png",
-          "Name": "server.benchCategories.shiftArtifacts"
+          "Id": "Vector_Artifacts",
+          "Icon": "Icons/CraftingCategories/Arcane/Vector_Artifacts.png",
+          "Name": "server.benchCategories.vectorArtifacts"
         }
       ],
       "Id": "Antiquarianbench"

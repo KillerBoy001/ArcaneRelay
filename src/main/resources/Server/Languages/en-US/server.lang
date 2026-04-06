@@ -77,4 +77,4 @@ customUI.ConnectionRow.buttonRemoveTitle = Remove
 # === Benches ===
 
 benchCategories.relayArtifacts = Relay Artifacts
-benchCategories.shiftArtifacts = Shift Artifacts
+benchCategories.vectorArtifacts = Vector Artifacts
