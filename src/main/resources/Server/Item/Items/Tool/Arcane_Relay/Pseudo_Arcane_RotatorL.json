@@ -7,33 +7,6 @@
     "Primary": "Block_Primary",
     "Secondary": "Block_Secondary"
   },
-  "Recipe": {
-    "TimeSeconds": 0.5,
-    "Input": [
-      {
-        "Quantity": 4,
-        "ItemId": "Ingredient_Crystal_Cyan"
-      },
-      {
-        "ItemId": "Ingredient_Bar_Iron",
-        "Quantity": 2
-      },
-      {
-        "ResourceTypeId": "Rock",
-        "Quantity": 1
-      }
-    ],
-    "OutputQuantity": 1,
-    "BenchRequirement": [
-      {
-        "Id": "Arcanebench",
-        "Type": "Crafting",
-        "Categories": [
-          "Arcane_Artifacts"
-        ]
-      }
-    ]
-  },
   "Categories": [
     "Items.Tools"
   ],
@@ -41,7 +14,7 @@
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
     "Opacity": "Transparent",
-    "CustomModel": "Blocks/Functional/Rotator.blockymodel",
+    "CustomModel": "Blocks/Functional/RotaterL.blockymodel",
     "CustomModelTexture": [
       {
         "Texture": "Blocks/Functional/Rotator_Texture.png",
@@ -91,11 +64,11 @@
       "Definitions": {
         "CloseDoorOut": {
           "InteractionSoundEventId": "SFX_Sticks_Break",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/Rotator_Rotate.blockyanim"
+          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/RotatorL_Rotate.blockyanim"
         },
         "OpenDoorOut": {
           "InteractionSoundEventId": "SFX_Sticks_Break",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/Rotator_Rotate.blockyanim"
+          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/RotatorL_Rotate.blockyanim"
         }
       }
     },
@@ -121,7 +94,7 @@
       -15
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Rotator.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_RotatorL.png",
   "Scale": 1,
   "Tags": {
     "Type": [
@@ -129,5 +102,5 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone",
-  "Quality": "Tool"
+  "Quality": "Developer"
 }
