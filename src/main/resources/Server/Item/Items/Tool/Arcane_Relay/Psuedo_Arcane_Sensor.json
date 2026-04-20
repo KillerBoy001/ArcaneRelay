@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "Step sensor",
-    "Description": "The step sensor will detect motion on the block \nThe sensor can be covered by carpets and will trigger when a player walks over it"
+    "Name": "server.items.Pseudo_Arcane_Sensor.name",
+    "Description": "server.items.Pseudo_Arcane_Sensor.description"
   },
   "Interactions": {
     "Primary": "Block_Primary",

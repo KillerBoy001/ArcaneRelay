@@ -1,0 +1,82 @@
+{
+  "TranslationProperties": {
+    "Name": "Red Cloth Carpet",
+    "Description": "server.items.Sensor_Carpet.description"
+  },
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Cloth_Block_Wool_Red",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Builders",
+        "Type": "StructuralCrafting",
+        "Categories": [
+          "Carpet"
+        ]
+      }
+    ],
+    "OutputQuantity": 8,
+    "TimeSeconds": 0
+  },
+  "Categories": [
+    "Blocks.Cloth"
+  ],
+  "SubCategory": "RoofBlocks",
+  "BlockType": {
+    "DrawType": "Model",
+    "CustomModel": "Blocks/Structures/Roofs/Cloth_Roof_Horizontal.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Structures/Roofs/Cloth_Roof_Textures/Tent_Red.png",
+        "Weight": 1
+      }
+    ],
+    "Group": "Carpet",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "SoftBlocks",
+        "ItemId": "Cloth_Carpet_Red"
+      }
+    },
+    "BlockParticleSetId": "Grass",
+    "BlockSoundSetId": "Cloth",
+    "ParticleColor": "#7d332d",
+    "HitboxType": "Block_Flat",
+    "SupportsRequiredFor": "All",
+    "Material": "Empty",
+    "Support": {
+      "Down": [
+        {
+          "Support": "Ignored"
+        }
+      ]
+    }
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Translation": [
+      0,
+      -3.6
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Cloth_Roof_Red_Flat.png",
+  "Tags": {
+    "Type": [
+      "Cloth"
+    ],
+    "SubType": [
+      "Roof"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Items_Cloth"
+}

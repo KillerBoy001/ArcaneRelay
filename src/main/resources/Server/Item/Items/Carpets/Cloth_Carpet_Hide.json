@@ -1,0 +1,83 @@
+{
+  "TranslationProperties": {
+    "Name": "Hide Carpet",
+    "Description": "server.items.Sensor_Carpet.description"
+  },
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Ingredient_Leather_Light",
+        "Quantity": 1
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Builders",
+        "Type": "StructuralCrafting",
+        "Categories": [
+          "Carpet"
+        ]
+      }
+    ],
+    "OutputQuantity": 2,
+    "TimeSeconds": 0
+  },
+  "Categories": [
+    "Blocks.Cloth"
+  ],
+  "SubCategory": "RoofBlocks",
+  "BlockType": {
+    "DrawType": "Model",
+    "CustomModel": "Blocks/Structures/Roofs/Cloth_Roof_Horizontal.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Structures/Roofs/Cloth_Roof_Textures/Tent_Hide.png",
+        "Weight": 1
+      }
+    ],
+    "Group": "Carpet",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "SoftBlocks",
+        "ItemId": "Cloth_Carpet_Hide"
+      }
+    },
+    "BlockParticleSetId": "Grass",
+    "BlockSoundSetId": "Cloth",
+    "ParticleColor": "#966936",
+    "HitboxType": "Block_Flat",
+    "SupportsRequiredFor": "All",
+    "Material": "Empty",
+    "Support": {
+      "Down": [
+        {
+          "Support": "Ignored"
+        }
+      ]
+    },
+    "RandomRotation": "YawStep90"
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Translation": [
+      0,
+      -3.6
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Roof_HideTent_Horizontal.png",
+  "Tags": {
+    "Type": [
+      "Cloth"
+    ],
+    "SubType": [
+      "Roof"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Items_Cloth"
+}
