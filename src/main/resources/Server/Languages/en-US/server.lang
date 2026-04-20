@@ -20,7 +20,7 @@ items.Antiquarian_Bench.name = Antiquarian's Workbench
 items.Antiquarian_Bench.description = Used to craft ancient mechanism that allow for logic and automation.
 items.Sensor_Carpet.description = To be placed on floor, this does not impact functionality of blocks underneath.
 items.Pseudo_Arcane_Sensor.name = Motion sensor.
-items.Pseudo_Arcane_Sensor.description = The sensor will detect motion on the block /nThe sensor can be covered by carpets and will trigger when a player walks over it.
+items.Pseudo_Arcane_Sensor.description = The sensor will detect motion on the block \nThe sensor can be covered by carpets and will trigger when a player walks over it.
 
 
 # === interactionHints ===
