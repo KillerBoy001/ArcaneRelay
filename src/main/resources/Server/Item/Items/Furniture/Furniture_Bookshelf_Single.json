@@ -127,9 +127,12 @@
     "Input": [
       {
         "ResourceTypeId": "Wood_Hardwood"
-      },
+      }
+    ],
+    "BenchRequirement": [
       {
-        "ItemId": "Deco_Book_Pile_Small"
+        "Type": "StructuralCrafting",
+        "Id": "Builders"
       }
     ]
   }
