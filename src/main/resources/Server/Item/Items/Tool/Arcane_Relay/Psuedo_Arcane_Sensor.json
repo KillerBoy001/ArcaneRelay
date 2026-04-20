@@ -1,0 +1,159 @@
+{
+  "TranslationProperties": {
+    "Name": "Step sensor",
+    "Description": "The step sensor will detect motion on the block \nThe sensor can be covered by carpets and will trigger when a player walks over it"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Recipe": {
+    "TimeSeconds": 0.5,
+    "Input": [
+      {
+        "Quantity": 2,
+        "ItemId": "Ingredient_Crystal_Cyan"
+      },
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 1
+      },
+      {
+        "ResourceTypeId": "Rubble",
+        "Quantity": 3
+      }
+    ],
+    "OutputQuantity": 1,
+    "BenchRequirement": [
+      {
+        "Id": "Antiquarianbench",
+        "Type": "Crafting",
+        "Categories": [
+          "Relay_Artifacts"
+        ]
+      }
+    ]
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "BlockType": {
+    "BlockEntity": {
+      "Components": {
+        "ArcaneTrigger": {}
+      }
+    },
+    "DrawType": "Model",
+    "BlockSoundSetId": "Stone",
+    "Opacity": "Solid",
+    "CustomModel": "Blocks/Functional/Sensor.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Sensor_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "Light": {
+      "Radius": 0,
+      "Color": "#046"
+    },
+    "PlacementSettings": {
+      "AllowRotationKey": true,
+      "PlaceInEmptyBlocks": true,
+      "RotationMode": "Default"
+    },
+    "BlockParticleSetId": "Crystal",
+    "Material": "Solid",
+    "InteractionHint": "server.interactionHints.generic",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "Condition",
+            "Crouching": true,
+            "Next": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "ArcaneTrigger"
+              }
+            },
+            "Failed": {
+              "Type": "Serial",
+              "Interactions": [
+                {
+                  "Type": "ArcaneActivator",
+                  "Activator": "Arcane_Button"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "CollisionEnter": {
+        "Interactions": [
+          {
+            "Type": "Serial",
+            "Interactions": [
+              {
+                "Type": "ArcaneActivator",
+                "Activator": "Arcane_Button"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "CloseDoorOut": {
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Sensor/Sensor_Triggered.blockyanim"
+        },
+        "OpenDoorOut": {
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Sensor/Sensor_Triggered.blockyanim"
+        },
+        "OpenDoorIn": {
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Sensor/Sensor_Triggered.blockyanim"
+        },
+        "CloseDoorIn": {
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Sensor/Sensor_Triggered.blockyanim"
+        }
+      }
+    },
+    "ParticleColor": "#bbac72",
+    "VariantRotation": "NESW",
+    "Gathering": {
+      "Breaking": {
+        "ItemId": "Psuedo_Arcane_Sensor",
+        "GatherType": "Rocks"
+      }
+    }
+  },
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      33,
+      45,
+      33
+    ],
+    "Translation": [
+      0,
+      -13.5
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Psuedo_Arcane_Sensor.png",
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "ItemLevel": 20,
+  "Quality": "Tool"
+}
