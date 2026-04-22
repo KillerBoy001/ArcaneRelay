@@ -1,14 +1,14 @@
 # Arcane Relay
 This is a Hytale mod that attempts to add our own take at a custom logic system.
 
-![Connect Evrything](./art/Affinity/BlockNameCards/Connect%20Everything.png)
+![Connect Evrything](./art/Affinity/BlockNameCards/ConnectEverything.png)
 
-![Build Contraptions](./art/Affinity/BlockNameCards/Build%20Contraptions.png)
+![Build Contraptions](./art/Affinity/BlockNameCards/BuildContraptions.png)
 
 The repository is open source so feel free to use our code or assets in any other project. We also have the `./art` directory which includes all of our raw art files. Have fun!
 
 ## Additions
-![Arcane Staff](./art/Affinity/BlockNameCards/Staff%20&%20Bench.png)
+![Arcane Staff](./art/Affinity/BlockNameCards/StaffAndBench.png)
 
 This are our backbone of the mod, without them you can't do much, with them you can create and link arcane blocks to send signals between them.
 
@@ -27,7 +27,7 @@ Similar to the button this is used to send/relay a signal to other arcane blocks
 
 ---
 
-![Arcane Toggle Relay](./art/Affinity/BlockNameCards/Toggle%20Relay.png) 
+![Arcane Toggle Relay](./art/Affinity/BlockNameCards/ToggleRelay.png) 
 
 Like a relay but with two states! This one is hard to explain without being technical, so here is the item description: Used to block or relay signal depending on state. When a signal is received it always toggles it's state. If active it will relay the signal, if inactive it will stop the relay. Interact with the block to toggle the starting state.
 
