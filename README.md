@@ -1,6 +1,10 @@
 # Arcane Relay
 This is a Hytale mod that attempts to add our own take at a custom logic system.
 
+![Connect Evrything](./art/Affinity/BlockNameCards/Connect%20Everything.png)
+
+![Build Contraptions](./art/Affinity/BlockNameCards/Build%20Contraptions.png)
+
 The repository is open source so feel free to use our code or assets in any other project. We also have the `./art` directory which includes all of our raw art files. Have fun!
 
 ## Additions
