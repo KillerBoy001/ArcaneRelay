@@ -43,6 +43,8 @@ This is our own take on a Piston. It pushes the block above it in the direction 
 
 This block only pulls! But it has an extended range, use it to pull back the first block it encounters within 15 blocks!
 
+![More to come](./art/Affinity/BlockNameCards/MoreToCome.png)
+
 ## Plugin Development
 
 ### Activations
