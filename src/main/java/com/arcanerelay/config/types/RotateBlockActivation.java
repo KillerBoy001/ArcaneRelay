@@ -56,6 +56,10 @@ public class RotateBlockActivation extends Activation {
                 case 3 -> 2;
                 case 2 -> 1;
                 case 1 -> 0;
+                case 9 -> 8;
+                case 8 -> 11;
+                case 11 -> 10;
+                case 10 -> 9;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
@@ -65,6 +69,10 @@ public class RotateBlockActivation extends Activation {
                 case 3 -> 0;
                 case 2 -> 3;
                 case 1 -> 2;
+                case 9 -> 10;
+                case 10 -> 11;
+                case 11 -> 8;
+                case 8 -> 9;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
@@ -74,15 +82,23 @@ public class RotateBlockActivation extends Activation {
                 case 26 -> 0;
                 case 0 -> 16;
                 case 16 -> 10;
+                case 9 -> 13;
+                case 13 -> 1;
+                case 1 -> 5;
+                case 5 -> 9;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
         if(!Clockwise && OwnRotIndex ==4){ //Normal
             return switch (TargetRotIndex) {
-                case 11 -> 27;
-                case 27 -> 1;
-                case 1 -> 17;
-                case 17 -> 11;
+                case 10 -> 16;
+                case 16 -> 0;
+                case 0 -> 26;
+                case 26 -> 10;
+                case 9 -> 5;
+                case 5 -> 1;
+                case 1 -> 13;
+                case 13 -> 9;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
@@ -92,6 +108,10 @@ public class RotateBlockActivation extends Activation {
                 case 17 -> 1;
                 case 1 -> 27;
                 case 27 -> 11;
+                case 0 -> 12;
+                case 12 -> 8;
+                case 8 -> 4;
+                case 4 -> 0;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
@@ -101,33 +121,49 @@ public class RotateBlockActivation extends Activation {
                 case 27 -> 1;
                 case 1 -> 17;
                 case 17 -> 11;
+                case 0 -> 4;
+                case 4 -> 8;
+                case 8 -> 12;
+                case 12 -> 0;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
         if(Clockwise && OwnRotIndex ==6) { //Inversed
             return switch (TargetRotIndex) {
-                case 9 -> 19;
-                case 19 -> 3;
-                case 3 -> 25;
-                case 25 -> 9;
+                case 10 -> 16;
+                case 16 -> 0;
+                case 0 -> 26;
+                case 26 -> 10;
+                case 9 -> 5;
+                case 5 -> 1;
+                case 1 -> 13;
+                case 13 -> 9;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
         if(!Clockwise && OwnRotIndex ==6){ //Normal
             return switch (TargetRotIndex) {
-                case 8 -> 24;
-                case 24 -> 2;
-                case 2 -> 18;
-                case 18 -> 8;
+                case 10 -> 26;
+                case 26 -> 0;
+                case 0 -> 16;
+                case 16 -> 10;
+                case 9 -> 13;
+                case 13 -> 1;
+                case 1 -> 5;
+                case 5 -> 9;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
         if(Clockwise && OwnRotIndex ==7) { //Inversed
             return switch (TargetRotIndex) {
-                case 8 -> 18;
-                case 18 -> 2;
-                case 2 -> 24;
-                case 24 -> 8;
+                case 9 -> 19;
+                case 19 -> 3;
+                case 3 -> 25;
+                case 25 -> 9;
+                case 0 -> 4;
+                case 4 -> 8;
+                case 8 -> 12;
+                case 12 -> 0;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
@@ -137,11 +173,19 @@ public class RotateBlockActivation extends Activation {
                 case 25 -> 3;
                 case 3 -> 19;
                 case 19 -> 9;
+                case 0 -> 12;
+                case 12 -> 8;
+                case 8 -> 4;
+                case 4 -> 0;
                 default -> TargetRotIndex; // If Rotation is not supported return source
             };
         }
         if(Clockwise && OwnRotIndex ==8) { //Inversed
             return switch (TargetRotIndex) {
+                case 0 -> 1;
+                case 3 -> 0;
+                case 2 -> 3;
+                case 1 -> 2;
                 case 9 -> 10;
                 case 10 -> 11;
                 case 11 -> 8;
@@ -151,6 +195,10 @@ public class RotateBlockActivation extends Activation {
         }
         if(!Clockwise && OwnRotIndex ==8){ //Normal
             return switch (TargetRotIndex) {
+                case 0 -> 3;
+                case 3 -> 2;
+                case 2 -> 1;
+                case 1 -> 0;
                 case 9 -> 8;
                 case 8 -> 11;
                 case 11 -> 10;
