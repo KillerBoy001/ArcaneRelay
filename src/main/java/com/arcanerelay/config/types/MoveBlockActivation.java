@@ -19,6 +19,7 @@ import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.VariantRotation;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
@@ -79,20 +80,6 @@ public class MoveBlockActivation extends Activation {
         this.range = range;
     }
 
-    private static Vector3d getForwardFromBlockType(@Nonnull BlockType blockType, boolean isWall) {
-        return switch (blockType.getVariantRotation()) {
-            case UpDown -> new Vector3d(0, 1, 0);
-            default -> isWall ? new Vector3d(0, -1, 0) : new Vector3d(0, 0, -1);
-        };
-    }
-
-    private static Vector3d getUpFromBlockType(@Nonnull BlockType blockType, boolean isWall) {
-        return switch (blockType.getVariantRotation()) {
-            case UpDown -> new Vector3d(0, 1, 0);
-            default -> isWall ? new Vector3d(0, 0, 1) : new Vector3d(0, 1, 0);
-        };
-    }
-
     private static boolean isPushable(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
             return false;
@@ -123,21 +110,133 @@ public class MoveBlockActivation extends Activation {
         return id != null && id.toLowerCase().contains("wall");
     }
 
+
+    public static Vector3i GetUpFromBlock(WorldChunk chnk, Vector3i pos,boolean IsWallPusher) {
+        return GetUpFromBlock(chnk,pos,IsWallPusher,1);
+    }
+    public static Vector3i GetUpFromBlock(WorldChunk chnk, Vector3i pos,boolean IsWallPusher,int Distance){
+        int RotIndex = chnk.getRotationIndex(pos.x,pos.y,pos.z);
+        if(IsWallPusher) {
+            return switch (RotIndex) {
+                case 11 -> new Vector3i(Distance, 0, 0); //EastWall Facing Up
+                case 17 -> new Vector3i(Distance, 0, 0); //EastWall Facing Right
+                case 27 -> new Vector3i(Distance, 0, 0); //EastWall Facing Left
+                case 1 -> new Vector3i(Distance, 0, 0); //EastWall Facing Down
+
+                case 8 -> new Vector3i(0, 0, -Distance); //NorthWall Facing Up
+                case 18 -> new Vector3i(0, 0, -Distance); //NorthWall Facing Right
+                case 24 -> new Vector3i(0, 0, -Distance); //NorthWall Facing Left
+                case 2 -> new Vector3i(0, 0, -Distance); //NorthWall Facing Down
+
+                case 9 -> new Vector3i(-Distance, 0, 0); //WestWall Facing Up
+                case 19 -> new Vector3i(-Distance, 0, 0); //WestWall Facing Right
+                case 25 -> new Vector3i(-Distance, 0, 0); //WestWall Facing Left
+                case 3 -> new Vector3i(-Distance, 0, 0); //WestWall Facing Down
+
+                case 10 -> new Vector3i(0, 0, Distance); //SouthWall Facing Up
+                case 16 -> new Vector3i(0, 0, Distance); //SouthWall Facing Right
+                case 26 -> new Vector3i(0, 0, Distance); //SouthWall Facing Left
+                case 0 -> new Vector3i(0, 0, Distance); //SouthWall Facing Down
+
+                default -> new Vector3i(0, 0, 0); // extend if needed
+            };
+        } else{
+            return switch (RotIndex) {
+                case 0 -> new Vector3i(0, Distance, 0); //Facing North Upright
+                case 1 -> new Vector3i(0, Distance, 0); //Facing West Upright
+                case 2 -> new Vector3i(0, Distance, 0); //Facing South Upright
+                case 3 -> new Vector3i(0, Distance, 0); //Facing East Upright
+
+                case 4 -> new Vector3i(0, 0, Distance); //DoublePipe SouthWall extra for pullers and rotators
+                case 5 -> new Vector3i(Distance, 0, 0); //DoublePipe EastWall extra for pullers and rotators
+                case 6 -> new Vector3i(0, 0, -Distance); //DoublePipe NorthWall extra for pullers and rotators
+                case 7 -> new Vector3i(-Distance, 0, 0); //DoublePipe WestWall extra for pullers and rotators
+
+                case 8 -> new Vector3i(0, -Distance, 0); //Facing South UpsideDown
+                case 9 -> new Vector3i(0, -Distance, 0); //Facing East UpsideDown
+                case 10 -> new Vector3i(0, -Distance, 0); //Facing North UpsideDown
+                case 11 -> new Vector3i(0, -Distance, 0); //Facing West UpsideDown
+
+                case 49 -> new Vector3i(0, 0, -Distance); //Facing West LayingOnRightSide
+                case 50 -> new Vector3i(-Distance, 0, 0); //Facing South LayingOnRightSide
+                case 26 -> new Vector3i(Distance, 0, 0); //Facing North LayingOnRightSide
+                case 51 -> new Vector3i(0, 0, Distance); //Facing East LayingOnRightSide
+
+                case 16 -> new Vector3i(-Distance, 0, 0); //Facing North LayingOnLeftSide
+                case 17 -> new Vector3i(0, 0, Distance); //Facing West LayingOnLeftSide
+                case 18 -> new Vector3i(Distance, 0, 0); //Facing South LayingOnRightSide
+                case 19 -> new Vector3i(0, 0, -Distance); //Facing East LayingOnLeftSide
+
+                default -> new Vector3i(0, 0, 0); // extend if needed
+            };
+        }
+    }
+
+    public static Vector3i GetForwardFromBlock(WorldChunk chnk, Vector3i pos,boolean IsWallPusher) {
+        return GetForwardFromBlock(chnk,pos,IsWallPusher,1);
+    }
+    public static Vector3i GetForwardFromBlock(WorldChunk chnk,Vector3i pos,boolean IsWallPusher,int Distance){
+        int RotIndex = chnk.getRotationIndex(pos.x,pos.y,pos.z);
+        if(IsWallPusher) {
+            return switch (RotIndex) {
+                case 11 -> new Vector3i(0, Distance, 0); //EastWall Facing Up
+                case 17 -> new Vector3i(0, 0, -Distance); //EastWall Facing Right
+                case 27 -> new Vector3i(0, 0, Distance); //EastWall Facing Left
+                case 1 -> new Vector3i(0, -Distance, 0); //EastWall Facing Down
+
+                case 8 -> new Vector3i(0, Distance, 0); //NorthWall Facing Up
+                case 18 -> new Vector3i(-Distance, 0, 0); //NorthWall Facing Right
+                case 24 -> new Vector3i(Distance, 0, 0); //NorthWall Facing Left
+                case 2 -> new Vector3i(0, -Distance, 0); //NorthWall Facing Down
+
+                case 9 -> new Vector3i(0, Distance, 0); //WestWall Facing Up
+                case 19 -> new Vector3i(0, 0, Distance); //WestWall Facing Right
+                case 25 -> new Vector3i(0, 0, -Distance); //WestWall Facing Left
+                case 3 -> new Vector3i(0, -Distance, 0); //WestWall Facing Down
+
+                case 10 -> new Vector3i(0, Distance, 0); //SouthWall Facing Up
+                case 16 -> new Vector3i(Distance, 0, 0); //SouthWall Facing Right
+                case 26 -> new Vector3i(-Distance, 0, 0); //SouthWall Facing Left
+                case 0 -> new Vector3i(0, -Distance, 0); //SouthWall Facing Down
+
+                default -> new Vector3i(0, 0, 0); // extend if needed
+            };
+        } else {
+            return switch (RotIndex) {
+                case 0 -> new Vector3i(0, 0, -Distance); //Facing North Upright
+                case 1 -> new Vector3i(-Distance, 0, 0); //Facing West Upright
+                case 2 -> new Vector3i(0, 0, Distance); //Facing South Upright
+                case 3 -> new Vector3i(Distance, 0, 0); //Facing East Upright
+
+                case 8 -> new Vector3i(0, 0, Distance); //Facing South UpsideDown
+                case 9 -> new Vector3i(Distance, 0, 0); //Facing East UpsideDown
+                case 10 -> new Vector3i(0, 0, -Distance); //Facing North UpsideDown
+                case 11 -> new Vector3i(-Distance, 0, 0); //Facing West UpsideDown
+
+
+                case 49 -> new Vector3i(-Distance, 0, 0); //Facing West LayingOnRightSide
+                case 50 -> new Vector3i(0, 0, Distance); //Facing South LayingOnRightSide
+                case 26 -> new Vector3i(0, 0, -Distance); //Facing North LayingOnRightSide
+                case 51 -> new Vector3i(Distance, 0, 0); //Facing East LayingOnRightSide
+
+                case 16 -> new Vector3i(0, 0, -Distance); //Facing North LayingOnLeftSide
+                case 17 -> new Vector3i(-Distance, 0, 0); //Facing West LayingOnLeftSide
+                case 18 -> new Vector3i(0, 0, Distance); //Facing South LayingOnRightSide
+                case 19 -> new Vector3i(Distance, 0, 0); //Facing East LayingOnLeftSide
+
+                default -> new Vector3i(0, 0, 0); // extend if needed
+            };
+        }
+    }
+
     private Vector3i getGlobalForwardVector(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ, Vector3i pusherPosition) {
         boolean isWallPusher = isWallPusherVariant(commandBuffer, blockRef, sectionRef, worldX, worldY, worldZ);
         BlockType pusherBlockType = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ)).getBlockType(worldX, worldY, worldZ);
         if (pusherBlockType == null) return new Vector3i(0, 0, 0);
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
-        int pusherRotationIndex = pusherChunk.getRotationIndex(pusherPosition.x, pusherPosition.y, pusherPosition.z);
-        RotationTuple pusherRotationTuple = RotationTuple.get(pusherRotationIndex);
-        Vector3d localForward = getForwardFromBlockType(pusherBlockType, isWallPusher);
-        Vector3d globalForwardDouble = pusherRotationTuple.rotatedVector(localForward.clone());
-        return new Vector3i(
-            (int) Math.round(globalForwardDouble.getX()),
-            (int) Math.round(globalForwardDouble.getY()),
-            (int) Math.round(globalForwardDouble.getZ())
-        );
+
+        return GetForwardFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
     }
 
     private Vector3i getGlobalUpVector(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ, Vector3i pusherPosition) {
@@ -146,15 +245,8 @@ public class MoveBlockActivation extends Activation {
         if (pusherBlockType == null) return new Vector3i(0, 0, 0);
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
-        int pusherRotationIndex = pusherChunk.getRotationIndex(pusherPosition.x, pusherPosition.y, pusherPosition.z);
-        Vector3d localUp = getUpFromBlockType(pusherBlockType, isWallPusher);
-        RotationTuple upRotationTuple = RotationTuple.get(pusherRotationIndex);
-        Vector3d upDirection = upRotationTuple.rotatedVector(localUp.clone());
-        return new Vector3i(
-            (int) Math.round(upDirection.getX()),
-            (int) Math.round(upDirection.getY()),
-            (int) Math.round(upDirection.getZ())
-        );
+
+        return GetUpFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
     }
 
     @Override

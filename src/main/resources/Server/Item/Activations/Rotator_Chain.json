@@ -1,0 +1,4 @@
+{
+  "Type": "Chain",
+  "Activations": ["Rotate_Block", "Toggle_Rotator"]
+}
