@@ -70,7 +70,7 @@
             "Crouching": true,
             "Failed": {
               "Type": "ArcaneActivator",
-              "Activator": "Pusher_Chain"
+              "Activator": "Rotator_Chain"
             },
             "Next": {
               "Type": "ChangeBlock",
