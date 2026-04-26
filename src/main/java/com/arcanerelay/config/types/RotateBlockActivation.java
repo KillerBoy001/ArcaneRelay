@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class RotateBlockActivation extends Activation {
-    private String[] RotTypeID = new String[0]
+    private String[] RotTypeID = new String[0];
     public static final BuilderCodec<RotateBlockActivation> CODEC = BuilderCodec.builder(
                     RotateBlockActivation.class,
                     RotateBlockActivation::new,
