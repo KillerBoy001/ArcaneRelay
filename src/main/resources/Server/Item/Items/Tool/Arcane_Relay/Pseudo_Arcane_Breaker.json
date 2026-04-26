@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Pseudo_Arcane_Pusher.name",
-    "Description": "server.items.Pseudo_Arcane_Pusher.description"
+    "Name": "server.items.Pseudo_Arcane_Breaker.name",
+    "Description": "server.items.Pseudo_Arcane_Breaker.description"
   },
   "Interactions": {
     "Primary": "Block_Primary",
@@ -12,11 +12,15 @@
     "Input": [
       {
         "Quantity": 4,
-        "ItemId": "Ingredient_Crystal_Green"
+        "ItemId": "Ingredient_Crystal_Red"
       },
       {
         "ItemId": "Ingredient_Bar_Iron",
         "Quantity": 2
+      },
+      {
+        "ItemId": "Ingredient_Bar_Gold",
+        "Quantity": 4
       },
       {
         "ResourceTypeId": "Rock",
@@ -29,7 +33,7 @@
         "Id": "Antiquarianbench",
         "Type": "Crafting",
         "Categories": [
-          "Vector_Artifacts"
+          "Destructive_Artifacts"
         ]
       }
     ]
@@ -39,28 +43,20 @@
   ],
   "ItemLevel": 10,
   "BlockType": {
+    "Light": {
+      "Color": "#141"
+    },
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
-    "Opacity": "Transparent",
-    "CustomModel": "Blocks/Functional/Pusher.blockymodel",
+    "Opacity": "Solid",
+    "CustomModel": "Blocks/Functional/Breaker.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Functional/Pusher_Texture.png",
+        "Texture": "Blocks/Functional/Breaker_Texture.png",
         "Weight": 1
       }
     ],
     "CustomModelScale": 1,
-    "Light": {
-      "Radius": 0,
-      "Color": "#141"
-    },
-    "PlacementSettings": {
-      "AllowRotationKey": true,
-      "PlaceInEmptyBlocks": true,
-      "RotationMode": "FacingPlayer",
-      "WallPlacementOverrideBlockId": "Pseudo_Arcane_Pusher_Wall",
-      "BlockPreviewVisibility": "AlwaysVisible"
-    },
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",
     "InteractionHint": "server.interactionHints.generic",
@@ -72,7 +68,7 @@
             "Crouching": true,
             "Failed": {
               "Type": "ArcaneActivator",
-              "Activator": "Pusher_Chain"
+              "Activator": "Breaker_Chain"
             }
           }
         ]
@@ -82,37 +78,46 @@
       "Definitions": {
         "CloseDoorOut": {
           "InteractionSoundEventId": "SFX_Sticks_Break",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Pusher/Move.blockyanim"
+          "CustomModelAnimation": "Blocks/Animations/Functional/Breaker/Breaker_Break.blockyanim"
         },
         "OpenDoorOut": {
           "InteractionSoundEventId": "SFX_Sticks_Break",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Pusher/Move.blockyanim"
+          "CustomModelAnimation": "Blocks/Animations/Functional/Breaker/Breaker_Break.blockyanim"
         }
       }
     },
     "ParticleColor": "#bbac72",
-    "VariantRotation": "UpDownNESW",
+    "VariantRotation": "DoublePipe",
     "Gathering": {
       "Breaking": {
-        "ItemId": "Pseudo_Arcane_Pusher",
-        "GatherType": "Rocks"
+        "GatherType": "Rocks",
+        "ItemId": "Pseudo_Arcane_Breaker"
       }
-    }
+    },
+    "FlipType": "Symmetric",
+    "PlacementSettings": {
+      "AllowRotationKey": true,
+      "RotationMode": "Default",
+      "BlockPreviewVisibility": "AlwaysVisible",
+      "PlaceInEmptyBlocks": true
+    },
+    "CubeShadingMode": "Flat",
+    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
   },
   "PlayerAnimationsId": "Block",
   "IconProperties": {
-    "Scale": 0.445,
+    "Scale": 0.5,
     "Rotation": [
       22.5,
-      45,
+      47,
       22.5
     ],
     "Translation": [
       0,
-      -17.7
+      -14
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Pusher.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Puller.png",
   "Scale": 1,
   "Tags": {
     "Type": [

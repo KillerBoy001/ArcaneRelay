@@ -1,0 +1,4 @@
+{
+  "Type": "Chain",
+  "Activations": ["Hit_Block", "Toggle_Breaker"]
+}
