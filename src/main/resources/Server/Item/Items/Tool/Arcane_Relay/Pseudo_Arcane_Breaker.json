@@ -77,11 +77,11 @@
     "State": {
       "Definitions": {
         "CloseDoorOut": {
-          "InteractionSoundEventId": "SFX_Sticks_Break",
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Breaker",
           "CustomModelAnimation": "Blocks/Animations/Functional/Breaker/Breaker_Break.blockyanim"
         },
         "OpenDoorOut": {
-          "InteractionSoundEventId": "SFX_Sticks_Break",
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Breaker",
           "CustomModelAnimation": "Blocks/Animations/Functional/Breaker/Breaker_Break.blockyanim"
         }
       }
@@ -102,7 +102,7 @@
       "PlaceInEmptyBlocks": true
     },
     "CubeShadingMode": "Flat",
-    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
+    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Breaker"
   },
   "PlayerAnimationsId": "Block",
   "IconProperties": {
