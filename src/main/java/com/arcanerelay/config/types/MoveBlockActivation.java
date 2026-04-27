@@ -1,5 +1,6 @@
 package com.arcanerelay.config.types;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ActivationExecutor;
@@ -277,8 +278,10 @@ public class MoveBlockActivation extends Activation {
         if (pusherBlockType == null) return new Vector3i(0, 0, 0);
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
+        Vector3i Nul = new Vector3i(0, 0, 0);
 
-        return GetForwardFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
+        Vector3i ForwardVector = GetForwardFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
+        return ForwardVector;
     }
 
     private Vector3i getGlobalUpVector(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ, Vector3i pusherPosition) {
@@ -287,9 +290,10 @@ public class MoveBlockActivation extends Activation {
         if (pusherBlockType == null) return new Vector3i(0, 0, 0);
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
+        Vector3i Nul = new Vector3i(0, 0, 0);
 
-        Vector3i Up = GetUpFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
-        return GetUpFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
+        Vector3i UpVector = GetUpFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
+        return UpVector;
     }
 
     @Override
