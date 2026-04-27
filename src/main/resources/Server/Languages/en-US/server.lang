@@ -27,6 +27,7 @@ interactionHints.button = Press [{key}] to press
 interactionHints.toggle = Press [{key}] to toggle
 interactionHints.cycle = Press [{key}] to cycle
 interactionHints.relay = Press [{key}] to relay
+interactionHints.rotate = Press [{key}] to rotate
 
 # === Arcane Relay notifications (interactions / activation) ===
 
