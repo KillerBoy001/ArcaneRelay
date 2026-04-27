@@ -1,4 +1,4 @@
 {
   "Type": "Chain",
-  "Activations": ["Hit_Block", "Toggle_Breaker"]
+  "Activations": ["Hit", "Toggle_Breaker"]
 }

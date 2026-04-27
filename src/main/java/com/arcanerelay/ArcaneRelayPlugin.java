@@ -4,7 +4,7 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationBinding;
 import com.arcanerelay.config.types.ArcanePullerActivation;
 import com.arcanerelay.config.types.ChainActivation;
-import com.arcanerelay.config.types.HitBlockActivation;
+import com.arcanerelay.config.types.HitActivation;
 import com.arcanerelay.config.types.MoveBlockActivation;
 import com.arcanerelay.config.types.SendSignalActivation;
 import com.arcanerelay.config.types.ToggleDoorActivation;
@@ -120,7 +120,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
                 .register("Chain", ChainActivation.class, ChainActivation.CODEC)
                 .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC)
-                .register("HitBlock", HitBlockActivation.class, HitBlockActivation.CODEC);
+                .register("Hit", HitActivation.class, HitActivation.CODEC);
 
         this.getEventRegistry().registerGlobal(BootEvent.class, event -> ActivationBinding.onBindingsLoaded());
     }
