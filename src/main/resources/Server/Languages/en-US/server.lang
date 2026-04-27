@@ -17,7 +17,7 @@ items.Pseudo_Arcane_Puller.description = Used to pull back a block from far away
 items.Pseudo_Arcane_Puller_Extension.name = Puller Extension
 items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling back entities and blocks with the Puller.
 items.Pseudo_Arcane_Rotator.name = Rotator
-items.Pseudo_Arcane_Rotator.description = Used to rotate blocks 90 degrees.\n\nInteract to activate\nCrouch click to Switch it between Counter-Clockwise and Clockwise.
+items.Pseudo_Arcane_Rotator.description = Used to rotate blocks 90 degrees.\n\nInteract to activate\n\nCrouch click to Switch, Counter-Clockwise <-> Clockwise.
 items.Antiquarian_Bench.name = Antiquarian's Workbench
 items.Antiquarian_Bench.description = Used to craft ancient mechanism that allow for logic and automation.
 

@@ -138,6 +138,16 @@ public class MoveBlockActivation extends Activation {
                 case 26 -> new Vector3i(0, 0, Distance); //SouthWall Facing Left
                 case 0 -> new Vector3i(0, 0, Distance); //SouthWall Facing Down
 
+                case 15 -> new Vector3i(0, Distance, 0); //Facing West Upright
+                case 12 -> new Vector3i(0, Distance, 0); //Facing South Upright
+                case 13 -> new Vector3i(0, Distance, 0); //Facing East Upright
+                case 14 -> new Vector3i(0, Distance, 0); //Facing North Upright
+
+                case 4 -> new Vector3i(0, -Distance, 0); //Facing North UpsideDown
+                case 5 -> new Vector3i(0, -Distance, 0); //Facing West UpsideDown
+                case 6 -> new Vector3i(0, -Distance, 0); //Facing South UpsideDown
+                case 7 -> new Vector3i(0, -Distance, 0); //Facing East UpsideDown
+
                 default -> new Vector3i(0, 0, 0); // extend if needed
             };
         } else{
@@ -156,6 +166,15 @@ public class MoveBlockActivation extends Activation {
                 case 9 -> new Vector3i(0, -Distance, 0); //Facing East UpsideDown
                 case 10 -> new Vector3i(0, -Distance, 0); //Facing North UpsideDown
                 case 11 -> new Vector3i(0, -Distance, 0); //Facing West UpsideDown
+
+                case 12 -> new Vector3i(0, 0, -Distance);
+                case 13 -> new Vector3i(-Distance, 0, 0);
+                case 14 -> new Vector3i(0, 0, Distance);
+                case 15 -> new Vector3i(Distance, 0, 0);
+
+                case 24 -> new Vector3i(-Distance, 0, 0);
+                case 25 -> new Vector3i(0, 0, Distance);
+                case 27 -> new Vector3i(0, 0, -Distance);
 
                 case 49 -> new Vector3i(0, 0, -Distance); //Facing West LayingOnRightSide
                 case 50 -> new Vector3i(-Distance, 0, 0); //Facing South LayingOnRightSide
@@ -199,6 +218,16 @@ public class MoveBlockActivation extends Activation {
                 case 26 -> new Vector3i(-Distance, 0, 0); //SouthWall Facing Left
                 case 0 -> new Vector3i(0, -Distance, 0); //SouthWall Facing Down
 
+                case 15 -> new Vector3i(-Distance, 0, 0); //Facing West Upright
+                case 12 -> new Vector3i(0, 0, Distance); //Facing South Upright
+                case 13 -> new Vector3i(Distance, 0, 0); //Facing East Upright
+                case 14 -> new Vector3i(0, 0, -Distance); //Facing North Upright
+
+                case 4 -> new Vector3i(0, 0, -Distance); //Facing North UpsideDown
+                case 5 -> new Vector3i(-Distance, 0, 0); //Facing West UpsideDow
+                case 6 -> new Vector3i(0, 0, Distance); //Facing South UpsideDown
+                case 7 -> new Vector3i(Distance, 0, 0); //Facing East UpsideDown
+
                 default -> new Vector3i(0, 0, 0); // extend if needed
             };
         } else {
@@ -208,11 +237,24 @@ public class MoveBlockActivation extends Activation {
                 case 2 -> new Vector3i(0, 0, Distance); //Facing South Upright
                 case 3 -> new Vector3i(Distance, 0, 0); //Facing East Upright
 
+                case 4 -> new Vector3i(0, Distance, 0); //DoublePipe SouthWall extra for pullers and rotators
+                case 5 -> new Vector3i(0, Distance, 0); //DoublePipe EastWall extra for pullers and rotators
+                case 6 -> new Vector3i(0, Distance, 0); //DoublePipe NorthWall extra for pullers and rotators
+                case 7 -> new Vector3i(0, Distance, 0); //DoublePipe WestWall extra for pullers and rotators
+
                 case 8 -> new Vector3i(0, 0, Distance); //Facing South UpsideDown
                 case 9 -> new Vector3i(Distance, 0, 0); //Facing East UpsideDown
                 case 10 -> new Vector3i(0, 0, -Distance); //Facing North UpsideDown
                 case 11 -> new Vector3i(-Distance, 0, 0); //Facing West UpsideDown
 
+                case 12 -> new Vector3i(0, -Distance, 0);
+                case 13 -> new Vector3i(0, -Distance, 0);
+                case 14 -> new Vector3i(0, -Distance, 0);
+                case 15 -> new Vector3i(0, -Distance, 0);
+
+                case 24 -> new Vector3i(0, 0, Distance);
+                case 25 -> new Vector3i(Distance, 0, 0);
+                case 27 -> new Vector3i(-Distance, 0, 0);
 
                 case 49 -> new Vector3i(-Distance, 0, 0); //Facing West LayingOnRightSide
                 case 50 -> new Vector3i(0, 0, Distance); //Facing South LayingOnRightSide
@@ -246,6 +288,7 @@ public class MoveBlockActivation extends Activation {
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
 
+        Vector3i Up = GetUpFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
         return GetUpFromBlock(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
     }
 
