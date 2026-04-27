@@ -12,10 +12,12 @@ items.Pseudo_Arcane_Pusher_Wall.name = Pusher - Wall Variant
 items.Pseudo_Arcane_Pusher_Wall.description = Used to push blocks up and down. Blocks will be moved in the direction at which the Pusher is facing.\n\nInteract to activate\n\nPrefer regular Pusher instead, this item is just used to allow the wall rotations.
 items.Pseudo_Arcane_Staff.name = Arcane Staff
 items.Pseudo_Arcane_Staff.description = Required to configure Arcane Artifacts. Used to setup connections within Arcane blocks.
-items.Pseudo_Arcane_Puller.name = Arcane Puller
+items.Pseudo_Arcane_Puller.name = Puller
 items.Pseudo_Arcane_Puller.description = Used to pull back a block from far away. When a signal is received it will either extend to reach a target or pull back once it has one.
-items.Pseudo_Arcane_Puller_Extension.name = Arcane Puller Extension
+items.Pseudo_Arcane_Puller_Extension.name = Puller Extension
 items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling back entities and blocks with the Puller.
+items.Pseudo_Arcane_Rotator.name = Rotator
+items.Pseudo_Arcane_Rotator.description = Used to rotate blocks 90 degrees.\n\nInteract to activate\n\nCrouch click to Switch, Counter-Clockwise <-> Clockwise.
 items.Antiquarian_Bench.name = Antiquarian's Workbench
 items.Antiquarian_Bench.description = Used to craft ancient mechanism that allow for logic and automation.
 

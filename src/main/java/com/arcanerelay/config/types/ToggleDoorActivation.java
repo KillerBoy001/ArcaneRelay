@@ -252,6 +252,7 @@ public class ToggleDoorActivation extends Activation {
             String blockState = mainBlockType.getStateForBlock(mainBlockType);
             DoorState currentState = DoorState.fromBlockState(blockState);
             int rotation = mainChunk.getRotationIndex(mainX, mainY, mainZ);
+
             Rotation doorYaw = RotationTuple.get(rotation).yaw();
 
             DoorState newState;

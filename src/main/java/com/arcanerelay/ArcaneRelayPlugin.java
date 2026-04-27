@@ -2,12 +2,7 @@ package com.arcanerelay;
 
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationBinding;
-import com.arcanerelay.config.types.ArcanePullerActivation;
-import com.arcanerelay.config.types.ChainActivation;
-import com.arcanerelay.config.types.MoveBlockActivation;
-import com.arcanerelay.config.types.SendSignalActivation;
-import com.arcanerelay.config.types.ToggleDoorActivation;
-import com.arcanerelay.config.types.ToggleStateActivation;
+import com.arcanerelay.config.types.*;
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.components.ArcanePullerBlock;
 import com.arcanerelay.components.ArcaneSection;
@@ -116,6 +111,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 .register("ToggleState", ToggleStateActivation.class, ToggleStateActivation.CODEC)
                 .register("SendSignal", SendSignalActivation.class, SendSignalActivation.CODEC)
                 .register("MoveBlock", MoveBlockActivation.class, MoveBlockActivation.CODEC)
+                .register("RotateBlock", RotateBlockActivation.class, RotateBlockActivation.CODEC)
                 .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
                 .register("Chain", ChainActivation.class, ChainActivation.CODEC)
                 .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC);

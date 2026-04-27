@@ -1,0 +1,106 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Rotator.name",
+    "Description": "server.items.Pseudo_Arcane_Rotator.description"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "BlockType": {
+    "DrawType": "Model",
+    "BlockSoundSetId": "Stone",
+    "Opacity": "Transparent",
+    "CustomModel": "Blocks/Functional/RotaterL.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Rotator_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "Light": {
+      "Radius": 0,
+      "Color": "#141"
+    },
+    "PlacementSettings": {
+      "AllowRotationKey": true,
+      "RotationMode": "Default",
+      "BlockPreviewVisibility": "AlwaysVisible",
+      "PlaceInEmptyBlocks": true
+    },
+    "BlockParticleSetId": "Crystal",
+    "Material": "Solid",
+    "InteractionHint": "server.interactionHints.generic",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "Condition",
+            "Crouching": true,
+            "Failed": {
+              "Type": "ArcaneActivator",
+              "Activator": "Rotator_Chain"
+            },
+            "Next": {
+              "Type": "ChangeBlock",
+              "Changes": {
+                "Pseudo_Arcane_Rotator": "Pseudo_Arcane_RotatorL",
+                "*Pseudo_Arcane_Rotator_State_Definitions_CloseDoorOut": "Pseudo_Arcane_RotatorL",
+                "*Pseudo_Arcane_Rotator_State_Definitions_OpenDoorOut": "Pseudo_Arcane_RotatorL",
+                "Pseudo_Arcane_RotatorL": "Pseudo_Arcane_Rotator",
+                "*Pseudo_Arcane_RotatorL_State_Definitions_CloseDoorOut": "Pseudo_Arcane_Rotator",
+                "*Pseudo_Arcane_RotatorL_State_Definitions_OpenDoorOut": "Pseudo_Arcane_Rotator"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "CloseDoorOut": {
+          "InteractionSoundEventId": "SFX_Sticks_Break",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/RotatorL_Rotate.blockyanim"
+        },
+        "OpenDoorOut": {
+          "InteractionSoundEventId": "SFX_Sticks_Break",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/RotatorL_Rotate.blockyanim"
+        }
+      }
+    },
+    "ParticleColor": "#bbac72",
+    "VariantRotation": "DoublePipe",
+    "Gathering": {
+      "Breaking": {
+        "ItemId": "Pseudo_Arcane_Rotator",
+        "GatherType": "Rocks"
+      }
+    }
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -15
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_RotatorL.png",
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "Quality": "Developer"
+}
