@@ -10,6 +10,7 @@ import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.resources.ArcaneMoveState;
+import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -336,7 +337,7 @@ public class ArcanePullerActivation extends Activation {
     public static Vector3i getGlobalUp(WorldChunk chunk, BlockType blockType, Vector3i pullerPos) {
         int rotationIndex = chunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
         RotationTuple rotationTuple = RotationTuple.get(rotationIndex);
-        Vector3d localUp = getLocalUp(blockType);
+        Vector3d localUp = new Vector3d(GetUpVector(chunk,pullerPos));
         Vector3d global = rotationTuple.rotatedVector(localUp);
         return new Vector3i((int) Math.round(global.getX()), (int) Math.round(global.getY()), (int) Math.round(global.getZ()));
     }

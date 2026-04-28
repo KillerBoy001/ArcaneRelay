@@ -3,7 +3,7 @@ package com.arcanerelay.config.types;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
-import static com.arcanerelay.config.types.MoveBlockActivation.GetUpFromBlock;
+import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
@@ -488,7 +488,7 @@ public class RotateBlockActivation extends Activation {
             boolean IsClockWise = isClockWise(RotatorBlockType); // If RotatorL
 
             // Target Info
-            Vector3i TempUp = GetUpFromBlock(chunk, RotatorPos, false,1);
+            Vector3i TempUp = GetUpVector(chunk, RotatorPos);
             Vector3i globalUp = new Vector3i (RotatorPos.x+TempUp.x,RotatorPos.y+TempUp.y,RotatorPos.z+TempUp.z);
             BlockType TargetBlockType = chunk.getBlockType(globalUp.x, globalUp.y,globalUp.z);
             String TargetID = TargetBlockType.getId();
