@@ -1,11 +1,88 @@
 package com.arcanerelay.util;
 
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.protocol.BlockMaterial;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Arrays;
 
-public abstract class BlockVectorUtil {
+public class BlockVectorUtil {
+
+    static List<String> NoneMoveableIDs = Arrays.asList(
+            "Void_Suspender"
+    );
+
+    static List<String> NoneRotatableIDs = Arrays.asList(
+            "Void_Suspender", "Soil_Grass", "Bench", "Bed"
+    );
+
+    private static boolean isExtensionBlock(@Nullable BlockType blockType) {
+        if (blockType == null) return false;
+        String id = blockType.getId();
+        if (id == null) return false;
+        String lower = id.toLowerCase();
+        return lower.contains("puller") && lower.contains("extension");
+    }
+
+    public static boolean isEmpty(@Nullable BlockType blockType, int blockID) {
+        if (blockID == 0 ) return false;
+        return isEmpty(blockType);
+    }
+    public static boolean isEmpty(@Nullable BlockType blockType) {
+        if (blockType == null) return true;
+        return blockType.getMaterial() == BlockMaterial.Empty;
+    }
+
+    public static boolean isPullable(@Nullable BlockType blockType, int blockID) {
+        if (blockID == 0 ) return false;
+        return isPullable(blockType);
+    }
+    public static boolean isPullable(@Nullable BlockType blockType) {
+        String id = blockType.getId();
+        if (blockType == null) return false;
+        if (isExtensionBlock(blockType)) return false;
+        for (String keyword : NoneMoveableIDs) {
+            if (id.contains(keyword)) {
+                return false;
+            }
+        }
+        return blockType.getMaterial() == BlockMaterial.Solid;
+    }
+
+    public static boolean isMoveable(@Nullable BlockType blockType, int blockID) {
+        if (blockID == 0 ) return false;
+        return isMoveable(blockType);
+    }
+    public static boolean isMoveable(@Nullable BlockType blockType) {
+        String id = blockType.getId();
+        if (blockType == null) return false;
+        for (String keyword : NoneMoveableIDs) {
+            if (id.contains(keyword)) {
+                return false;
+            }
+        }
+        return blockType.getMaterial() != BlockMaterial.Empty;
+    }
+
+    public static boolean isRotatable(@Nullable BlockType blockType, int blockID) {
+        if (blockID == 0 ) return false;
+        return isRotatable(blockType);
+    }
+    public static boolean isRotatable(@Nullable BlockType blockType) {
+        String id = blockType.getId();
+        if (blockType == null)
+            return false;
+        for (String keyword : NoneRotatableIDs) {
+            if (id.contains(keyword)) {
+                return false;
+            }
+        }
+        return blockType.getMaterial() != BlockMaterial.Empty;
+    }
 
     /** Gets the local upward Vector from a block based on its RotationIndex. */
     public static Vector3i GetUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos) {

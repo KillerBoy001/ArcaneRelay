@@ -4,6 +4,7 @@ import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import static com.arcanerelay.util.BlockVectorUtil.*;
+import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
@@ -16,7 +17,6 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -489,17 +489,24 @@ public class RotateBlockActivation extends Activation {
 
             // Target Info
             Vector3i TempUp = GetUpVector(chunk, RotatorPos);
-            Vector3i globalUp = new Vector3i (RotatorPos.x+TempUp.x,RotatorPos.y+TempUp.y,RotatorPos.z+TempUp.z);
-            BlockType TargetBlockType = chunk.getBlockType(globalUp.x, globalUp.y,globalUp.z);
+            Vector3i TargetPos = new Vector3i (RotatorPos.x+TempUp.x,RotatorPos.y+TempUp.y,RotatorPos.z+TempUp.z);
+            BlockType TargetBlockType = chunk.getBlockType(TargetPos.x, TargetPos.y, TargetPos.z);
             String TargetID = TargetBlockType.getId();
 
             int OwnRotIndex = chunk.getRotationIndex(worldX, worldY, worldZ);
-            int TargetRotIndex = chunk.getRotationIndex(globalUp.x, globalUp.y, globalUp.z);
+            int TargetRotIndex = chunk.getRotationIndex(TargetPos.x, TargetPos.y, TargetPos.z);
 
             int NewRotInd = GetNewTarRotIndex(OwnRotIndex,TargetRotIndex,IsClockWise);
 
             if (TargetRotIndex !=NewRotInd){
-                chunk.setBlock(globalUp.x, globalUp.y, globalUp.z, assetMap.getIndex(TargetID), TargetBlockType, NewRotInd, 0, 0);
+                Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
+                if(isRotatable(TargetBlockType)) {
+                    chunk.setBlock(TargetPos.x, TargetPos.y, TargetPos.z, assetMap.getIndex(TargetID), TargetBlockType, NewRotInd, 0, 0);
+                    ArcaneUtil.setTicking(chunkStore, TargetPos.x, TargetPos.y, TargetPos.z);
+                } else {
+                    ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Block of type: '%s', is not allowed to be rotated",TargetBlockType.getId());
+                }
+
             }
         });
 

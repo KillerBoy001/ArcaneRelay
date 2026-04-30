@@ -67,6 +67,11 @@
           "Id": "Vector_Artifacts",
           "Icon": "Icons/CraftingCategories/Arcane/Vector_Artifacts.png",
           "Name": "server.benchCategories.vectorArtifacts"
+        },
+        {
+          "Id": "Void_Artifacts",
+          "Icon": "Icons/CraftingCategories/Arcane/Void_Artifacts.png",
+          "Name": "server.benchCategories.voidArtifacts"
         }
       ],
       "Id": "Antiquarianbench"

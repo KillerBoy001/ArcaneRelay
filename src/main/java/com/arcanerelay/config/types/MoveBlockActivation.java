@@ -83,13 +83,16 @@ public class MoveBlockActivation extends Activation {
         this.range = range;
     }
 
-    private static boolean isPushable(@Nullable BlockType blockType, int blockId) {
-        if (blockId == 0)
-            return false;
-        if (blockType == null)
-            return false;
-        return blockType.getMaterial() != BlockMaterial.Empty;
-    }
+    //private static boolean isPushable(@Nullable BlockType blockType, int blockId) {
+    //    String id = blockType.getId();
+    //    if (blockId == 0)
+    //        return false;
+    //    if (blockType == null)
+    //        return false;
+    //    if (id.contains("Void_Suspender"))
+    //        return false;
+    //    return blockType.getMaterial() != BlockMaterial.Empty;
+    //}
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
@@ -180,7 +183,7 @@ public class MoveBlockActivation extends Activation {
 
                 int blockId = chunk.getBlock(c.x, c.y, c.z);
                 BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
-                if (!isPushable(blockType, blockId))
+                if (!isMoveable(blockType,blockId))
                     break;
 
                 chainBlockIds[chainLength]     = blockId;

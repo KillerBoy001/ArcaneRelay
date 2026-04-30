@@ -7,10 +7,10 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
+import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.resources.ArcaneMoveState;
-import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 public class ArcanePullerActivation extends Activation {
     private int range = 15;
     private static final double KNOCKBACK_MAX_SPEED = 30;
@@ -46,18 +47,18 @@ public class ArcanePullerActivation extends Activation {
     private static final float KNOCKBACK_MIN_DURATION = 0.05f;
 
     public static final BuilderCodec<ArcanePullerActivation> CODEC = BuilderCodec.builder(
-        ArcanePullerActivation.class,
-        ArcanePullerActivation::new,
-        Activation.ABSTRACT_CODEC)
-        .documentation("Pulls blocks and entities toward the puller. Extends a chain, collides with blocks/entities, then pulls back.")
-        .appendInherited(
-            new KeyedCodec<>("Range", Codec.INTEGER),
-            (a, r) -> a.range = r,
-            a -> a.range,
-            (a, p) -> a.range = p.range)
-        .documentation("Maximum extension range (default: 15).")
-        .add()
-        .build();
+                    ArcanePullerActivation.class,
+                    ArcanePullerActivation::new,
+                    Activation.ABSTRACT_CODEC)
+            .documentation("Pulls blocks and entities toward the puller. Extends a chain, collides with blocks/entities, then pulls back.")
+            .appendInherited(
+                    new KeyedCodec<>("Range", Codec.INTEGER),
+                    (a, r) -> a.range = r,
+                    a -> a.range,
+                    (a, p) -> a.range = p.range)
+            .documentation("Maximum extension range (default: 15).")
+            .add()
+            .build();
 
     public int getRange() {
         return range;
@@ -69,11 +70,11 @@ public class ArcanePullerActivation extends Activation {
 
     @Override
     public ArcaneSection.BlockTickStrategy execute(
-        @Nonnull ArcaneCachedAccessor accessor,
-        @Nullable Ref<ChunkStore> sectionRef,
-        @Nullable Ref<ChunkStore> blockRef,
-        int worldX, int worldY, int worldZ,
-        @Nonnull List<int[]> sources
+            @Nonnull ArcaneCachedAccessor accessor,
+            @Nullable Ref<ChunkStore> sectionRef,
+            @Nullable Ref<ChunkStore> blockRef,
+            int worldX, int worldY, int worldZ,
+            @Nonnull List<int[]> sources
     ) {
         ChunkStoreCommandBufferLike commandBuffer = accessor.getCommandBuffer();
         ArcaneRelayPlugin.LOGGER.atInfo().log("Executing ArcanePullerActivation at %d,%d,%d", worldX, worldY, worldZ);
@@ -90,7 +91,7 @@ public class ArcanePullerActivation extends Activation {
 
         BlockType pullerBlockType = chunk.getBlockType(worldX, worldY, worldZ);
         if (pullerBlockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
-        
+
 
         Vector3i pullerPos = new Vector3i(worldX, worldY, worldZ);
         Vector3i globalUp = getGlobalUp(chunk, pullerBlockType, pullerPos);
@@ -119,14 +120,14 @@ public class ArcanePullerActivation extends Activation {
     }
 
     private ArcaneSection.BlockTickStrategy handleExtending(
-        ChunkStoreCommandBufferLike commandBuffer,
-        World world,
-        ArcanePullerBlock puller,
-        Vector3i pullerPos,
-        WorldChunk pullerChunk,
-        Vector3i globalForward,
-        BlockType pullerBlockType,
-        int maxRange
+            ChunkStoreCommandBufferLike commandBuffer,
+            World world,
+            ArcanePullerBlock puller,
+            Vector3i pullerPos,
+            WorldChunk pullerChunk,
+            Vector3i globalForward,
+            BlockType pullerBlockType,
+            int maxRange
     ) {
         int extLen = puller.getExtensionLength();
         int maxExtend = Math.max(0, maxRange - 1);
@@ -142,28 +143,28 @@ public class ArcanePullerActivation extends Activation {
         BlockType tipBlockType = BlockType.getAssetMap().getAsset(tipBlockId);
 
         ArcaneRelayPlugin.LOGGER.atInfo().log(
-            "Puller EXTENDING at %d,%d,%d: extLen=%d tip=%d,%d,%d blockId=%d",
-            pullerPos.x, pullerPos.y, pullerPos.z, extLen, tipX, tipY, tipZ, tipBlockId);
+                "Puller EXTENDING at %d,%d,%d: extLen=%d tip=%d,%d,%d blockId=%d",
+                pullerPos.x, pullerPos.y, pullerPos.z, extLen, tipX, tipY, tipZ, tipBlockId);
 
         if (isPullable(tipBlockType, tipBlockId)) {
-             if (extLen == 0) {
+            if (extLen == 0) {
                 puller.setIDLE();
                 commandBuffer.run((Store<ChunkStore> s) -> {
                     int rotationIndex = pullerChunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
                     ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(s, world, pullerPos, globalForward, RotationTuple.get(rotationIndex));
                 });
                 return ArcaneSection.BlockTickStrategy.PROCESSED;
-             }
+            }
             commandBuffer.run((Store<ChunkStore> s) -> {
                 ActivationExecutor.playEffects(world, pullerPos.x, pullerPos.y, pullerPos.z,
-                    this.getEffects());
+                        this.getEffects());
             });
             puller.setPULLING_BACK();
             handlePullingBack(commandBuffer, world, puller, pullerPos, globalForward);
 
             ArcaneRelayPlugin.LOGGER.atInfo().log(
-                "Puller hit block %d at %d,%d,%d; starting pull-back",
-                tipBlockId, tipX, tipY, tipZ);
+                    "Puller hit block %d at %d,%d,%d; starting pull-back",
+                    tipBlockId, tipX, tipY, tipZ);
             return ArcaneSection.BlockTickStrategy.CONTINUE;
         }
 
@@ -174,8 +175,8 @@ public class ArcanePullerActivation extends Activation {
 
             if (!entities.isEmpty()) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log(
-                    "Puller hit %d entities at %d,%d,%d; starting pull-back",
-                    entities.size(), tipX, tipY, tipZ);
+                        "Puller hit %d entities at %d,%d,%d; starting pull-back",
+                        entities.size(), tipX, tipY, tipZ);
                 puller.setPULLING_BACK();
                 handlePullingBack(commandBuffer, world, puller, pullerPos, globalForward);
             }
@@ -189,35 +190,35 @@ public class ArcanePullerActivation extends Activation {
             }
             commandBuffer.run((Store<ChunkStore> s) -> {
                 boolean placed = puller.extend(world, pullerPos.x, pullerPos.y, pullerPos.z,
-                    pullerBlockType, pullerChunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z));
+                        pullerBlockType, pullerChunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z));
                 if (!placed) return;
 
                 ActivationExecutor.playEffects(world, pullerPos.x, pullerPos.y, pullerPos.z,
-                    this.getEffects());
+                        this.getEffects());
                 ArcaneRelayPlugin.LOGGER.atInfo().log(
-                    "Puller extended to %d,%d,%d (len=%d)",
-                    tipX, tipY, tipZ, puller.getExtensionLength());
+                        "Puller extended to %d,%d,%d (len=%d)",
+                        tipX, tipY, tipZ, puller.getExtensionLength());
 
                 int rotationIndex = tipChunk.getRotationIndex(tipX, tipY, tipZ);
                 Holder<ChunkStore> pullerHolder = pullerChunk.getBlockComponentHolder(
-                    pullerPos.x, pullerPos.y, pullerPos.z);
-                
+                        pullerPos.x, pullerPos.y, pullerPos.z);
+
                 puller.setPhase(ArcanePullerBlock.Phase.EXTENDING);
                 ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(
-                    s,
-                    world,
-                    new Vector3i(tipX, tipY, tipZ),
-                    globalForward,
-                    RotationTuple.get(rotationIndex)
+                        s,
+                        world,
+                        new Vector3i(tipX, tipY, tipZ),
+                        globalForward,
+                        RotationTuple.get(rotationIndex)
                 );
-    
+
                 pullerHolder.putComponent(ArcaneRelayPlugin.get().getArcanePullerBlockComponentType(), puller);
                 if (pullerHolder != null) {
                     BlockType blockType = pullerChunk.getBlockType(pullerPos.x, pullerPos.y, pullerPos.z);
                     pullerChunk.setState(pullerPos.x, pullerPos.y, pullerPos.z, blockType, rotationIndex, pullerHolder);
                 }
             });
-         
+
             return ArcaneSection.BlockTickStrategy.CONTINUE;
         }
 
@@ -238,36 +239,36 @@ public class ArcanePullerActivation extends Activation {
     }
 
     private ArcaneSection.BlockTickStrategy handlePullingBack(
-        ChunkStoreCommandBufferLike commandBuffer,
-        World world,
-        ArcanePullerBlock puller,
-        Vector3i pullerPos,
-        Vector3i globalUp
+            ChunkStoreCommandBufferLike commandBuffer,
+            World world,
+            ArcanePullerBlock puller,
+            Vector3i pullerPos,
+            Vector3i globalUp
     ) {
         int extLen = puller.getExtensionLength();
         ArcaneRelayPlugin.LOGGER.atInfo().log(
-            "Puller PULLING_BACK at %d,%d,%d: extLen=%d",
-            pullerPos.x, pullerPos.y, pullerPos.z, extLen);
+                "Puller PULLING_BACK at %d,%d,%d: extLen=%d",
+                pullerPos.x, pullerPos.y, pullerPos.z, extLen);
         if (extLen <= 0) {
             puller.setIDLE();
             return ArcaneSection.BlockTickStrategy.PROCESSED;
         }
 
         Vector3i tipPos = new Vector3i(
-            pullerPos.x + globalUp.x * (extLen + 1),
-            pullerPos.y + globalUp.y * (extLen + 1),
-            pullerPos.z + globalUp.z * (extLen + 1)
+                pullerPos.x + globalUp.x * (extLen + 1),
+                pullerPos.y + globalUp.y * (extLen + 1),
+                pullerPos.z + globalUp.z * (extLen + 1)
         );
         Vector3i lastPos = new Vector3i(
-            pullerPos.x + globalUp.x * extLen,
-            pullerPos.y + globalUp.y * extLen,
-            pullerPos.z + globalUp.z * extLen
+                pullerPos.x + globalUp.x * extLen,
+                pullerPos.y + globalUp.y * extLen,
+                pullerPos.z + globalUp.z * extLen
         );
 
         ArcaneRelayPlugin.LOGGER.atInfo().log(
-            "Puller PULLING_BACK positions: tip=%d,%d,%d last=%d,%d,%d",
-            tipPos.x, tipPos.y, tipPos.z,
-            lastPos.x, lastPos.y, lastPos.z);
+                "Puller PULLING_BACK positions: tip=%d,%d,%d last=%d,%d,%d",
+                tipPos.x, tipPos.y, tipPos.z,
+                lastPos.x, lastPos.y, lastPos.z);
 
         WorldChunk tipChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(tipPos.x, tipPos.z));
         if (tipChunk == null) return ArcaneSection.BlockTickStrategy.CONTINUE;
@@ -279,8 +280,8 @@ public class ArcanePullerActivation extends Activation {
         int filler = tipChunk.getFiller(tipPos.x, tipPos.y, tipPos.z);
 
         ArcaneRelayPlugin.LOGGER.atInfo().log(
-            "Puller move-entry check: extLen=%d tip=%d,%d,%d blockId=%d pullable=%s",
-            extLen, tipPos.x, tipPos.y, tipPos.z, tipBlockId, isPullable(tipBlockType, tipBlockId));
+                "Puller move-entry check: extLen=%d tip=%d,%d,%d blockId=%d pullable=%s",
+                extLen, tipPos.x, tipPos.y, tipPos.z, tipBlockId, isPullable(tipBlockType, tipBlockId));
         commandBuffer.run((Store<ChunkStore> s) -> {
             WorldChunk lastChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(lastPos.x, lastPos.z));
             if (lastChunk != null) {
@@ -288,13 +289,13 @@ public class ArcanePullerActivation extends Activation {
             }
             int newLen = extLen - 1;
             updateExtensionConnectedBlocks(s, world, pullerPos, globalUp, newLen, puller.getExtensionBlockKey());
-            
 
-        if (isPullable(tipBlockType, tipBlockId)) {
+
+            if (isPullable(tipBlockType, tipBlockId)) {
                 ArcaneMoveState moveState = s.getResource(ArcaneMoveState.getResourceType());
                 if (moveState == null) return;
                 moveState.addMoveEntry(tipPos, globalUp.clone().scale(-1), tipBlockType, tipBlockId,
-                    rotation, filler, 0, holder);
+                        rotation, filler, 0, holder);
             }
         });
 
@@ -302,7 +303,7 @@ public class ArcanePullerActivation extends Activation {
         if (entityStore != null) {
             Set<Ref<EntityStore>> entitiesInTip = new HashSet<>();
             collectEntitiesInBlock(entityStore, new Vector3i(tipPos.x, tipPos.y, tipPos.z), entitiesInTip);
-           
+
             if (!entitiesInTip.isEmpty()) {
                 Vector3i knockbackDir = globalUp.clone().scale(-1);
                 for (Ref<EntityStore> ref : entitiesInTip) {
@@ -312,17 +313,17 @@ public class ArcanePullerActivation extends Activation {
                             applyKnockbackToward(entityStore, ref, knockbackDir, duration);
                         });
                     }
-             
-                ArcaneRelayPlugin.LOGGER.atInfo().log(
-                    "Puller hit %d entities at %d,%d,%d; applied knockback",
-                    entitiesInTip.size(), tipPos.x, tipPos.y, tipPos.z);
+
+                    ArcaneRelayPlugin.LOGGER.atInfo().log(
+                            "Puller hit %d entities at %d,%d,%d; applied knockback",
+                            entitiesInTip.size(), tipPos.x, tipPos.y, tipPos.z);
                 }
             }
-            
+
         }
 
         ActivationExecutor.playEffects(world, pullerPos.x, pullerPos.y, pullerPos.z,
-            this.getEffects());
+                this.getEffects());
         puller.removeLastExtensionPosition();
 
         if (puller.getExtensionLength() == 0) {
@@ -343,47 +344,22 @@ public class ArcanePullerActivation extends Activation {
         return global;
     }
 
-    private static Vector3d getLocalUp(BlockType blockType) {
-        return switch (blockType.getVariantRotation()) {
-            case UpDown -> new Vector3d(0, 1, 0);
-            case Wall -> new Vector3d(0, 0, 1);
-            default -> new Vector3d(0, 1, 0);
-        };
-    }
-
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0) return true;
         if (blockType == null) return true;
         return blockType.getMaterial() == BlockMaterial.Empty;
     }
 
-    private static boolean isPullable(@Nullable BlockType blockType, int blockId) {
-        if (blockId == 0) return false;
-        if (blockType == null) return false;
-
-        if (isExtensionBlock(blockType)) return false;
-
-        return blockType.getMaterial() == BlockMaterial.Solid;
-    }
-
-    public static boolean isExtensionBlock(@Nullable BlockType blockType) {
-        if (blockType == null) return false;
-        String id = blockType.getId();
-        if (id == null) return false;
-        String lower = id.toLowerCase();
-        return lower.contains("puller") && lower.contains("extension");
-    }
-
     private void syncExtensionChain(
-        @Nonnull ChunkStoreCommandBufferLike commandBuffer,
-        @Nonnull World world,
-        @Nonnull ArcanePullerBlock puller,
-        @Nonnull Vector3i pullerPos,
-        @Nonnull Vector3i forward,
-        int maxRange
+            @Nonnull ChunkStoreCommandBufferLike commandBuffer,
+            @Nonnull World world,
+            @Nonnull ArcanePullerBlock puller,
+            @Nonnull Vector3i pullerPos,
+            @Nonnull Vector3i forward,
+            int maxRange
     ) {
         int actualLen = Math.min(maxRange, computeActualExtensionLength(world, pullerPos, forward, puller, maxRange));
-        
+
         int storedLen = puller.getExtensionLength();
 
         if (actualLen < storedLen) {
@@ -399,11 +375,11 @@ public class ArcanePullerActivation extends Activation {
     }
 
     private static int computeActualExtensionLength(
-        @Nonnull World world,
-        @Nonnull Vector3i pullerPos,
-        @Nonnull Vector3i forward,
-        @Nonnull ArcanePullerBlock puller,
-        int maxRange
+            @Nonnull World world,
+            @Nonnull Vector3i pullerPos,
+            @Nonnull Vector3i forward,
+            @Nonnull ArcanePullerBlock puller,
+            int maxRange
     ) {
         String extensionKey = puller.getExtensionBlockKey();
         if (extensionKey == null || extensionKey.isEmpty()) return 10;
@@ -439,12 +415,12 @@ public class ArcanePullerActivation extends Activation {
     }
 
     private static void updateExtensionConnectedBlocks(
-        @Nonnull Store<ChunkStore> store,
-        @Nonnull World world,
-        @Nonnull Vector3i pullerPos,
-        @Nonnull Vector3i forward,
-        int newLen,
-        @Nonnull String extensionKey
+            @Nonnull Store<ChunkStore> store,
+            @Nonnull World world,
+            @Nonnull Vector3i pullerPos,
+            @Nonnull Vector3i forward,
+            int newLen,
+            @Nonnull String extensionKey
     ) {
         if (newLen < 0 || extensionKey.isEmpty()) return;
 
@@ -459,17 +435,17 @@ public class ArcanePullerActivation extends Activation {
         int rotationIndex = chunk.getRotationIndex(x, y, z);
 
         Holder<ChunkStore> pullerHolder = pullerChunk.getBlockComponentHolder(
-            pullerPos.x, pullerPos.y, pullerPos.z
+                pullerPos.x, pullerPos.y, pullerPos.z
         );
 
         ArcaneConnectedBlocksUtil.updateCurrentAndPrevious(
-            store,
-            world,
-            new Vector3i(x, y, z),
-            forward,
-            RotationTuple.get(rotationIndex)
+                store,
+                world,
+                new Vector3i(x, y, z),
+                forward,
+                RotationTuple.get(rotationIndex)
         );
-        
+
         if (pullerHolder != null) {
             BlockType blockType = chunk.getBlockType(pullerPos.x, pullerPos.y, pullerPos.z);
             pullerChunk.setState(pullerPos.x, pullerPos.y, pullerPos.z, blockType, rotationIndex, pullerHolder);
