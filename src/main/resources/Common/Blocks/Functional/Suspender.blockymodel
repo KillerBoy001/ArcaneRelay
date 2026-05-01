@@ -53,25 +53,6 @@
     },
     {
       "id": "2",
-      "name": "PresurePlate",
-      "position": {"x": 0, "y": 0, "z": 0},
-      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
-      "shape": {
-        "type": "none",
-        "offset": {"x": 0, "y": 31, "z": 0},
-        "stretch": {"x": 1, "y": 1, "z": 1},
-        "settings": {
-          "isPiece": false
-        },
-        "textureLayout": {},
-        "unwrapMode": "custom",
-        "visible": true,
-        "doubleSided": false,
-        "shadingMode": "flat"
-      }
-    },
-    {
-      "id": "3",
       "name": "Gem",
       "position": {"x": 0, "y": 15.5, "z": 0},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -122,7 +103,7 @@
       }
     },
     {
-      "id": "4",
+      "id": "3",
       "name": "Top",
       "position": {"x": 0, "y": 28, "z": 0},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -137,27 +118,27 @@
         },
         "textureLayout": {
           "back": {
-            "offset": {"x": 32, "y": 51},
+            "offset": {"x": 0, "y": 72},
             "mirror": {"x": false, "y": false},
             "angle": 0
           },
           "right": {
-            "offset": {"x": 32, "y": 51},
+            "offset": {"x": 0, "y": 72},
             "mirror": {"x": false, "y": false},
             "angle": 0
           },
           "front": {
-            "offset": {"x": 32, "y": 51},
+            "offset": {"x": 0, "y": 72},
             "mirror": {"x": false, "y": false},
             "angle": 0
           },
           "left": {
-            "offset": {"x": 32, "y": 51},
+            "offset": {"x": 0, "y": 72},
             "mirror": {"x": false, "y": false},
             "angle": 0
           },
           "top": {
-            "offset": {"x": 32, "y": 32},
+            "offset": {"x": 64, "y": 64},
             "mirror": {"x": true, "y": true},
             "angle": 0
           },
@@ -174,7 +155,7 @@
       }
     },
     {
-      "id": "5",
+      "id": "4",
       "name": "Pillar",
       "position": {"x": -8, "y": 8, "z": -8},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -226,7 +207,7 @@
       }
     },
     {
-      "id": "6",
+      "id": "5",
       "name": "Pillar",
       "position": {"x": 12, "y": 8, "z": -8},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -278,7 +259,7 @@
       }
     },
     {
-      "id": "7",
+      "id": "6",
       "name": "Pillar",
       "position": {"x": -8, "y": 8, "z": 12},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -330,7 +311,7 @@
       }
     },
     {
-      "id": "8",
+      "id": "7",
       "name": "Pillar",
       "position": {"x": 12, "y": 8, "z": 12},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -382,7 +363,7 @@
       }
     },
     {
-      "id": "9",
+      "id": "8",
       "name": "chains",
       "position": {"x": 0, "y": 0, "z": 0},
       "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
@@ -401,7 +382,7 @@
       },
       "children": [
         {
-          "id": "10",
+          "id": "9",
           "name": "cube--C1",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": 0.36191, "y": -0.11168, "z": 0.27389, "w": 0.88405},
@@ -429,7 +410,7 @@
           }
         },
         {
-          "id": "11",
+          "id": "10",
           "name": "cube--C2",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": 0.06224, "y": 0.54615, "z": 0.44957, "w": 0.70408},
@@ -457,7 +438,7 @@
           }
         },
         {
-          "id": "12",
+          "id": "11",
           "name": "cube--C3",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": 0.44957, "y": 0.54615, "z": -0.06224, "w": 0.70408},
@@ -485,7 +466,7 @@
           }
         },
         {
-          "id": "13",
+          "id": "12",
           "name": "cube--C4",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": 0.36191, "y": 0.88405, "z": 0.27389, "w": 0.11168},
@@ -513,7 +494,7 @@
           }
         },
         {
-          "id": "14",
+          "id": "13",
           "name": "cube--C5",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": 0.54187, "y": 0.06829, "z": 0.70408, "w": 0.45385},
@@ -541,7 +522,7 @@
           }
         },
         {
-          "id": "15",
+          "id": "14",
           "name": "cube--C6",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": 0.88102, "y": -0.27264, "z": 0.1147, "w": 0.36921},
@@ -569,7 +550,7 @@
           }
         },
         {
-          "id": "16",
+          "id": "15",
           "name": "cube--C7",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": 0.81576, "y": 0.43019, "z": 0.34218, "w": 0.17996},
@@ -597,7 +578,7 @@
           }
         },
         {
-          "id": "17",
+          "id": "16",
           "name": "cube--C8",
           "position": {"x": 0, "y": 15.5, "z": 0},
           "orientation": {"x": -0.33487, "y": -0.43145, "z": -0.81878, "w": 0.17694},
@@ -625,6 +606,214 @@
           }
         }
       ]
+    },
+    {
+      "id": "17",
+      "name": "Pillar",
+      "position": {"x": -8, "y": 8, "z": 12},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "box",
+        "offset": {"x": -4.5, "y": 8, "z": 0.5},
+        "stretch": {"x": 1, "y": 1, "z": 1},
+        "settings": {
+          "isPiece": false,
+          "size": {"x": 3, "y": 16, "z": 3},
+          "isStaticBox": true
+        },
+        "textureLayout": {
+          "back": {
+            "offset": {"x": 61, "y": 70},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "right": {
+            "offset": {"x": 64, "y": 70},
+            "mirror": {"x": true, "y": false},
+            "angle": 0
+          },
+          "front": {
+            "offset": {"x": 61, "y": 70},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "left": {
+            "offset": {"x": 64, "y": 86},
+            "mirror": {"x": true, "y": true},
+            "angle": 0
+          },
+          "top": {
+            "offset": {"x": 0, "y": 3},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "bottom": {
+            "offset": {"x": 0, "y": 0},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          }
+        },
+        "unwrapMode": "custom",
+        "visible": true,
+        "doubleSided": false,
+        "shadingMode": "fullbright"
+      }
+    },
+    {
+      "id": "18",
+      "name": "Pillar",
+      "position": {"x": -8, "y": 8, "z": 12},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "box",
+        "offset": {"x": -4.5, "y": 8, "z": -24.5},
+        "stretch": {"x": 1, "y": 1, "z": 1},
+        "settings": {
+          "isPiece": false,
+          "size": {"x": 3, "y": 16, "z": 3},
+          "isStaticBox": true
+        },
+        "textureLayout": {
+          "back": {
+            "offset": {"x": 64, "y": 70},
+            "mirror": {"x": true, "y": false},
+            "angle": 0
+          },
+          "right": {
+            "offset": {"x": 61, "y": 70},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "front": {
+            "offset": {"x": 64, "y": 70},
+            "mirror": {"x": true, "y": false},
+            "angle": 0
+          },
+          "left": {
+            "offset": {"x": 61, "y": 86},
+            "mirror": {"x": false, "y": true},
+            "angle": 0
+          },
+          "top": {
+            "offset": {"x": 0, "y": 3},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "bottom": {
+            "offset": {"x": 0, "y": 0},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          }
+        },
+        "unwrapMode": "custom",
+        "visible": true,
+        "doubleSided": false,
+        "shadingMode": "fullbright"
+      }
+    },
+    {
+      "id": "19",
+      "name": "Pillar",
+      "position": {"x": -8, "y": 8, "z": 12},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "box",
+        "offset": {"x": 20.5, "y": 8, "z": -24.5},
+        "stretch": {"x": 1, "y": 1, "z": 1},
+        "settings": {
+          "isPiece": false,
+          "size": {"x": 3, "y": 16, "z": 3},
+          "isStaticBox": true
+        },
+        "textureLayout": {
+          "back": {
+            "offset": {"x": 61, "y": 70},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "right": {
+            "offset": {"x": 64, "y": 70},
+            "mirror": {"x": true, "y": false},
+            "angle": 0
+          },
+          "front": {
+            "offset": {"x": 61, "y": 70},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "left": {
+            "offset": {"x": 64, "y": 86},
+            "mirror": {"x": true, "y": true},
+            "angle": 0
+          },
+          "top": {
+            "offset": {"x": 0, "y": 3},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "bottom": {
+            "offset": {"x": 0, "y": 0},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          }
+        },
+        "unwrapMode": "custom",
+        "visible": true,
+        "doubleSided": false,
+        "shadingMode": "fullbright"
+      }
+    },
+    {
+      "id": "20",
+      "name": "Pillar",
+      "position": {"x": -8, "y": 8, "z": 12},
+      "orientation": {"x": 0, "y": 0, "z": 0, "w": 1},
+      "shape": {
+        "type": "box",
+        "offset": {"x": 20.5, "y": 8, "z": 0.5},
+        "stretch": {"x": 1, "y": 1, "z": 1},
+        "settings": {
+          "isPiece": false,
+          "size": {"x": 3, "y": 16, "z": 3},
+          "isStaticBox": true
+        },
+        "textureLayout": {
+          "back": {
+            "offset": {"x": 64, "y": 70},
+            "mirror": {"x": true, "y": false},
+            "angle": 0
+          },
+          "right": {
+            "offset": {"x": 61, "y": 70},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "front": {
+            "offset": {"x": 64, "y": 70},
+            "mirror": {"x": true, "y": false},
+            "angle": 0
+          },
+          "left": {
+            "offset": {"x": 61, "y": 86},
+            "mirror": {"x": false, "y": true},
+            "angle": 0
+          },
+          "top": {
+            "offset": {"x": 0, "y": 3},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          },
+          "bottom": {
+            "offset": {"x": 0, "y": 0},
+            "mirror": {"x": false, "y": false},
+            "angle": 0
+          }
+        },
+        "unwrapMode": "custom",
+        "visible": true,
+        "doubleSided": false,
+        "shadingMode": "fullbright"
+      }
     }
   ],
   "format": "prop",
