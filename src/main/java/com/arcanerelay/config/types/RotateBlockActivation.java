@@ -1,6 +1,7 @@
 package com.arcanerelay.config.types;
 
 import com.arcanerelay.ArcaneRelayPlugin;
+import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import static com.arcanerelay.util.BlockVectorUtil.*;
@@ -491,7 +492,8 @@ public class RotateBlockActivation extends Activation {
             Vector3i TempUp = GetUpVector(chunk, RotatorPos);
             Vector3i TargetPos = new Vector3i (RotatorPos.x+TempUp.x,RotatorPos.y+TempUp.y,RotatorPos.z+TempUp.z);
             BlockType TargetBlockType = chunk.getBlockType(TargetPos.x, TargetPos.y, TargetPos.z);
-            String TargetID = TargetBlockType.getId();
+            //String TargetID = TargetBlockType.getId();
+            String TargetID = com.arcanerelay.util.ArcaneUtil.getOriginalBlockTypeId(TargetBlockType); // Makes sure it doesnt do initial animation
 
             int OwnRotIndex = chunk.getRotationIndex(worldX, worldY, worldZ);
             int TargetRotIndex = chunk.getRotationIndex(TargetPos.x, TargetPos.y, TargetPos.z);
@@ -501,7 +503,7 @@ public class RotateBlockActivation extends Activation {
             if (TargetRotIndex !=NewRotInd){
                 Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
                 if(isRotatable(TargetBlockType)) {
-                    chunk.setBlock(TargetPos.x, TargetPos.y, TargetPos.z, assetMap.getIndex(TargetID), TargetBlockType, NewRotInd, 0, 0);
+                    chunk.setBlock(TargetPos.x, TargetPos.y, TargetPos.z, assetMap.getIndex(TargetID), TargetBlockType, NewRotInd, 0, 4);
                     chunk.setTicking(TargetPos.x, TargetPos.y, TargetPos.z,true);
                 } else {
                     ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Block of type: '%s', is not allowed to be rotated",TargetBlockType.getId());
