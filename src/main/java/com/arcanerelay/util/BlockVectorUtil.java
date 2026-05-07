@@ -13,7 +13,7 @@ import java.util.Arrays;
 public class BlockVectorUtil {
 
     static List<String> NoneMoveableIDs = Arrays.asList(
-            "Void_Suspender1", "Barrier", "Bedrock"
+            "Void_Suspender", "Barrier", "Bedrock"
     );
 
     static List<String> NoneRotatableIDs = Arrays.asList(
