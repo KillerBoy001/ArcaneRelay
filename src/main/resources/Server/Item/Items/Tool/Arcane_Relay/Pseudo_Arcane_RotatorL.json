@@ -14,7 +14,7 @@
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
     "Opacity": "Transparent",
-    "CustomModel": "Blocks/Functional/RotaterL.blockymodel",
+    "CustomModel": "Blocks/Functional/RotatorL.blockymodel",
     "CustomModelTexture": [
       {
         "Texture": "Blocks/Functional/Rotator_Texture.png",

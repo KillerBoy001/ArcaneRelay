@@ -13,11 +13,11 @@ import java.util.Arrays;
 public class BlockVectorUtil {
 
     static List<String> NoneMoveableIDs = Arrays.asList(
-            "Void_Suspender"
+            "Void_Suspender1", "Barrier", "Bedrock"
     );
 
     static List<String> NoneRotatableIDs = Arrays.asList(
-            "Void_Suspender", "Soil_Grass", "Bench", "Bed"
+            "Void_Suspender", "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"
     );
 
     private static boolean isExtensionBlock(@Nullable BlockType blockType) {
