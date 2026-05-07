@@ -63,11 +63,11 @@
     "State": {
       "Definitions": {
         "CloseDoorOut": {
-          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Rotater",
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Rotator",
           "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/RotatorL_Rotate.blockyanim"
         },
         "OpenDoorOut": {
-          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Rotater",
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Rotator",
           "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/RotatorL_Rotate.blockyanim"
         }
       }
