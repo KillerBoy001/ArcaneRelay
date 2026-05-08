@@ -8,6 +8,7 @@ import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import static com.arcanerelay.util.BlockVectorUtil.*;
+import com.arcanerelay.util.ArcaneConfig;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.resources.ArcaneMoveState;
@@ -41,6 +42,7 @@ import java.util.Set;
 
 
 public class ArcanePullerActivation extends Activation {
+    ArcaneConfig config = ArcaneRelayPlugin.getConfig();
     private int range = 15;
     private static final double KNOCKBACK_MAX_SPEED = 30;
     private static final float KNOCKBACK_DURATION = 0.1f;
@@ -96,7 +98,7 @@ public class ArcanePullerActivation extends Activation {
         Vector3i pullerPos = new Vector3i(worldX, worldY, worldZ);
         Vector3i globalUp = getGlobalUp(chunk, pullerBlockType, pullerPos);
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
-        int maxRange = getRange();
+        int maxRange = config.getPullerRange();//getRange();
 
         int[] source = sources.isEmpty() ? null : sources.get(0);
 

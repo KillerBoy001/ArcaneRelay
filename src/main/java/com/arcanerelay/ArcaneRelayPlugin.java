@@ -18,6 +18,7 @@ import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
 import com.arcanerelay.systems.ArcaneStaffHudSystem;
 import com.arcanerelay.systems.ArcaneSystems;
 import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
+import com.arcanerelay.util.ArcaneConfig;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.ResourceType;
@@ -29,10 +30,13 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Int
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenCustomUIInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.Config;
 
 import javax.annotation.Nonnull;
 
 public class ArcaneRelayPlugin extends JavaPlugin {
+    private static Config<ArcaneConfig> configRef;
+    private final Config<ArcaneConfig> config = withConfig("ArcaneRelayConfig", ArcaneConfig.CODEC);
 
     private static ArcaneRelayPlugin instance;
     /** Thread that ran plugin setup(); used to detect main thread for world.execute() etc. */
@@ -61,12 +65,20 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         super(init);
     }
 
+    public static ArcaneConfig getConfig() {
+        return (configRef != null) ? (ArcaneConfig)configRef.get() : new ArcaneConfig();
+    }
+
     public static ArcaneRelayPlugin get() {
         return instance;
     }
 
     @Override
     protected void setup() {
+        config.save();
+        configRef = this.config;
+        ArcaneConfig cfg = (ArcaneConfig)this.config.get();
+
         instance = this;
         mainThread = Thread.currentThread();
 

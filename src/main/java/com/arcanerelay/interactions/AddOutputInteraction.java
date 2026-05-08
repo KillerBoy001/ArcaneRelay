@@ -1,7 +1,9 @@
 package com.arcanerelay.interactions;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.components.ArcaneTriggerBlock;
+import com.arcanerelay.util.ArcaneConfig;
 import com.arcanerelay.util.VisualsUtil;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
@@ -29,7 +31,9 @@ import javax.annotation.Nonnull;
  * Uses ArcaneConfiguratorComponent to find the trigger block.
  */
 public class AddOutputInteraction extends SimpleInstantInteraction {
-    private static final double TRIGGER_DISTANCE = 10.0;
+    static ArcaneConfig config = ArcaneRelayPlugin.getConfig();
+    private static final double TRIGGER_DISTANCE = config.getTriggerDistance();
+    //private static final double TRIGGER_DISTANCE = 10.0;
 
     @Nonnull
     public static final BuilderCodec<AddOutputInteraction> CODEC = BuilderCodec.builder(

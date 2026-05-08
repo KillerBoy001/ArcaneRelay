@@ -37,7 +37,9 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.Config;
 import com.hypixel.hytale.server.core.util.TargetUtil;
+import com.arcanerelay.util.ArcaneConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 
 public class MoveBlockActivation extends Activation {
+    ArcaneConfig config = ArcaneRelayPlugin.getConfig();
     private int range = 1;
     private int upAmount = 1;
     private boolean isWall = false;
@@ -152,6 +155,7 @@ public class MoveBlockActivation extends Activation {
         commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
             World world = store.getExternalData().getWorld();
             Vector3i pusherPosition = new Vector3i(worldX, worldY, worldZ);
+            range = config.getPusherRange(); // Get range from Config instead
 
             Vector3i globalForward = getGlobalForwardVector(store, blockRef, sectionRef,
                 worldX, worldY, worldZ, pusherPosition);
@@ -165,7 +169,7 @@ public class MoveBlockActivation extends Activation {
                 return;
 
             Vector3i frontPusherPosition = pusherPosition.clone();
-            int maxRange = Math.max(1, range);
+            int maxRange = Math.max(1, range);//config.getPusherRange()
 
             int[] chainBlockIds               = new int[maxRange];
             int[] chainRotations              = new int[maxRange];

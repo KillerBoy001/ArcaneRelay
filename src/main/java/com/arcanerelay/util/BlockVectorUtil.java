@@ -1,5 +1,6 @@
 package com.arcanerelay.util;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -11,14 +12,17 @@ import java.util.List;
 import java.util.Arrays;
 
 public class BlockVectorUtil {
+    static ArcaneConfig config = ArcaneRelayPlugin.getConfig();
 
-    static List<String> NoneMoveableIDs = Arrays.asList(
-            "Void_Suspender", "Barrier", "Bedrock"
-    );
+    static List<String> NoneMoveableIDs = Arrays.asList(config.getNotMoveableBlocks());
+    static List<String> NoneRotatableIDs = Arrays.asList(config.getNotRotateableBlocks());
+    //static List<String> NoneMoveableIDs = Arrays.asList(
+    //        "Void_Suspender", "Barrier", "Bedrock"
+    //);
 
-    static List<String> NoneRotatableIDs = Arrays.asList(
-            "Void_Suspender", "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"
-    );
+    //static List<String> NoneRotatableIDs = Arrays.asList(
+    //        "Void_Suspender", "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"
+    //);
 
     private static boolean isExtensionBlock(@Nullable BlockType blockType) {
         if (blockType == null) return false;
