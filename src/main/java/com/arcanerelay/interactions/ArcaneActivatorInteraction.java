@@ -47,7 +47,7 @@ import javax.annotation.Nonnull;
  */
 public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
     static ArcaneConfig config = ArcaneRelayPlugin.getConfig();
-    private static final double TARGET_DISTANCE = config.getTriggerDistance();
+    private static final double TARGET_DISTANCE = config.getTargetDistance();
     //private static final double TARGET_DISTANCE = 10.0;
 
     @Nonnull
