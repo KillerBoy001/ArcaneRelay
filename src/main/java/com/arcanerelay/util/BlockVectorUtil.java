@@ -32,6 +32,16 @@ public class BlockVectorUtil {
         return lower.contains("puller") && lower.contains("extension");
     }
 
+    public static void SetTickingAround(@Nonnull WorldChunk chnk,Vector3i Pos, int range) {
+        for (int x = -range; x <= range; x++) {
+            for (int y = -range; y <= range; y++) {
+                for (int z = -range; z <= range; z++) {
+                    chnk.setTicking(Pos.x+x, Pos.y+y, Pos.z+z,true);
+                }
+            }
+        }
+    }
+
     public static boolean isEmpty(@Nullable BlockType blockType, int blockID) {
         if (blockID == 0 ) return false;
         return isEmpty(blockType);
@@ -51,6 +61,7 @@ public class BlockVectorUtil {
         if (isExtensionBlock(blockType)) return false;
         for (String keyword : NoneMoveableIDs) {
             if (id.contains(keyword)) {
+
                 return false;
             }
         }

@@ -65,7 +65,7 @@
     "VariantRotation": "NESW",
     "Gathering": {
       "Breaking": {
-        "ItemId": "Psuedo_Arcane_Sensor",
+        "ItemId": "Pseudo_Arcane_Void_Suspender",
         "GatherType": "Rocks"
       }
     },
