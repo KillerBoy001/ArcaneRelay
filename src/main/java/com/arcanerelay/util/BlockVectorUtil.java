@@ -20,6 +20,16 @@ public class BlockVectorUtil {
             "Void_Suspender", "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"
     );
 
+    public static void SetTickingAround(@Nonnull WorldChunk chnk,Vector3i Pos, int range) {
+        for (int x = -range; x <= range; x++) {
+            for (int y = -range; y <= range; y++) {
+                for (int z = -range; z <= range; z++) {
+                    chnk.setTicking(Pos.x+x, Pos.y+y, Pos.z+z,true);
+                }
+            }
+        }
+    }
+
     private static boolean isExtensionBlock(@Nullable BlockType blockType) {
         if (blockType == null) return false;
         String id = blockType.getId();

@@ -504,7 +504,7 @@ public class RotateBlockActivation extends Activation {
                 Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
                 if(isRotatable(TargetBlockType)) {
                     chunk.setBlock(TargetPos.x, TargetPos.y, TargetPos.z, assetMap.getIndex(TargetID), TargetBlockType, NewRotInd, 0, 4);
-                    chunk.setTicking(TargetPos.x, TargetPos.y, TargetPos.z,true);
+                    SetTickingAround(chunk,TargetPos,1);
                 } else {
                     ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Block of type: '%s', is not allowed to be rotated",TargetBlockType.getId());
                 }
