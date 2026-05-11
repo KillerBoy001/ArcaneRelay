@@ -7,8 +7,8 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
-import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.util.BlockVectorUtil;
 import com.arcanerelay.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.hypixel.hytale.codec.Codec;
@@ -146,7 +146,7 @@ public class ArcanePullerActivation extends Activation {
                 "Puller EXTENDING at %d,%d,%d: extLen=%d tip=%d,%d,%d blockId=%d",
                 pullerPos.x, pullerPos.y, pullerPos.z, extLen, tipX, tipY, tipZ, tipBlockId);
 
-        if (isPullable(tipBlockType, tipBlockId)) {
+        if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)) {
             if (extLen == 0) {
                 puller.setIDLE();
                 commandBuffer.run((Store<ChunkStore> s) -> {
@@ -281,7 +281,7 @@ public class ArcanePullerActivation extends Activation {
 
         ArcaneRelayPlugin.LOGGER.atInfo().log(
                 "Puller move-entry check: extLen=%d tip=%d,%d,%d blockId=%d pullable=%s",
-                extLen, tipPos.x, tipPos.y, tipPos.z, tipBlockId, isPullable(tipBlockType, tipBlockId));
+                extLen, tipPos.x, tipPos.y, tipPos.z, tipBlockId, BlockVectorUtil.isPullable(tipBlockType, tipBlockId));
         commandBuffer.run((Store<ChunkStore> s) -> {
             WorldChunk lastChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(lastPos.x, lastPos.z));
             if (lastChunk != null) {
@@ -291,7 +291,7 @@ public class ArcanePullerActivation extends Activation {
             updateExtensionConnectedBlocks(s, world, pullerPos, globalUp, newLen, puller.getExtensionBlockKey());
 
 
-            if (isPullable(tipBlockType, tipBlockId)) {
+            if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)) {
                 ArcaneMoveState moveState = s.getResource(ArcaneMoveState.getResourceType());
                 if (moveState == null) return;
                 moveState.addMoveEntry(tipPos, globalUp.clone().scale(-1), tipBlockType, tipBlockId,
@@ -339,7 +339,7 @@ public class ArcanePullerActivation extends Activation {
         //int rotationIndex = chunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
         //RotationTuple rotationTuple = RotationTuple.get(rotationIndex);
         //Vector3d global = rotationTuple.rotatedVector(localUp);
-        Vector3i global = GetUpVector(chunk,pullerPos);
+        Vector3i global = BlockVectorUtil.getUpVector(chunk,pullerPos);
         //Vector3d global = rotationTuple.rotatedVector(localUp);
         return global;
     }

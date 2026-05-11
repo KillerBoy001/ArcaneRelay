@@ -2,9 +2,9 @@ package com.arcanerelay.config.types;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.util.BlockVectorUtil;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
-import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
@@ -489,7 +489,7 @@ public class RotateBlockActivation extends Activation {
             boolean IsClockWise = isClockWise(RotatorBlockType); // If RotatorL
 
             // Target Info
-            Vector3i TempUp = GetUpVector(chunk, RotatorPos);
+            Vector3i TempUp = BlockVectorUtil.getUpVector(chunk, RotatorPos);
             Vector3i TargetPos = new Vector3i (RotatorPos.x+TempUp.x,RotatorPos.y+TempUp.y,RotatorPos.z+TempUp.z);
             BlockType TargetBlockType = chunk.getBlockType(TargetPos.x, TargetPos.y, TargetPos.z);
             //String TargetID = TargetBlockType.getId();
@@ -500,11 +500,11 @@ public class RotateBlockActivation extends Activation {
 
             int NewRotInd = GetNewTarRotIndex(OwnRotIndex,TargetRotIndex,IsClockWise);
 
-            if (TargetRotIndex !=NewRotInd){
+            if (TargetRotIndex != NewRotInd){
                 Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
-                if(isRotatable(TargetBlockType)) {
+                if(BlockVectorUtil.isRotatable(TargetBlockType)) {
                     chunk.setBlock(TargetPos.x, TargetPos.y, TargetPos.z, assetMap.getIndex(TargetID), TargetBlockType, NewRotInd, 0, 4);
-                    SetTickingAround(chunk,TargetPos,1);
+                    BlockVectorUtil.setTickingAround(chunk,TargetPos,1);
                 } else {
                     ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Block of type: '%s', is not allowed to be rotated",TargetBlockType.getId());
                 }

@@ -13,14 +13,14 @@ import java.util.Arrays;
 public class BlockVectorUtil {
 
     static List<String> NoneMoveableIDs = Arrays.asList(
-            "Void_Suspender", "Barrier", "Bedrock"
+            "Barrier", "Bedrock"
     );
 
     static List<String> NoneRotatableIDs = Arrays.asList(
-            "Void_Suspender", "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"
+            "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"
     );
 
-    public static void SetTickingAround(@Nonnull WorldChunk chnk,Vector3i Pos, int range) {
+    public static void setTickingAround(@Nonnull WorldChunk chnk,Vector3i Pos, int range) {
         for (int x = -range; x <= range; x++) {
             for (int y = -range; y <= range; y++) {
                 for (int z = -range; z <= range; z++) {
@@ -95,16 +95,16 @@ public class BlockVectorUtil {
     }
 
     /** Gets the local upward Vector from a block based on its RotationIndex. */
-    public static Vector3i GetUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos) {
-        return GetUpVector(chnk,SourcePos,false,1);
+    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos) {
+        return getUpVector(chnk,SourcePos,false,1);
     }
-    public static Vector3i GetUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos,int Distance) {
-        return GetUpVector(chnk,SourcePos,false,Distance);
+    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos,int Distance) {
+        return getUpVector(chnk,SourcePos,false,Distance);
     }
-    public static  Vector3i GetUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher) {
-        return GetUpVector(chnk,SourcePos,IsWallPusher,1);
+    public static  Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher) {
+        return getUpVector(chnk,SourcePos,IsWallPusher,1);
     }
-    public static Vector3i GetUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos,boolean IsWallPusher,int Distance){
+    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos,boolean IsWallPusher,int Distance){
         int RotIndex = chnk.getRotationIndex(SourcePos.x,SourcePos.y,SourcePos.z);
         if(IsWallPusher) {
             return switch (RotIndex) {
@@ -182,16 +182,16 @@ public class BlockVectorUtil {
     }
 
     /** Gets the local forward Vector from a block based on its RotationIndex. */
-    public static Vector3i GetForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos) {
-        return GetForwardVector(chnk,SourcePos,false,1);
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos) {
+        return getForwardVector(chnk,SourcePos,false,1);
     }
-    public static Vector3i GetForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos,int Distance) {
-        return GetForwardVector(chnk,SourcePos,false,Distance);
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos,int Distance) {
+        return getForwardVector(chnk,SourcePos,false,Distance);
     }
-    public static Vector3i GetForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher) {
-        return GetForwardVector(chnk,SourcePos,IsWallPusher,1);
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher) {
+        return getForwardVector(chnk,SourcePos,IsWallPusher,1);
     }
-    public static Vector3i GetForwardVector(@Nonnull WorldChunk chnk,Vector3i SourcePos,boolean IsWallPusher,int Distance){
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk,Vector3i SourcePos,boolean IsWallPusher,int Distance){
         int RotIndex = chnk.getRotationIndex(SourcePos.x,SourcePos.y,SourcePos.z);
         if(IsWallPusher) {
             return switch (RotIndex) {

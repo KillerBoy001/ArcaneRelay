@@ -6,8 +6,8 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.resources.ArcaneMoveState;
-import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -83,17 +83,6 @@ public class MoveBlockActivation extends Activation {
         this.range = range;
     }
 
-    //private static boolean isPushable(@Nullable BlockType blockType, int blockId) {
-    //    String id = blockType.getId();
-    //    if (blockId == 0)
-    //        return false;
-    //    if (blockType == null)
-    //        return false;
-    //    if (id.contains("Void_Suspender"))
-    //        return false;
-    //    return blockType.getMaterial() != BlockMaterial.Empty;
-    //}
-
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
             return true;
@@ -124,7 +113,7 @@ public class MoveBlockActivation extends Activation {
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
         Vector3i Nul = new Vector3i(0, 0, 0);
 
-        Vector3i ForwardVector = GetForwardVector(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
+        Vector3i ForwardVector = BlockVectorUtil.getForwardVector(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
         return ForwardVector;
     }
 
@@ -136,7 +125,7 @@ public class MoveBlockActivation extends Activation {
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
         Vector3i Nul = new Vector3i(0, 0, 0);
 
-        Vector3i UpVector = GetUpVector(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
+        Vector3i UpVector = BlockVectorUtil.getUpVector(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
         return UpVector;
     }
 
@@ -183,7 +172,7 @@ public class MoveBlockActivation extends Activation {
 
                 int blockId = chunk.getBlock(c.x, c.y, c.z);
                 BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
-                if (!isMoveable(blockType,blockId))
+                if (!BlockVectorUtil.isMoveable(blockType,blockId))
                     break;
 
                 chainBlockIds[chainLength]     = blockId;
