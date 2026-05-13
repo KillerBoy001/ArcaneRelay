@@ -94,7 +94,7 @@ public class ArcanePullerActivation extends Activation {
 
 
         Vector3i pullerPos = new Vector3i(worldX, worldY, worldZ);
-        Vector3i globalUp = getGlobalUp(chunk, pullerBlockType, pullerPos);
+        Vector3i globalUp = BlockVectorUtil.getUpVector(chunk, pullerPos);
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
         int maxRange = getRange();
 
@@ -333,15 +333,6 @@ public class ArcanePullerActivation extends Activation {
 
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;
-    }
-
-    public static Vector3i getGlobalUp(WorldChunk chunk, BlockType blockType, Vector3i pullerPos) {
-        //int rotationIndex = chunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
-        //RotationTuple rotationTuple = RotationTuple.get(rotationIndex);
-        //Vector3d global = rotationTuple.rotatedVector(localUp);
-        Vector3i global = BlockVectorUtil.getUpVector(chunk,pullerPos);
-        //Vector3d global = rotationTuple.rotatedVector(localUp);
-        return global;
     }
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {

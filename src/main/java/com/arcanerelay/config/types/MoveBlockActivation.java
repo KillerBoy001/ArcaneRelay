@@ -7,6 +7,7 @@ import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.util.BlockUtil;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -86,8 +87,10 @@ public class MoveBlockActivation extends Activation {
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
             return true;
+
         if (blockType == null)
             return true;
+
         return blockType.getMaterial() == BlockMaterial.Empty;
     }
 
@@ -95,38 +98,36 @@ public class MoveBlockActivation extends Activation {
         World world = commandBuffer.getExternalData().getWorld();
         WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (chunk == null) return false;
+
         BlockType blockType = chunk.getBlockType(worldX, worldY, worldZ);
         if (blockType == null) return false;
+
         if (isWall)
             return true;
+
         if (blockType.getVariantRotation() == VariantRotation.Wall)
             return true;
+        
         String id = blockType.getId();
         return id != null && id.toLowerCase().contains("wall");
     }
 
     private Vector3i getGlobalForwardVector(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ, Vector3i pusherPosition) {
         boolean isWallPusher = isWallPusherVariant(commandBuffer, blockRef, sectionRef, worldX, worldY, worldZ);
-        BlockType pusherBlockType = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ)).getBlockType(worldX, worldY, worldZ);
-        if (pusherBlockType == null) return new Vector3i(0, 0, 0);
+        
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
-        Vector3i Nul = new Vector3i(0, 0, 0);
 
-        Vector3i ForwardVector = BlockVectorUtil.getForwardVector(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
-        return ForwardVector;
+        return BlockVectorUtil.getForwardVector(pusherChunk, pusherPosition, isWallPusher);
     }
 
     private Vector3i getGlobalUpVector(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ, Vector3i pusherPosition) {
         boolean isWallPusher = isWallPusherVariant(commandBuffer, blockRef, sectionRef, worldX, worldY, worldZ);
-        BlockType pusherBlockType = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ)).getBlockType(worldX, worldY, worldZ);
-        if (pusherBlockType == null) return new Vector3i(0, 0, 0);
+                
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
-        Vector3i Nul = new Vector3i(0, 0, 0);
 
-        Vector3i UpVector = BlockVectorUtil.getUpVector(pusherChunk,new Vector3i(pusherPosition.x, pusherPosition.y, pusherPosition.z),isWallPusher);
-        return UpVector;
+        return BlockVectorUtil.getUpVector(pusherChunk, pusherPosition, isWallPusher);
     }
 
     @Override
@@ -233,12 +234,12 @@ public class MoveBlockActivation extends Activation {
         if (entityStore == null) return;
 
         Set<Ref<EntityStore>> entitiesOnTop = new HashSet<>();
-        collectEntitiesOnTopOfBlock(entityStore, nextEmptyPosition, entitiesOnTop);
-        collectEntitiesOnTopOfBlock(entityStore, frontPusherPosition.clone(), entitiesOnTop);
+        BlockUtil.collectEntitiesOnTopOfBlock(entityStore, nextEmptyPosition, entitiesOnTop);
+        BlockUtil.collectEntitiesOnTopOfBlock(entityStore, frontPusherPosition.clone(), entitiesOnTop);
 
         for (int i = 0; i < len; i++) {
             Vector3i fromPosition = frontPusherPosition.clone().add(globalForward.clone().scale(i).add(scaledGlobalUpVector));
-            collectEntitiesOnTopOfBlock(entityStore, fromPosition, entitiesOnTop);
+            BlockUtil.collectEntitiesOnTopOfBlock(entityStore, fromPosition, entitiesOnTop);
         }
 
         final List<Ref<EntityStore>> entitiesOnTopList = new ArrayList<>(entitiesOnTop);
@@ -252,50 +253,6 @@ public class MoveBlockActivation extends Activation {
                 continue;
 
             moveEntityWithBlock(world, entityStore, ref, transform, globalForward);
-        }
-    }
-
-    private static final double FEET_Y_OFFSET = -0.5;
-
-    private static Vector3d getFeetPosition(@Nonnull TransformComponent transform,
-            @Nullable BoundingBox boundingBox) {
-        Vector3d feetPosition = transform.getPosition().clone();
-
-        if (boundingBox != null) {
-            feetPosition.add(0, boundingBox.getBoundingBox().min.y, 0);
-        } else {
-            feetPosition.add(0, FEET_Y_OFFSET, 0);
-        }
-
-        return feetPosition;
-    }
-
-    private static boolean isFeetOnTopOfBlock(Vector3d feetPosition, Vector3i blockPosition) {
-        return feetPosition.x >= blockPosition.x - 0.1 && feetPosition.x <= blockPosition.x + 1.1
-            && feetPosition.y >= blockPosition.y + 0.95 && feetPosition.y <= blockPosition.y + 1.1
-            && feetPosition.z >= blockPosition.z - 0.1 && feetPosition.z <= blockPosition.z + 1.1;
-    }
-
-    private static void collectEntitiesOnTopOfBlock(
-            @Nonnull Store<EntityStore> entityStore,
-            Vector3i blockPosition,
-            @Nonnull Set<Ref<EntityStore>> out) {
-        Vector3d min = new Vector3d(blockPosition.x - 0.1, blockPosition.y + 0.9, blockPosition.z - 0.1);
-        Vector3d max = new Vector3d(blockPosition.x + 1.1, blockPosition.y + 2.1, blockPosition.z + 1.1);
-
-        for (var ref : TargetUtil.getAllEntitiesInBox(min, max, entityStore)) {
-            if (ref == null || !ref.isValid())
-                continue;
-
-            TransformComponent transform = entityStore.getComponent(ref, TransformComponent.getComponentType());
-            if (transform == null)
-                continue;
-
-            BoundingBox boundingBox = entityStore.getComponent(ref, BoundingBox.getComponentType());
-            Vector3d feet = getFeetPosition(transform, boundingBox);
-
-            if (isFeetOnTopOfBlock(feet, blockPosition))
-                out.add(ref);
         }
     }
 

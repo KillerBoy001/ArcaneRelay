@@ -16,17 +16,17 @@ import java.util.Arrays;
 
 public class BlockVectorUtil {
 
-    static List<String> NoneMoveableIDs = Arrays.asList(
+    private static List<String> NoneMoveableIDs = Arrays.asList(
             "Barrier", "Bedrock");
 
-    static List<String> NoneRotatableIDs = Arrays.asList(
+    private static List<String> NoneRotatableIDs = Arrays.asList(
             "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock");
 
-    public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i Pos, int range) {
+    public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i pos, int range) {
         for (int x = -range; x <= range; x++) {
             for (int y = -range; y <= range; y++) {
                 for (int z = -range; z <= range; z++) {
-                    chnk.setTicking(Pos.x + x, Pos.y + y, Pos.z + z, true);
+                    chnk.setTicking(pos.x + x, pos.y + y, pos.z + z, true);
                 }
             }
         }
@@ -118,48 +118,48 @@ public class BlockVectorUtil {
         return blockType.getMaterial() != BlockMaterial.Empty;
     }
 
-    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos) {
-        return getUpVector(chnk, SourcePos, false, 1);
+    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i sourcePos) {
+        return getUpVector(chnk, sourcePos, false, 1);
     }
 
-    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, int Distance) {
-        return getUpVector(chnk, SourcePos, false, Distance);
+    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i sourcePos, int distance) {
+        return getUpVector(chnk, sourcePos, false, distance);
     }
 
-    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher) {
-        return getUpVector(chnk, SourcePos, IsWallPusher, 1);
+    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i sourcePos, boolean isWallPusher) {
+        return getUpVector(chnk, sourcePos, isWallPusher, 1);
     }
 
-    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher, int Distance) {
-        int RotIndex = chnk.getRotationIndex(SourcePos.x, SourcePos.y, SourcePos.z);
+    public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i sourcePos, boolean isWallPusher, int distance) {
+        int RotIndex = chnk.getRotationIndex(sourcePos.x, sourcePos.y, sourcePos.z);
         RotationTuple blockRotation = RotationTuple.get(RotIndex);
 
-        Vector3i localUp = IsWallPusher ? new Vector3i(0, 0, 1) : new Vector3i(0, 1, 0);
+        Vector3i localUp = isWallPusher ? new Vector3i(0, 0, 1) : new Vector3i(0, 1, 0);
         Vector3i resultVector = applyRotationToVector(localUp, blockRotation);
 
-        return resultVector.scale(Distance);
+        return resultVector.scale(distance);
     }
 
-    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos) {
-        return getForwardVector(chnk, SourcePos, false, 1);
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i sourcePos) {
+        return getForwardVector(chnk, sourcePos, false, 1);
     }
 
-    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, int Distance) {
-        return getForwardVector(chnk, SourcePos, false, Distance);
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i sourcePos, int distance) {
+        return getForwardVector(chnk, sourcePos, false, distance);
     }
 
-    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher) {
-        return getForwardVector(chnk, SourcePos, IsWallPusher, 1);
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i sourcePos, boolean isWallPusher) {
+        return getForwardVector(chnk, sourcePos, isWallPusher, 1);
     }
 
-    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i SourcePos, boolean IsWallPusher, int Distance) {
-        int RotIndex = chnk.getRotationIndex(SourcePos.x, SourcePos.y, SourcePos.z);
+    public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i sourcePos, boolean isWallPusher, int distance) {
+        int RotIndex = chnk.getRotationIndex(sourcePos.x, sourcePos.y, sourcePos.z);
         RotationTuple blockRotation = RotationTuple.get(RotIndex);
 
-        Vector3i localForward = IsWallPusher ? new Vector3i(0, -1, 0) : new Vector3i(0, 0, -1);
+        Vector3i localForward = isWallPusher ? new Vector3i(0, -1, 0) : new Vector3i(0, 0, -1);
         Vector3i resultVector = applyRotationToVector(localForward, blockRotation);
 
-        return resultVector.scale(Distance);
+        return resultVector.scale(distance);
     }
 
     /**
@@ -182,9 +182,9 @@ public class BlockVectorUtil {
 
         Vector3d vec = new Vector3d(vector.x, vector.y, vector.z);
 
-        vec = Rotation.rotate(vec, Rotation.None, Rotation.None, roll);
-        vec = Rotation.rotate(vec, Rotation.None, pitch, Rotation.None);
-        vec = Rotation.rotate(vec, yaw, Rotation.None, Rotation.None);
+        roll.rotateZ(vec, vec);
+        pitch.rotateX(vec, vec);
+        yaw.rotateY(vec, vec);
 
         return new Vector3i((int) Math.round(vec.x), (int) Math.round(vec.y), (int) Math.round(vec.z));
     }

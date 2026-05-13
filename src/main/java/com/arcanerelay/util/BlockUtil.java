@@ -1,9 +1,19 @@
 package com.arcanerelay.util;
 
+import com.hypixel.hytale.component.Ref;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.TargetUtil;
+
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -56,5 +66,48 @@ public final class BlockUtil {
         }
 
         return null;
+    }
+
+    private static final double FEET_Y_OFFSET = -0.5;
+    private static Vector3d getFeetPosition(@Nonnull TransformComponent transform,
+            @Nullable BoundingBox boundingBox) {
+        Vector3d feetPosition = transform.getPosition().clone();
+
+        if (boundingBox != null) {
+            feetPosition.add(0, boundingBox.getBoundingBox().min.y, 0);
+        } else {
+            feetPosition.add(0, FEET_Y_OFFSET, 0);
+        }
+
+        return feetPosition;
+    }
+
+    private static boolean isFeetOnTopOfBlock(Vector3d feetPosition, Vector3i blockPosition) {
+        return feetPosition.x >= blockPosition.x - 0.1 && feetPosition.x <= blockPosition.x + 1.1
+            && feetPosition.y >= blockPosition.y + 0.95 && feetPosition.y <= blockPosition.y + 1.1
+            && feetPosition.z >= blockPosition.z - 0.1 && feetPosition.z <= blockPosition.z + 1.1;
+    }
+
+    public static void collectEntitiesOnTopOfBlock(
+            @Nonnull Store<EntityStore> entityStore,
+            Vector3i blockPosition,
+            @Nonnull Set<Ref<EntityStore>> out) {
+        Vector3d min = new Vector3d(blockPosition.x - 0.1, blockPosition.y + 0.9, blockPosition.z - 0.1);
+        Vector3d max = new Vector3d(blockPosition.x + 1.1, blockPosition.y + 2.1, blockPosition.z + 1.1);
+
+        for (var ref : TargetUtil.getAllEntitiesInBox(min, max, entityStore)) {
+            if (ref == null || !ref.isValid())
+                continue;
+
+            TransformComponent transform = entityStore.getComponent(ref, TransformComponent.getComponentType());
+            if (transform == null)
+                continue;
+
+            BoundingBox boundingBox = entityStore.getComponent(ref, BoundingBox.getComponentType());
+            Vector3d feet = getFeetPosition(transform, boundingBox);
+
+            if (isFeetOnTopOfBlock(feet, blockPosition))
+                out.add(ref);
+        }
     }
 }
