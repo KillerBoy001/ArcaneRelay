@@ -1,6 +1,7 @@
 package com.arcanerelay.util;
 
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.Axis;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -186,5 +187,50 @@ public class BlockVectorUtil {
         vec = Rotation.rotate(vec, yaw, Rotation.None, Rotation.None);
 
         return new Vector3i((int) Math.round(vec.x), (int) Math.round(vec.y), (int) Math.round(vec.z));
+    }
+
+    public static RotationTuple rotateOverAxis90Degrees(RotationTuple currentRotation, Vector3i rotationAxis, boolean clockwise) {
+        Axis axis = getAxisFromVector(rotationAxis);
+        if (axis == null) return currentRotation;
+
+        boolean isNegativeAxis = (rotationAxis.x < 0 || rotationAxis.y < 0 || rotationAxis.z < 0);
+        
+        Rotation addedRotation;
+        if (clockwise) {
+            addedRotation = isNegativeAxis ? Rotation.Ninety : Rotation.TwoSeventy;
+        } else {
+            addedRotation = isNegativeAxis ? Rotation.TwoSeventy : Rotation.Ninety;
+        }
+       
+        Rotation roll = (currentRotation.roll() == null) ? Rotation.None : currentRotation.roll();
+        Rotation pitch = (currentRotation.pitch() == null) ? Rotation.None : currentRotation.pitch();
+        Rotation yaw = (currentRotation.yaw() == null) ? Rotation.None : currentRotation.yaw();
+
+        RotationTuple result = RotationTuple.of(Rotation.None, Rotation.None, roll);
+        result = result.composeOnAxis(Axis.X, pitch);
+        result = result.composeOnAxis(Axis.Y, yaw);
+
+        return result.composeOnAxis(axis, addedRotation);
+    }
+
+     /**
+     * Determines which global axis (X, Y, or Z) a vector primarily points along.
+     * Returns the axis with the largest absolute component.
+     */
+    @Nullable
+    private static Axis getAxisFromVector(@Nonnull Vector3i vector) {
+        double x = Math.abs(vector.x);
+        double y = Math.abs(vector.y);
+        double z = Math.abs(vector.z);
+        
+        if (x > y && x > z) {
+            return Axis.X;
+        } else if (y > x && y > z) {
+            return Axis.Y;
+        } else if (z > x && z > y) {
+            return Axis.Z;
+        }
+        
+        return null;
     }
 }
