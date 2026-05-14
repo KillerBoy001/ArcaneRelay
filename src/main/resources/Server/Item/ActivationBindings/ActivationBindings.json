@@ -11,6 +11,7 @@
     "Furniture_Royal_Magic_Potion_Glow": "Toggle_Torch_Crude"
   },
   "ContainsBindings": {
+    "Pseudo_Arcane_Rotator": "Rotator_Chain",
     "Door": "Toggle_Door",
     "Gate": "Toggle_Door",
     "Lamp": "Toggle_Torch",
