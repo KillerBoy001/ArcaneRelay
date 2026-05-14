@@ -1,0 +1,12 @@
+{
+  "QualityValue": 6,
+  "ItemTooltipTexture": "UI/ItemQualities/Tooltips/ItemTooltipDefault.png",
+  "ItemTooltipArrowTexture": "UI/ItemQualities/Tooltips/ItemTooltipDefaultArrow.png",
+  "SlotTexture": "UI/ItemQualities/Slots/RelayArtifacts.png",
+  "BlockSlotTexture": "UI/ItemQualities/Slots/RelayArtifacts.png",
+  "SpecialSlotTexture": "UI/ItemQualities/Slots/RelayArtifacts.png",
+  "TextColor": "#269edc",
+  "LocalizationKey": "server.general.qualities.Tool",
+  "VisibleQualityLabel": true,
+  "RenderSpecialSlot": true
+}

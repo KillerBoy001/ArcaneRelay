@@ -1,0 +1,14 @@
+{
+  "Icon": "Icons/ItemCategories/ArcaneRelay.png",
+  "Order": 50,
+  "Children": [
+    {
+      "Id": "Arcane_Relay",
+      "Name": "Arcane Relay",
+      "Icon": "Icons/ItemCategories/TechnicalBlocks.png",
+      "Order": 1
+    }
+  ],
+  "Name": "Arcane Relay",
+  "InfoDisplayMode": "Tooltip"
+}
