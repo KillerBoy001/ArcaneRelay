@@ -82,3 +82,18 @@ customUI.ConnectionRow.buttonRemoveTitle = Remove
 benchCategories.relayArtifacts = Relay Artifacts
 benchCategories.vectorArtifacts = Vector Artifacts
 benchCategories.voidArtifacts = Void Artifacts
+
+# === Qualities ===
+
+arcanerelay.qualities.arcaneTool = Arcane Tool
+arcanerelay.qualities.relayArtifact = Relay Artifact
+arcanerelay.qualities.vectorArtifact = Vector Artifact
+
+# === Creative Category ===
+ui.arcanerelaycategory.name = Arcane Relay
+ui.arcanerelaycategory.subcategory.tools.name = Arcane Tools
+ui.arcanerelaycategory.subcategory.tools.description = The essential tools for Arcane Relay. With them you can craft and connect all the other arcane artifacts.
+ui.arcanerelaycategory.subcategory.relayArtifacts.name = Relay Artifacts
+ui.arcanerelaycategory.subcategory.relayArtifacts.description = Used to relay signals within other arcane artifacts or other Hytale components like doors, trapdoors, and lights.  
+ui.arcanerelaycategory.subcategory.vectorArtifacts.name = Vector Artifacts
+ui.arcanerelaycategory.subcategory.vectorArtifacts.description = Used to move or rotate blocks within the world. Trigger them manualy or remotely via a signal and reshape the world around you. 

@@ -5,9 +5,11 @@
   },
   "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Antiquarian_Bench.png",
   "Categories": [
-    "Furniture.Benches"
+    "Furniture.Benches",
+    "Pseudo_Arcane_Category.Arcane_Relay"
   ],
-  "Quality": "Tool",
+  "Quality": "Arcane_Tools",
+  "SubCategory": "Arcane_Tools",
   "Recipe": {
     "TimeSeconds": 3,
     "Input": [
