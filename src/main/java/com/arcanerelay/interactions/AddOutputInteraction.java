@@ -32,8 +32,7 @@ import javax.annotation.Nonnull;
  */
 public class AddOutputInteraction extends SimpleInstantInteraction {
     static ArcaneConfig config = ArcaneRelayPlugin.getConfig();
-    private static final double TRIGGER_DISTANCE = config.getTriggerDistance();
-    //private static final double TRIGGER_DISTANCE = 10.0;
+    private static final double TRIGGER_DISTANCE = config.getTriggerDistance(); // util.ArcaneConfig now sets default: 10.0
 
     @Nonnull
     public static final BuilderCodec<AddOutputInteraction> CODEC = BuilderCodec.builder(

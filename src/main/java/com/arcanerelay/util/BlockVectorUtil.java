@@ -14,8 +14,8 @@ import java.util.Arrays;
 public class BlockVectorUtil {
     static ArcaneConfig config = ArcaneRelayPlugin.getConfig();
 
-    static List<String> NoneMoveableIDs = Arrays.asList(config.getNotMoveableBlocks());
-    static List<String> NoneRotatableIDs = Arrays.asList(config.getNotRotateableBlocks());
+    static List<String> NoneMoveableIDs = Arrays.asList(config.getNoneMoveableBlocks());
+    static List<String> NoneRotatableIDs = Arrays.asList(config.getNoneRotatableBlocks());
     //static List<String> NoneMoveableIDs = Arrays.asList(
     //        "Void_Suspender", "Barrier", "Bedrock"
     //);

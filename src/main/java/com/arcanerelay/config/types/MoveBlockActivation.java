@@ -79,23 +79,13 @@ public class MoveBlockActivation extends Activation {
         .build();
 
     public int getRange() {
-        return range;
+        return config.getPusherRange(); // util.ArcaneConfig now sets default: 15
     }
 
     public void setRange(int range) {
-        this.range = range;
+        config.setPusherRange(range);
     }
 
-    //private static boolean isPushable(@Nullable BlockType blockType, int blockId) {
-    //    String id = blockType.getId();
-    //    if (blockId == 0)
-    //        return false;
-    //    if (blockType == null)
-    //        return false;
-    //    if (id.contains("Void_Suspender"))
-    //        return false;
-    //    return blockType.getMaterial() != BlockMaterial.Empty;
-    //}
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
@@ -155,7 +145,7 @@ public class MoveBlockActivation extends Activation {
         commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
             World world = store.getExternalData().getWorld();
             Vector3i pusherPosition = new Vector3i(worldX, worldY, worldZ);
-            range = config.getPusherRange(); // Get range from Config instead
+            range = getRange();
 
             Vector3i globalForward = getGlobalForwardVector(store, blockRef, sectionRef,
                 worldX, worldY, worldZ, pusherPosition);
@@ -169,7 +159,7 @@ public class MoveBlockActivation extends Activation {
                 return;
 
             Vector3i frontPusherPosition = pusherPosition.clone();
-            int maxRange = Math.max(1, range);//config.getPusherRange()
+            int maxRange = Math.max(1, range);
 
             int[] chainBlockIds               = new int[maxRange];
             int[] chainRotations              = new int[maxRange];

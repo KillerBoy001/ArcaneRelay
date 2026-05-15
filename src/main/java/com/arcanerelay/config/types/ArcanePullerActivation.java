@@ -63,11 +63,11 @@ public class ArcanePullerActivation extends Activation {
             .build();
 
     public int getRange() {
-        return range;
+        return config.getPullerRange(); // util.ArcaneConfig now sets default: 15
     }
 
     public void setRange(int range) {
-        this.range = range;
+        config.setPullerRange(range);
     }
 
     @Override
@@ -98,7 +98,7 @@ public class ArcanePullerActivation extends Activation {
         Vector3i pullerPos = new Vector3i(worldX, worldY, worldZ);
         Vector3i globalUp = getGlobalUp(chunk, pullerBlockType, pullerPos);
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
-        int maxRange = config.getPullerRange();//getRange();
+        int maxRange = getRange();
 
         int[] source = sources.isEmpty() ? null : sources.get(0);
 
