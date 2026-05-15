@@ -22,12 +22,12 @@ public class ArcaneConfig {
                             (config, info) -> config.TargetDistance)
                     .add()
 
-                    .append(new KeyedCodec<Integer>("PusherRange (default:15)", Codec.INTEGER),
+                    .append(new KeyedCodec<Integer>("PusherRange", Codec.INTEGER),
                             (config, value, info) -> config.PusherRange = value,
                             (config, info) -> config.PusherRange)
                     .add()
 
-                    .append(new KeyedCodec<Integer>("PullerRange (default:15)", Codec.INTEGER),
+                    .append(new KeyedCodec<Integer>("PullerRange", Codec.INTEGER),
                             (config, value, info) -> config.PullerRange = value,
                             (config, info) -> config.PullerRange)
                     .add()
