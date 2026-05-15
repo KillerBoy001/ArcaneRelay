@@ -6,7 +6,7 @@
   "BlockSlotTexture": "UI/ItemQualities/Slots/RelayArtifacts.png",
   "SpecialSlotTexture": "UI/ItemQualities/Slots/RelayArtifacts.png",
   "TextColor": "#269edc",
-  "LocalizationKey": "server.general.qualities.Tool",
+  "LocalizationKey": "server.arcanerelay.qualities.relayArtifact",
   "VisibleQualityLabel": true,
   "RenderSpecialSlot": true
 }

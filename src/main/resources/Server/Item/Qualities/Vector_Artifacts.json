@@ -5,8 +5,8 @@
   "SlotTexture": "UI/ItemQualities/Slots/VectorArtifacts.png",
   "BlockSlotTexture": "UI/ItemQualities/Slots/VectorArtifacts.png",
   "SpecialSlotTexture": "UI/ItemQualities/Slots/VectorArtifacts.png",
-  "TextColor": "#339b1d",
-  "LocalizationKey": "server.general.qualities.Tool",
+  "TextColor": "#3DCD1F",
+  "LocalizationKey": "server.arcanerelay.qualities.vectorArtifact",
   "VisibleQualityLabel": true,
   "RenderSpecialSlot": true
 }
