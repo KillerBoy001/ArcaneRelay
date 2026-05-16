@@ -5,7 +5,8 @@
   },
   "Icon": "Icons/ItemsGenerated/Furniture_Village_Bookcase.png",
   "Categories": [
-    "Furniture.Shelves"
+    "Furniture.Shelves",
+    "Pseudo_Arcane_Category.Arcane_Relay"
   ],
   "Interactions": {
     "Primary": "Block_Primary",
@@ -113,7 +114,7 @@
         },
         "CloseDoorIn": {
           "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Bookshelf/Shelf_Book_Button_Push.blockyanim"
+          "CustomModelAnimation": "Blocks/Animations/Functional/Bookshelf/Shelf_Book_Button_Push2.blockyanim"
         }
       }
     }
@@ -173,5 +174,6 @@
       }
     ]
   },
-  "Quality": "Tool"
+  "Quality": "Relay_Artifacts",
+  "SubCategory": "Relay_Artifacts"
 }
