@@ -19,7 +19,7 @@ items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling
 items.Pseudo_Arcane_Rotator.name = Rotator
 items.Pseudo_Arcane_Rotator.description = Used to rotate blocks 90 degrees.\n\nInteract while crouching to switch between clockwise and counterclockwise rotation.
 items.Pseudo_Arcane_Sensor.name = Step Sensor
-items.Pseudo_Arcane_Rotator.description = Used to rotate blocks 90 degrees.\n\nInteract while crouching to switch between clockwise and counterclockwise rotation.
+items.Pseudo_Arcane_Sensor.description = The step sensor will detect motion on the block \nThe sensor can be covered by carpets and will trigger when a player walks over it.
 items.Antiquarian_Bench.name = Antiquarian's Workbench
 items.Antiquarian_Bench.description = Used to craft ancient mechanism that allow for logic and automation.
 
