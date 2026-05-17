@@ -68,6 +68,7 @@ public class ArcanePullerActivation extends Activation {
 
     public void setRange(int range) {
         config.setPullerRange(range);
+        ArcaneRelayPlugin.get().saveConfig();
     }
 
     @Override

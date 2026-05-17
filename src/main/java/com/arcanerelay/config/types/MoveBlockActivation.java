@@ -84,6 +84,7 @@ public class MoveBlockActivation extends Activation {
 
     public void setRange(int range) {
         config.setPusherRange(range);
+        ArcaneRelayPlugin.get().saveConfig();
     }
 
 
