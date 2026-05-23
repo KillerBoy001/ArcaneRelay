@@ -76,14 +76,16 @@ public class ArcaneBeamerActivation extends Activation {
             @Nonnull List<int[]> sources
     ) {
         ChunkStoreCommandBufferLike commandBuffer = accessor.getCommandBuffer();
+        World world = commandBuffer.getExternalData().getWorld();
 
         if (blockRef == null || !blockRef.isValid()) {
             return ArcaneSection.BlockTickStrategy.PROCESSED;
         }
 
-        World world = commandBuffer.getExternalData().getWorld();
         WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (chunk == null) return ArcaneSection.BlockTickStrategy.WAIT_FOR_ADJACENT_CHUNK_LOAD;
+
+        world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
 
         BlockType BeamerBlockType = chunk.getBlockType(worldX, worldY, worldZ);
         if (BeamerBlockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
@@ -92,7 +94,7 @@ public class ArcaneBeamerActivation extends Activation {
         Vector3i globalUp = BlockVectorUtil.getUpVector(chunk, BeamerPos);
         String state = BeamerBlockType.getStateForBlock(BeamerBlockType);
         if (state == null || state.isEmpty() || "null".equals(state)) {
-            state = "Disabled";
+            state = "Enabled";
         }
 
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
@@ -120,9 +122,11 @@ public class ArcaneBeamerActivation extends Activation {
         BlockTypeAssetMap<String, BlockType> assetMap = BlockType.getAssetMap();
 
         for (int i = 0; i <= maxRange; i++) {
-            Vector3i Localforward = BlockVectorUtil.getForwardVector(beamerChunk,BeamerPos,i+1 ); // +1 cause we wanna start ahead.
+            Vector3i Localforward = BlockVectorUtil.getForwardVector(beamerChunk,BeamerPos,i+1 );
             Vector3i NextPos = new Vector3i (BeamerPos.x + Localforward.x, BeamerPos.y + Localforward.y, BeamerPos.z + Localforward.z);
-            BlockType Block = beamerChunk.getBlockType(NextPos.x,NextPos.y,NextPos.z);
+
+            WorldChunk chnk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(NextPos.x, NextPos.z));
+            BlockType Block = chnk.getBlockType(NextPos.x,NextPos.y,NextPos.z);
             int rotind = beamerChunk.getRotationIndex(BeamerPos.x,BeamerPos.y,BeamerPos.z);
 
             int LaserID = assetMap.getIndex(LaserKey);
@@ -133,8 +137,8 @@ public class ArcaneBeamerActivation extends Activation {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Existing laser at: %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
             } else if (BlockVectorUtil.isEmpty(Block)) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Creating laser at: %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
-                beamerChunk.setBlock(NextPos.x, NextPos.y, NextPos.z, LaserID, LaserType, rotind, 0, 4);
-                BlockVectorUtil.setTickingAround(beamerChunk, NextPos, 1);
+                chnk.setBlock(NextPos.x, NextPos.y, NextPos.z, LaserID, LaserType, rotind, 0, 4);
+                BlockVectorUtil.setTickingAround(chnk, NextPos, 1);
             }else if(i == maxRange || !BlockVectorUtil.isEmpty(Block)){ //Not empty
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Created laser with range: %d", i);
                 break;
