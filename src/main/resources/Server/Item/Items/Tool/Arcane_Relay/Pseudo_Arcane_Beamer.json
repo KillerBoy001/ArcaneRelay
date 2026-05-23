@@ -104,7 +104,16 @@
                 "FaceType": "Pseudo_Arcane_Beamer_enable"
               }
             ]
-          }
+          },
+          "Particles": [
+            {
+              "SystemId": "LaserBeam_Initial",
+              "TargetNodeName": "Gem",
+              "RotationOffset": {
+                "Pitch": -90
+              }
+            }
+          ]
         },
         "Disabled": {
           "CustomModelAnimation": "Blocks/Animations/Functional/Beamer/Triggered.blockyanim"
