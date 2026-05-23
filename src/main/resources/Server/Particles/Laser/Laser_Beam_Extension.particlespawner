@@ -1,0 +1,86 @@
+{
+  "RenderMode": "BlendLinear",
+  "ParticleRotationInfluence": "BillboardVelocity",
+  "MaxConcurrentParticles": 20,
+  "ParticleLifeSpan": {
+    "Min": 0.04,
+    "Max": 0.04
+  },
+  "Particle": {
+    "Texture": "Particles/LaserBeam.png",
+    "Animation": {
+      "0": {
+        "Opacity": 0.2
+      },
+      "100": {
+        "Opacity": 0.2
+      }
+    },
+    "InitialAnimationFrame": {
+      "Scale": {
+        "X": {
+          "Min": 0.5,
+          "Max": 0.5
+        },
+        "Y": {
+          "Min": 0.3,
+          "Max": 0.7
+        }
+      },
+      "Opacity": 0.5,
+      "Rotation": {
+        "X": {
+          "Min": 90,
+          "Max": 90
+        },
+        "Y": {
+          "Max": 90,
+          "Min": 90
+        }
+      }
+    },
+    "ScaleRatioConstraint": "None",
+    "UseSpriteBlending": false,
+    "CollisionAnimationFrame": {
+      "Opacity": 1
+    }
+  },
+  "LinearFiltering": false,
+  "ParticleRotateWithSpawner": false,
+  "SpawnBurst": true,
+  "InitialVelocity": {
+    "Yaw": {
+      "Max": 90,
+      "Min": 90
+    },
+    "Pitch": {
+      "Max": 90,
+      "Min": 90
+    },
+    "Speed": {
+      "Max": 0.001,
+      "Min": 0.001
+    }
+  },
+  "Shape": "Cube",
+  "UseEmitDirection": false,
+  "ParticleCollision": {
+    "BlockType": "All",
+    "Action": "Expire"
+  },
+  "SpawnRate": {
+    "Min": 1,
+    "Max": 1
+  },
+  "EmitOffset": {
+    "Y": {
+      "Max": 0,
+      "Min": 0
+    },
+    "X": {
+      "Min": 0,
+      "Max": 0
+    }
+  },
+  "IsLowRes": false
+}

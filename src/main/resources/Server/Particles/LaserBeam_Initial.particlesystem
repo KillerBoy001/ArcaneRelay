@@ -1,0 +1,42 @@
+{
+  "Spawners": [
+    {
+      "SpawnerId": "Laser_SparksVortex",
+      "FixedRotation": false,
+      "RotationOffset": {
+        "Yaw": 0,
+        "Roll": -90
+      },
+      "WaveDelay": {
+        "Max": 1
+      },
+      "LifeSpan": {
+        "Max": 600
+      }
+    },
+    {
+      "SpawnerId": "Fire_Center_Blue",
+      "PositionOffset": {
+        "Y": 0.2
+      },
+      "RotationOffset": {
+        "Pitch": 0,
+        "Yaw": 0,
+        "Roll": 0
+      },
+      "InitialVelocity": {
+        "Speed": {
+          "Min": 0,
+          "Max": 0
+        },
+        "Pitch": {
+          "Min": 90,
+          "Max": 90
+        }
+      }
+    }
+  ],
+  "IsImportant": true,
+  "CullDistance": 16.0,
+  "LifeSpan": 0
+}

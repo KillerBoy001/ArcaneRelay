@@ -1,0 +1,148 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Beamer.name",
+    "Description": "server.items.Pseudo_Arcane_Beamer.description"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Recipe": {
+    "TimeSeconds": 0.5,
+    "Input": [
+      {
+        "Quantity": 12,
+        "ItemId": "Ingredient_Crystal_Cyan"
+      },
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 1
+      },
+      {
+        "ResourceTypeId": "Rubble",
+        "Quantity": 3
+      }
+    ],
+    "OutputQuantity": 1,
+    "BenchRequirement": [
+      {
+        "Id": "Antiquarianbench",
+        "Type": "Crafting",
+        "Categories": [
+          "Relay_Artifacts"
+        ]
+      }
+    ]
+  },
+  "Categories": [
+    "Items.Tools",
+    "Pseudo_Arcane_Category.Arcane_Relay"
+  ],
+  "BlockType": {
+    "BlockEntity": {
+      "Components": {
+        "ArcaneTrigger": {}
+      }
+    },
+    "DrawType": "Model",
+    "BlockSoundSetId": "Stone",
+    "Opacity": "Semitransparent",
+    "CustomModel": "Blocks/Functional/Beamer.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Beamer_texture.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "Light": {
+      "Radius": 0,
+      "Color": "#046"
+    },
+    "PlacementSettings": {
+      "AllowRotationKey": true,
+      "PlaceInEmptyBlocks": true,
+      "RotationMode": "FacingPlayer"
+    },
+    "BlockParticleSetId": "Crystal",
+    "Material": "Solid",
+    "InteractionHint": "server.interactionHints.beamer_enable",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "Condition",
+            "Crouching": true,
+            "Next": {
+              "Type": "OpenCustomUI",
+              "Page": {
+                "Id": "ArcaneTrigger"
+              }
+            },
+            "Failed": {
+              "Type": "Serial",
+              "Interactions": [
+                {
+                  "Type": "ArcaneActivator",
+                  "Activator": "Beamer_Chain"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "Enabled": {
+          "CustomModelAnimation": "Blocks/Animations/Functional/Beamer/Idling.blockyanim",
+          "Looping": true,
+          "InteractionHint": "server.interactionHints.beamer_disable",
+          "Supporting": {
+            "CardinalDirections": [
+              {
+                "FaceType": "Pseudo_Arcane_Beamer_enable"
+              }
+            ]
+          }
+        },
+        "Disabled": {
+          "CustomModelAnimation": "Blocks/Animations/Functional/Beamer/Triggered.blockyanim"
+        }
+      }
+    },
+    "ParticleColor": "#bbac72",
+    "VariantRotation": "NESW",
+    "Gathering": {
+      "Breaking": {
+        "ItemId": "Pseudo_Arcane_Beamer",
+        "GatherType": "Rocks"
+      }
+    },
+    "InteractionSoundEventId": "SFX_Pseudo_Arcane_Trigger"
+  },
+  "PlayerAnimationsId": "Item",
+  "IconProperties": {
+    "Scale": 0.445,
+    "Translation": [
+      0,
+      -17.7
+    ],
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Beamer.png",
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "Quality": "Relay_Artifacts",
+  "ItemLevel": 20,
+  "SubCategory": "Relay_Artifacts"
+}

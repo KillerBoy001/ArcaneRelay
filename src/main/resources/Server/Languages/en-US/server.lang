@@ -18,6 +18,10 @@ items.Pseudo_Arcane_Puller_Extension.name = Puller Extension
 items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling back entities and blocks with the Puller.
 items.Pseudo_Arcane_Rotator.name = Rotator
 items.Pseudo_Arcane_Rotator.description = Used to rotate blocks 90 degrees.\n\nInteract while crouching to switch between clockwise and counterclockwise rotation.
+items.Pseudo_Arcane_Beamer.name = Beam detector
+items.Pseudo_Arcane_Beamer.description = Casts a beam that reaches up to first solid block or max range, Breaking this beam by block placement or walking through will trigger the detector.
+items.Pseudo_Arcane_Beam.name = Laser beam
+items.Pseudo_Arcane_Beam.description = Block responsible for detecting entity/block presence for Beamer.
 items.Antiquarian_Bench.name = Antiquarian's Workbench
 items.Antiquarian_Bench.description = Used to craft ancient mechanism that allow for logic and automation.
 
@@ -28,6 +32,8 @@ interactionHints.toggle = Press [{key}] to toggle
 interactionHints.cycle = Press [{key}] to cycle
 interactionHints.relay = Press [{key}] to relay
 interactionHints.rotate = Press [{key}] to rotate
+interactionHints.beamer_enable = Press [{key}] to start beamer
+interactionHints.beamer_disable = Press [{key}] to stop beamer
 
 # === Arcane Relay notifications (interactions / activation) ===
 

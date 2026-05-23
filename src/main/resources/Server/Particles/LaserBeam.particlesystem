@@ -1,0 +1,20 @@
+{
+  "Spawners": [
+    {
+      "SpawnRate": {
+        "Min": 1.4,
+        "Max": 1.9
+      },
+      "LifeSpan": {
+        "Max": 0,
+        "Min": 0
+      },
+      "SpawnerId": "Laser_Beam_Extension"
+    },
+    {
+      "SpawnerId": "Laser_Collision"
+    }
+  ],
+  "IsImportant": true,
+  "LifeSpan": 0
+}

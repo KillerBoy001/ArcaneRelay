@@ -113,6 +113,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 .register("MoveBlock", MoveBlockActivation.class, MoveBlockActivation.CODEC)
                 .register("RotateBlock", RotateBlockActivation.class, RotateBlockActivation.CODEC)
                 .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
+                .register("ArcaneBeamer", ArcaneBeamerActivation.class, ArcaneBeamerActivation.CODEC)
                 .register("Chain", ChainActivation.class, ChainActivation.CODEC)
                 .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC);
 

@@ -1,0 +1,5 @@
+{
+  "Type": "ToggleState",
+  "OnState": "Enabled",
+  "OffState": "Disabled"
+}

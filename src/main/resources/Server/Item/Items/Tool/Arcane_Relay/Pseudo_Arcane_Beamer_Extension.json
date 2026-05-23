@@ -1,0 +1,95 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Beam.name",
+    "Description": "server.items.Pseudo_Arcane_Beam.description"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Categories": [
+    "Items.Tools"
+  ],
+  "BlockType": {
+    "DrawType": "Model",
+    "CustomModelScale": 1,
+    "Light": {
+      "Color": "#157"
+    },
+    "Material": "Empty",
+    "Particles": [
+      {
+        "SystemId": "LaserBeam",
+        "Color": "#00e4ff",
+        "TargetEntityPart": "Self",
+        "RotationOffset": {
+          "Yaw": 0,
+          "Pitch": -90,
+          "Roll": 0
+        },
+        "Scale": 1,
+        "DetachedFromModel": false
+      }
+    ],
+    "Opacity": "Transparent",
+    "RequiresAlphaBlending": false,
+    "HitboxType": "Laser_Hitbox",
+    "CubeShadingMode": "Standard",
+    "VariantRotation": "UpDownNESW",
+    "PlacementSettings": {
+      "RotationMode": "FacingPlayer",
+      "AllowBreakReplace": true
+    },
+    "SupportDropType": "Destroy",
+    "Support": {
+      "South": [
+        {
+          "FaceType": "Pseudo_Arcane_Beamer_enable"
+        },
+        {
+          "BlockTypeId": "Pseudo_Arcane_Beamer_Extension"
+        }
+      ]
+    },
+    "Interactions": {
+      "CollisionEnter": {
+        "Interactions": [
+          {
+            "Type": "ArcaneActivator",
+            "Activator": "Arcane_Button",
+            "Next": {
+              "Type": "BreakBlock"
+            }
+          }
+        ]
+      }
+    },
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Blank_Texture.png"
+      }
+    ]
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.58823,
+    "Rotation": [
+      345,
+      126,
+      18
+    ],
+    "Translation": [
+      -3,
+      -16
+    ]
+  },
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "Quality": "Developer",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Beamer_Extension.png"
+}
