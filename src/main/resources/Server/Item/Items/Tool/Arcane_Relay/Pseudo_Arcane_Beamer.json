@@ -85,14 +85,14 @@
                 {
                   "Type": "ChangeState",
                   "Changes": {
-                    "default": "Enabled",
-                    "Enabled": "Disabled",
-                    "Disabled": "Enabled"
+                    "default": "On",
+                    "On": "Off",
+                    "Off": "On"
                   }
                 },
                 {
                   "Type": "ArcaneActivator",
-                  "Activator": "Beamer_Chain"
+                  "Activator": "Beamer_Block"
                 }
               ]
             }
@@ -102,7 +102,7 @@
     },
     "State": {
       "Definitions": {
-        "Enabled": {
+        "On": {
           "CustomModelAnimation": "Blocks/Animations/Functional/Beamer/Idling.blockyanim",
           "Looping": true,
           "InteractionHint": "server.interactionHints.beamer_disable",
@@ -123,7 +123,7 @@
             }
           ]
         },
-        "Disabled": {
+        "Off": {
           "CustomModelAnimation": "Blocks/Animations/Functional/Beamer/Triggered.blockyanim"
         }
       }

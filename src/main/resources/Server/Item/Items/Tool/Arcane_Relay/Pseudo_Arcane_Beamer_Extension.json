@@ -56,12 +56,12 @@
         "Interactions": [
           {
             "Type": "ArcaneActivator",
-            "Activator": "Arcane_Button",
-            "Next": {
-              "Type": "BreakBlock"
-            }
+            "Activator": "Beamer_Block"
           }
-        ]
+        ],
+        "Cooldown": {
+          "Cooldown": 0.5
+        }
       }
     },
     "CustomModelTexture": [
