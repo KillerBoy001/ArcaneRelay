@@ -83,6 +83,14 @@
               "Type": "Serial",
               "Interactions": [
                 {
+                  "Type": "ChangeState",
+                  "Changes": {
+                    "default": "Enabled",
+                    "Enabled": "Disabled",
+                    "Disabled": "Enabled"
+                  }
+                },
+                {
                   "Type": "ArcaneActivator",
                   "Activator": "Beamer_Chain"
                 }

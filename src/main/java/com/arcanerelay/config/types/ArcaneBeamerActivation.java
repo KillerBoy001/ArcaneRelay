@@ -94,17 +94,17 @@ public class ArcaneBeamerActivation extends Activation {
         Vector3i globalUp = BlockVectorUtil.getUpVector(chunk, BeamerPos);
         String state = BeamerBlockType.getStateForBlock(BeamerBlockType);
         if (state == null || state.isEmpty() || "null".equals(state)) {
-            state = "Enabled";
+            state = "Disabled";
         }
 
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
         int maxRange = getRange();
 
-        if (state.contains("Disabled")){ // PriorState since this triggers before actual statechange.
+        if (state.contains("Enabled")){
             ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Enabling");
             BuildLaserBeam(commandBuffer, BeamerPos, chunk, maxRange);
             return ArcaneSection.BlockTickStrategy.PROCESSED;
-        } else if (state.contains("Enabled")){ // PriorState since this triggers before actual statechange.
+        } else if (state.contains("Disabled")){
             ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Disabling");
             BlockVectorUtil.setTickingAround(chunk, BeamerPos, 1);
             return ArcaneSection.BlockTickStrategy.PROCESSED;
@@ -132,6 +132,7 @@ public class ArcaneBeamerActivation extends Activation {
             int LaserID = assetMap.getIndex(LaserKey);
             BlockType LaserType = assetMap.getAsset(LaserKey);
 
+
             if (Block==LaserType) {
                 // Just log and move on ,when rebuilding partial existing laser
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Existing laser at: %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
@@ -139,10 +140,11 @@ public class ArcaneBeamerActivation extends Activation {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Creating laser at: %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
                 chnk.setBlock(NextPos.x, NextPos.y, NextPos.z, LaserID, LaserType, rotind, 0, 4);
                 BlockVectorUtil.setTickingAround(chnk, NextPos, 1);
-            }else if(i == maxRange || !BlockVectorUtil.isEmpty(Block)){ //Not empty
+            }else if(!BlockVectorUtil.isEmpty(Block)){ //Not empty
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Created laser with range: %d", i);
                 break;
             }
+            if(i == maxRange) ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Created laser with range: %d", i);
         }
         return ArcaneSection.BlockTickStrategy.CONTINUE;
     }

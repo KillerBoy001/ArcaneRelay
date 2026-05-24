@@ -1,4 +1,4 @@
 {
   "Type": "Chain",
-  "Activations": ["Beamer_Block", "Toggle_Beamer"]
+  "Activations": ["Beamer_Block"]
 }
