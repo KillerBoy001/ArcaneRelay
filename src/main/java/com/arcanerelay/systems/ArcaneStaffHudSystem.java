@@ -77,10 +77,10 @@ public class ArcaneStaffHudSystem extends EntityTickingSystem<EntityStore> {
             // IF MULTI HUD
             if (PluginManager.get().hasPlugin(new PluginIdentifier("Buuz135", "MultipleHUD"), SemverRange.WILDCARD)) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("MultipleHUD found, setting EmptyHUD");
-                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new EmptyHud(playerRef, "ArcaneStaffLegendEmpty"));
+                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new EmptyHud(playerRef, "ArcaneStaffLegend"));
                 return;
             }
-            hudManager.addCustomHud(playerRef, new EmptyHud(playerRef, "ArcaneStaffLegendEmpty"));
+            hudManager.addCustomHud(playerRef, new EmptyHud(playerRef, "ArcaneStaffLegend"));
         }
     }
 
