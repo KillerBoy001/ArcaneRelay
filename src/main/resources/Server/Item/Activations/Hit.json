@@ -1,6 +1,6 @@
 {
   "Type": "Hit",
-  "Damage": 0.1,
+  "Damage": 10,
   "RelativeDirection": {
     "X": 0,
     "Y": 1,
@@ -9,59 +9,60 @@
   "ItemTool": {
     "Specs": [
       {
-        "Power": 2,
+        "Power": 1,
         "GatherType": "SoftBlocks"
       },
       {
-        "Power": 2,
+        "Power": 0.5,
         "GatherType": "Soils"
       },
       {
-        "Power": 2,
+        "Power": 0.5,
         "GatherType": "Woods"
       },
       {
-        "Power": 2,
-        "GatherType": "Rocks"
+        "Power": 0.5,
+        "GatherType": "Rocks",
+        "Quality": 3
       },
       {
-        "Power": 2,
+        "Power": 0.5,
         "GatherType": "Benches"
       },
       {
-        "Power": 0.001,
+        "Power": 0.17,
         "GatherType": "VolcanicRocks"
       },
       {
-        "Power": 1,
+        "Power": 0.5,
         "GatherType": "OreCopper"
       },
       {
-        "Power": 1,
+        "Power": 0.25,
         "GatherType": "OreIron"
       },
       {
-        "Power": 1,
+        "Power": 0.25,
         "GatherType": "OreSilver"
       },
       {
-        "Power": 1,
+        "Power": 0.25,
         "GatherType": "OreGold"
       },
       {
-        "Power": 1,
+        "Power": 0.125,
         "GatherType": "OreThorium"
       },
       {
-        "Power": 1,
+        "Power": 0.125,
         "GatherType": "OreCobalt"
       },
       {
-        "Power": 1,
+        "Power": 0.084,
         "GatherType": "OreAdamantite"
       },
       {
-        "Power": 1,
+        "Power": 0.063,
         "GatherType": "OreMithril"
       }
     ]
