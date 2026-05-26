@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
  */
 public class ArcaneStaffHud extends CustomUIHud {
 
-    public ArcaneStaffHud(@Nonnull PlayerRef playerRef) {
-        super(playerRef);
+    public ArcaneStaffHud(@Nonnull PlayerRef playerRef,@Nonnull String key) {
+        super(playerRef, key);
     }
 
     @Override
