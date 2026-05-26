@@ -27,6 +27,12 @@
           "Name": "server.ui.arcanerelaycategory.subcategory.vectorArtifacts.name",
           "Order": 30,
           "Description": "server.ui.arcanerelaycategory.subcategory.vectorArtifacts.description"
+        },
+        {
+          "Id": "Destructive_Artifacts",
+          "Name": "server.ui.arcanerelaycategory.subcategory.destructiveArtifacts.name",
+          "Order": 40,
+          "Description": "server.ui.arcanerelaycategory.subcategory.destructiveArtifacts.description"
         }
       ]
     }

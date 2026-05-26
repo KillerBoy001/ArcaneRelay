@@ -39,7 +39,8 @@
     ]
   },
   "Categories": [
-    "Items.Tools"
+    "Items.Tools",
+    "Pseudo_Arcane_Category.Arcane_Relay"
   ],
   "ItemLevel": 10,
   "BlockType": {
@@ -117,7 +118,7 @@
       -14
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Puller.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Breaker.png",
   "Scale": 1,
   "Tags": {
     "Type": [
@@ -125,5 +126,6 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone",
-  "Quality": "Tool"
+  "Quality": "Destructive_Artifacts",
+  "SubCategory": "Destructive_Artifacts"
 }
