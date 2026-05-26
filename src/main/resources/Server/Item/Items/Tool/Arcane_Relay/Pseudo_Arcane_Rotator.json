@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Pseudo_Arcane_Pusher.name",
-    "Description": "server.items.Pseudo_Arcane_Pusher.description"
+    "Name": "server.items.Pseudo_Arcane_Rotator.name",
+    "Description": "server.items.Pseudo_Arcane_Rotator.description"
   },
   "Interactions": {
     "Primary": "Block_Primary",
@@ -38,15 +38,15 @@
     "Items.Tools",
     "Pseudo_Arcane_Category.Arcane_Relay"
   ],
-  "ItemLevel": 10,
+  "ItemLevel": 30,
   "BlockType": {
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
     "Opacity": "Transparent",
-    "CustomModel": "Blocks/Functional/Pusher.blockymodel",
+    "CustomModel": "Blocks/Functional/Rotator.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Functional/Pusher_Texture.png",
+        "Texture": "Blocks/Functional/Rotator_Texture.png",
         "Weight": 1
       }
     ],
@@ -57,14 +57,13 @@
     },
     "PlacementSettings": {
       "AllowRotationKey": true,
-      "PlaceInEmptyBlocks": true,
-      "RotationMode": "FacingPlayer",
-      "WallPlacementOverrideBlockId": "Pseudo_Arcane_Pusher_Wall",
-      "BlockPreviewVisibility": "AlwaysVisible"
+      "RotationMode": "Default",
+      "BlockPreviewVisibility": "AlwaysVisible",
+      "PlaceInEmptyBlocks": true
     },
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",
-    "InteractionHint": "server.interactionHints.generic",
+    "InteractionHint": "server.interactionHints.rotate",
     "Interactions": {
       "Use": {
         "Interactions": [
@@ -73,7 +72,18 @@
             "Crouching": true,
             "Failed": {
               "Type": "ArcaneActivator",
-              "Activator": "Pusher_Chain"
+              "Activator": "Rotator_Chain"
+            },
+            "Next": {
+              "Type": "ChangeBlock",
+              "Changes": {
+                "Pseudo_Arcane_Rotator": "Pseudo_Arcane_RotatorL",
+                "*Pseudo_Arcane_Rotator_State_Definitions_CloseDoorOut": "Pseudo_Arcane_RotatorL",
+                "*Pseudo_Arcane_Rotator_State_Definitions_OpenDoorOut": "Pseudo_Arcane_RotatorL",
+                "Pseudo_Arcane_RotatorL": "Pseudo_Arcane_Rotator",
+                "*Pseudo_Arcane_RotatorL_State_Definitions_CloseDoorOut": "Pseudo_Arcane_Rotator",
+                "*Pseudo_Arcane_RotatorL_State_Definitions_OpenDoorOut": "Pseudo_Arcane_Rotator"
+              }
             }
           }
         ]
@@ -82,27 +92,27 @@
     "State": {
       "Definitions": {
         "CloseDoorOut": {
-          "InteractionSoundEventId": "SFX_Sticks_Break",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Pusher/Move.blockyanim"
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Rotator",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/Rotator_Rotate.blockyanim"
         },
         "OpenDoorOut": {
-          "InteractionSoundEventId": "SFX_Sticks_Break",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Pusher/Move.blockyanim"
+          "InteractionSoundEventId": "SFX_Pseudo_Arcane_Rotator",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Rotator/Rotator_Rotate.blockyanim"
         }
       }
     },
     "ParticleColor": "#bbac72",
-    "VariantRotation": "UpDownNESW",
+    "VariantRotation": "DoublePipe",
     "Gathering": {
       "Breaking": {
-        "ItemId": "Pseudo_Arcane_Pusher",
+        "ItemId": "Pseudo_Arcane_Rotator",
         "GatherType": "Rocks"
       }
     }
   },
   "PlayerAnimationsId": "Block",
   "IconProperties": {
-    "Scale": 0.445,
+    "Scale": 0.5,
     "Rotation": [
       22.5,
       45,
@@ -110,10 +120,10 @@
     ],
     "Translation": [
       0,
-      -17.7
+      -15
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Pusher.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Rotator.png",
   "Scale": 1,
   "Tags": {
     "Type": [

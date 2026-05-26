@@ -35,7 +35,8 @@
     ]
   },
   "Categories": [
-    "Items.Tools"
+    "Items.Tools",
+    "Pseudo_Arcane_Category.Arcane_Relay"
   ],
   "BlockType": {
     "BlockEntity": {
@@ -142,6 +143,7 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone",
-  "Quality": "Tool",
+  "Quality": "Relay_Artifacts",
+  "SubCategory": "Relay_Artifacts",
   "ItemLevel": 20
 }
