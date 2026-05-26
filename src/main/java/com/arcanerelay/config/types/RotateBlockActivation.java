@@ -17,9 +17,11 @@ import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.vector.Rotation3f;
+
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
@@ -114,7 +116,7 @@ public class RotateBlockActivation extends Activation {
     }
 
     private void rotateEntityTransform(TransformComponent transform, boolean isClockWise) {
-        Vector3f rotation = transform.getRotation();
+        Rotation3f rotation = transform.getRotation();
         float yawAdjustment = isClockWise ? (float) (-Math.PI / 2) : (float) (Math.PI / 2);
         rotation.addYaw(yawAdjustment);
     }
@@ -131,17 +133,17 @@ public class RotateBlockActivation extends Activation {
             return;
         }
 
-        Vector3f rotation = transform.getRotation().clone();
+        Rotation3f rotation = new Rotation3f(transform.getRotation());
         float yawAdjustment = isClockWise ? (float) (-Math.PI / 2) : (float) (Math.PI / 2);
-        Vector3f newRotation = new Vector3f(
+        Rotation3f newRotation = new Rotation3f(
                 rotation.x,
                 rotation.y + yawAdjustment,
                 rotation.z
         );
 
         HeadRotation headComp = entityStore.getComponent(ref, HeadRotation.getComponentType());
-        Vector3f headRot = headComp != null ? headComp.getRotation().clone() : transform.getRotation().clone();
-        Vector3f newHeadRot = new Vector3f(
+        Rotation3f headRot = headComp != null ? new Rotation3f(headComp.getRotation()) : new Rotation3f(transform.getRotation());
+        Rotation3f newHeadRot = new Rotation3f(
                 headRot.x,
                 headRot.y + yawAdjustment,
                 headRot.z

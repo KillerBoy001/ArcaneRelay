@@ -24,7 +24,6 @@ import com.hypixel.hytale.function.predicate.ObjectPositionBlockFunction;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
-import com.hypixel.hytale.server.core.util.io.ByteBufUtil;
 import com.hypixel.hytale.sneakythrow.SneakyThrow;
 
 import io.netty.buffer.ByteBuf;
@@ -216,10 +215,9 @@ public class ArcaneSection implements Component<ChunkStore> {
         ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
         try {
             serialize(buf);
-            return ByteBufUtil.getBytesRelease(buf);
-        } catch (Throwable t) {
+            return io.netty.buffer.ByteBufUtil.getBytes(buf, 0, buf.writerIndex(), false);
+        } finally {
             buf.release();
-            throw SneakyThrow.sneakyThrow(t);
         }
     }
 

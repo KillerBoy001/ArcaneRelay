@@ -3,8 +3,8 @@ package com.arcanerelay.util;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3d;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
@@ -71,7 +71,7 @@ public final class BlockUtil {
     private static final double FEET_Y_OFFSET = -0.5;
     private static Vector3d getFeetPosition(@Nonnull TransformComponent transform,
             @Nullable BoundingBox boundingBox) {
-        Vector3d feetPosition = transform.getPosition().clone();
+        Vector3d feetPosition = new Vector3d(transform.getPosition());
 
         if (boundingBox != null) {
             feetPosition.add(0, boundingBox.getBoundingBox().min.y, 0);

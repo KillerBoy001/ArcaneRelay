@@ -9,8 +9,8 @@ import javax.annotation.Nonnull;
  * Empty HUD, necessary because hudManager.resetHud() currently crashes the server for some reason. Instead replace custom HUD with this to remove.
  */
 public final class EmptyHud extends CustomUIHud {
-    public EmptyHud(@Nonnull PlayerRef playerRef) {
-        super(playerRef);
+    public EmptyHud(@Nonnull PlayerRef playerRef, @Nonnull String key) {
+        super(playerRef, key);
     }
 
     @Override

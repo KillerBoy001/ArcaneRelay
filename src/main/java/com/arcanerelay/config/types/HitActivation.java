@@ -17,8 +17,9 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.vector.Vector3iUtil;
+import org.joml.Vector3d;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
@@ -55,7 +56,7 @@ public class HitActivation extends Activation {
             .documentation("Amount of damage to deal to the block (default: 0).")
             .add()
             .appendInherited(
-                    new KeyedCodec<>("RelativeDirection", Vector3i.CODEC),
+                    new KeyedCodec<>("RelativeDirection", Vector3iUtil.CODEC),
                     (a, r) -> a.direction = r,
                     a -> a.direction,
                     (a, p) -> a.direction = p.direction)
@@ -107,7 +108,7 @@ public class HitActivation extends Activation {
         }
 
         Vector3i globalUp = BlockVectorUtil.getUpVector(worldChunkComponent, currentPosition);
-        Vector3d targetDestination = currentPosition.clone().toVector3d().add(0.5, 0.5, 0.5);
+        Vector3d targetDestination = new Vector3d(currentPosition).add(0.5, 0.5, 0.5);
         Store<EntityStore> store = world.getEntityStore().getStore();
 
         List<Ref<EntityStore>> targets = getTargetPlayersEntities(store, targetDestination, globalUp);
@@ -141,16 +142,16 @@ public class HitActivation extends Activation {
     private List<Ref<EntityStore>> getTargetPlayersEntities(Store<EntityStore> store, Vector3d targetDestination, Vector3i globalUp) {
         List<Ref<EntityStore>> targets;
         if (globalUp.equals(new Vector3i(0, 1, 0))) {
-            Vector3d destination = targetDestination.clone().add(0, 0.7, 0);
+            Vector3d destination = new Vector3d(targetDestination).add(0, 0.7, 0);
 
             targets = TargetUtil.getAllEntitiesInSphere(destination, 1f, store);
         } else if (globalUp.equals(new Vector3i(0, -1, 0))) {
-            Vector3d destination = targetDestination.clone().add(0, -0.5, 0);
+            Vector3d destination = new Vector3d(targetDestination).add(0, -0.5, 0);
 
             targets = TargetUtil.getAllEntitiesInSphere(destination, 0.85f, store);
             targets.addAll(TargetUtil.getAllEntitiesInSphere(destination.add(0, -1.7, 0), 0.85f, store));
         } else {
-            Vector3d destination = targetDestination.clone().add(globalUp.clone().toVector3d().scale(0.5));
+            Vector3d destination = new Vector3d(targetDestination).add(new Vector3d(globalUp).mul(0.5));
 
             targets = TargetUtil.getAllEntitiesInSphere(destination, 1f, store);
             targets.addAll(TargetUtil.getAllEntitiesInSphere(destination.add(0, -1, 0), 1f, store));
@@ -161,7 +162,7 @@ public class HitActivation extends Activation {
     }
 
     private List<Ref<EntityStore>> getTargetNonPlayerEntities(Store<EntityStore> store, Vector3d targetDestination, Vector3i globalUp) {
-        Vector3d destination = targetDestination.clone().add(globalUp.clone().toVector3d().scale(0.5));
+        Vector3d destination = new Vector3d(targetDestination).add(new Vector3d(globalUp).mul(0.5));
         List<Ref<EntityStore>> targets = TargetUtil.getAllEntitiesInSphere(destination, 1f, store);
         
         targets.removeIf(target -> store.getComponent(target, Player.getComponentType()) != null);
@@ -192,7 +193,7 @@ public class HitActivation extends Activation {
         }
 
         Vector3i globalUp = BlockVectorUtil.getUpVector(worldChunkComponent, currentPosition);
-        Vector3i targetPosition = currentPosition.clone().add(globalUp);
+        Vector3i targetPosition = new Vector3i(currentPosition).add(globalUp);
 
         EntityStore entityStore = world.getEntityStore();
 
@@ -201,7 +202,7 @@ public class HitActivation extends Activation {
 
         world.execute(() -> {
             BlockHarvestUtils.performBlockDamage(
-                    (LivingEntity) null, (Ref<EntityStore>) null, targetPosition, null, itemTool, (String) null, false,
+                    (Ref<EntityStore>) null, targetPosition, null, itemTool, (String) null, false,
                     .4f, damageFlags.getValue(), chunkRef, entityStore.getStore(), chunkStore.getStore());
         });
     }
