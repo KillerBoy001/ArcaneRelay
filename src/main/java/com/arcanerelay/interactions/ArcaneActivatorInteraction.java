@@ -1,5 +1,6 @@
 package com.arcanerelay.interactions;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
@@ -44,7 +45,7 @@ import javax.annotation.Nonnull;
  * Executes the activation immediately (e.g. Pusher_Chain for the pusher).
  */
 public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
-    private static final double TARGET_DISTANCE = 10.0;
+    private static final double TARGET_DISTANCE = ArcaneRelayPlugin.getConfig().getTargetDistance();
 
     @Nonnull
     public static final BuilderCodec<ArcaneActivatorInteraction> CODEC = BuilderCodec.builder(

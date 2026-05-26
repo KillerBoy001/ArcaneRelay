@@ -1,6 +1,8 @@
 package com.arcanerelay.util;
 
 import com.hypixel.hytale.math.vector.Vector3i;
+import com.arcanerelay.ArcaneRelayPlugin;
+import com.arcanerelay.config.ArcaneRelayConfig;
 import com.hypixel.hytale.math.Axis;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.protocol.BlockMaterial;
@@ -15,12 +17,11 @@ import java.util.List;
 import java.util.Arrays;
 
 public class BlockVectorUtil {
+    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
 
-    private static List<String> NoneMoveableIDs = Arrays.asList(
-            "Barrier", "Bedrock");
+    private static List<String> NoneMoveableIDs = Arrays.asList(config.getNoneMoveableBlocks());
 
-    private static List<String> NoneRotatableIDs = Arrays.asList(
-            "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock");
+    private static List<String> NoneRotatableIDs = Arrays.asList(config.getNoneRotatableBlocks());
 
     public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i pos, int range) {
         for (int x = -range; x <= range; x++) {

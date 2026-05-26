@@ -4,6 +4,7 @@ import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcanePullerBlock;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
+import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
@@ -41,7 +42,7 @@ import java.util.Set;
 
 
 public class ArcanePullerActivation extends Activation {
-    private int range = 15;
+    private int range = ArcaneRelayPlugin.getConfig().getPullerRange();
     private static final double KNOCKBACK_MAX_SPEED = 30;
     private static final float KNOCKBACK_DURATION = 0.1f;
     private static final float KNOCKBACK_MIN_DURATION = 0.05f;
@@ -61,11 +62,7 @@ public class ArcanePullerActivation extends Activation {
             .build();
 
     public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
+        return ArcaneRelayPlugin.getConfig().getPullerRange();
     }
 
     @Override

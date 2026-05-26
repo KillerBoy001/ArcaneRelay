@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Set;
 
 public class MoveBlockActivation extends Activation {
-    private int range = 1;
+    private int range = ArcaneRelayPlugin.getConfig().getPusherRange();
     private int upAmount = 1;
     private boolean isWall = false;
 
@@ -75,14 +75,6 @@ public class MoveBlockActivation extends Activation {
         .documentation("Whether the block is a wall (default: false).")
         .add()
         .build();
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
-    }
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
