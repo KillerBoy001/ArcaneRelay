@@ -90,12 +90,12 @@ public class ArcaneBeamerActivation extends Activation {
         if (TriggerBlockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
         Vector3i TriggerPos = new Vector3i(worldX, worldY, worldZ);
 
-        if (TriggerBlockType.getId().equals(LaserKey)){                                                // Handle laser trigger
+        if (TriggerBlockType.getId().equals(LaserKey)){                             // Handle laser trigger
             int maxRange = getRange();
             Vector3i BeamerPos = GetBeamerPosFromLaser(commandBuffer,TriggerPos,Triggerchunk,maxRange);
             WorldChunk BeamerChunk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(BeamerPos.x, BeamerPos.z));
             SendTriggerFromSourceBeamer(commandBuffer, BeamerPos, BeamerChunk);
-        }else {                                                                                 // Handle beamer trigger
+        } else {                                                                    // Handle beamer trigger
             String state = TriggerBlockType.getStateForBlock(TriggerBlockType);
             if (state == null || state.isEmpty() || "null".equals(state)) {
                 state = "Off";
