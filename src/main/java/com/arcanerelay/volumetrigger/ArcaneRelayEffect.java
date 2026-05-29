@@ -70,7 +70,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
                                         if (chunkAtAnchor != null) {
                                             BlockType typeAtAnchor = chunkAtAnchor.getBlockType(anchor.x, anchor.y, anchor.z);
                                             if (typeAtAnchor != null && typeAtAnchor.getId().contains("Pseudo")) {
-                                                this.SendTrigger(anchor.x, anchor.y, anchor.z);
+                                                this.SendTrigger(anchor.x, anchor.y, anchor.z,blockType);
                                             }
                                         }
                                     }
@@ -102,8 +102,8 @@ public class ArcaneRelayEffect extends TriggerEffect {
         TRIGGER;
     }
 
-    private void SendTrigger(int BlockX,int BlockY,int BlockZ){
-            ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger on block: %d, %d, %d ",BlockX,BlockY,BlockZ);
+    private void SendTrigger(int BlockX,int BlockY,int BlockZ,BlockType Type){
+            ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger on block: %s at: %d, %d, %d ",Type.getId(),BlockX,BlockY,BlockZ);
     }
 
 }
