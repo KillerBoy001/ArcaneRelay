@@ -64,7 +64,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
                             if (chunk != null) {
                                 BlockType blockType = chunk.getBlockType(x, y, z);
                                 if (blockType != null) {
-                                    Vector3i anchor = doorAnchorForCell(world, x, y, z);
+                                    Vector3i anchor = AnchorForCell(world, x, y, z);
                                     if (processedBlocks.add(BlockUtil.pack(anchor.x, anchor.y, anchor.z))) {
                                         WorldChunk chunkAtAnchor = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
                                         if (chunkAtAnchor != null) {
@@ -84,7 +84,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
     } // End of execute
 
     @Nonnull
-    private static Vector3i doorAnchorForCell(@Nonnull World world, int x, int y, int z) {
+    private static Vector3i AnchorForCell(@Nonnull World world, int x, int y, int z) {
         WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(x, z));
         if (chunk == null) {
             return new Vector3i(x, y, z);
