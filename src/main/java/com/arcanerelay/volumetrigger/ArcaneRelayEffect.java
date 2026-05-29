@@ -2,10 +2,16 @@ package com.arcanerelay.volumetrigger;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 
+import com.arcanerelay.components.ArcaneTriggerBlock;
+import com.arcanerelay.core.activation.ActivationExecutor;
+import com.arcanerelay.core.activation.ArcaneCachedAccessor;
+import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerContext;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
 import com.hypixel.hytale.builtin.triggervolumes.shape.TriggerVolumeShape;
+import com.hypixel.hytale.component.ComponentAccessor;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.block.BlockUtil;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -18,6 +24,7 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
+import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.FillerBlockUtil;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -31,17 +38,17 @@ public class ArcaneRelayEffect extends TriggerEffect {
     @Nonnull
     public static final BuilderCodec<ArcaneRelayEffect> CODEC;
     @Nonnull
-    private ArcaneRelayEffect.Actions action;
+    private ArcaneRelayEffect.TriggerType action;
 
     public ArcaneRelayEffect() {
-        this.action = ArcaneRelayEffect.Actions.TRIGGER;
+        this.action = ArcaneRelayEffect.TriggerType.TRIGGER_ALL;
     }
 
     public void execute(@Nonnull TriggerContext context) {
-        Store<EntityStore> store = context.getStore();
-        World world = ((EntityStore)store.getExternalData()).getWorld();
+        Store<EntityStore> Entstore = context.getStore();
+        World world = ((EntityStore)Entstore.getExternalData()).getWorld();
         if (world != null) {
-            TransformComponent triggerTransform = (TransformComponent) store.getComponent(context.getEntityRef(), TransformComponent.getComponentType());
+            TransformComponent triggerTransform = (TransformComponent) Entstore.getComponent(context.getEntityRef(), TransformComponent.getComponentType());
             Vector3d triggerPos = triggerTransform != null ? triggerTransform.getPosition() : new Vector3d(context.getVolume().getPosition());
             Vector3d min = new Vector3d();
             Vector3d max = new Vector3d();
@@ -70,7 +77,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
                                         if (chunkAtAnchor != null) {
                                             BlockType typeAtAnchor = chunkAtAnchor.getBlockType(anchor.x, anchor.y, anchor.z);
                                             if (typeAtAnchor != null && typeAtAnchor.getId().contains("Pseudo")) {
-                                                this.SendTrigger(anchor.x, anchor.y, anchor.z,blockType);
+                                                this.SendTrigger(world,Entstore,anchor.x, anchor.y, anchor.z,blockType);
                                             }
                                         }
                                     }
@@ -95,15 +102,18 @@ public class ArcaneRelayEffect extends TriggerEffect {
     }
 
     static {
-        CODEC = ((BuilderCodec.Builder)BuilderCodec.builder(ArcaneRelayEffect.class, ArcaneRelayEffect::new, BASE_CODEC).append(new KeyedCodec("Action", new EnumCodec(ArcaneRelayEffect.Actions.class)), (e, v) -> e.action = v, (e) -> e.action).add()).build();
+        CODEC = ((BuilderCodec.Builder)BuilderCodec.builder(ArcaneRelayEffect.class, ArcaneRelayEffect::new, BASE_CODEC).append(new KeyedCodec("TriggerType", new EnumCodec(ArcaneRelayEffect.TriggerType.class)), (e, v) -> e.action = v, (e) -> e.action).add()).build();
     }
 
-    public static enum Actions {
-        TRIGGER;
+    public static enum TriggerType {
+        TRIGGER_ALL,
+        TRIGGER_CONNECTIONS;
     }
 
-    private void SendTrigger(int BlockX,int BlockY,int BlockZ,BlockType Type){
-            ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger on block: %s at: %d, %d, %d ",Type.getId(),BlockX,BlockY,BlockZ);
+    private void SendTrigger(@Nonnull World world,@Nonnull Store<EntityStore> store, int BlockX,int BlockY,int BlockZ,BlockType Type) {
+        ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger on block: %s at: %d, %d, %d ", Type.getId(), BlockX, BlockY, BlockZ);
     }
 
 }
+
+
