@@ -1,0 +1,40 @@
+{
+  "Icon": "Icons/ItemCategories/ArcaneRelay.png",
+  "Order": 50,
+  "Name": "server.ui.arcanerelaycategory.name",
+  "InfoDisplayMode": "Tooltip",
+  "Children": [
+    {
+      "Id": "Arcane_Relay",
+      "Name": "server.ui.arcanerelaycategory.name",
+      "Icon": "Icons/ItemCategories/TechnicalBlocks.png",
+      "Order": 10,
+      "SubCategories": [
+        {
+          "Id": "Arcane_Tools",
+          "Name": "server.ui.arcanerelaycategory.subcategory.tools.name",
+          "Order": 10,
+          "Description": "server.ui.arcanerelaycategory.subcategory.tools.description"
+        },
+        {
+          "Id": "Relay_Artifacts",
+          "Name": "server.ui.arcanerelaycategory.subcategory.relayArtifacts.name",
+          "Order": 20,
+          "Description": "server.ui.arcanerelaycategory.subcategory.relayArtifacts.description"
+        },
+        {
+          "Id": "Vector_Artifacts",
+          "Name": "server.ui.arcanerelaycategory.subcategory.vectorArtifacts.name",
+          "Order": 30,
+          "Description": "server.ui.arcanerelaycategory.subcategory.vectorArtifacts.description"
+        },
+        {
+          "Id": "Destructive_Artifacts",
+          "Name": "server.ui.arcanerelaycategory.subcategory.destructiveArtifacts.name",
+          "Order": 40,
+          "Description": "server.ui.arcanerelaycategory.subcategory.destructiveArtifacts.description"
+        }
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@
     },
     {
       "Files": [
-        "Sounds/Blocks/Functional/Rotate_2.ogg"
+        "Sounds/Blocks/Functional/Rotator_Rotate_1.ogg"
       ],
       "RandomSettings": {
         "MinVolume": -2,
@@ -24,43 +24,7 @@
         "MaxPitch": 2
       },
       "StartDelay": 0,
-      "Volume": 1.0
-    },
-    {
-      "Files": [
-        "Sounds/Blocks/Functional/Rotate_2.ogg"
-      ],
-      "RandomSettings": {
-        "MinVolume": -2,
-        "MinPitch": -2,
-        "MaxPitch": 2
-      },
-      "StartDelay": 0,
-      "Volume": 1.0
-    },
-    {
-      "Files": [
-        "Sounds/Blocks/Functional/Rotate_3.ogg"
-      ],
-      "RandomSettings": {
-        "MinVolume": -2,
-        "MinPitch": -2,
-        "MaxPitch": 2
-      },
-      "StartDelay": 0,
-      "Volume": 1.0
-    },
-    {
-      "Files": [
-        "Sounds/Blocks/Functional/Rotate_4.ogg"
-      ],
-      "RandomSettings": {
-        "MinVolume": -2,
-        "MinPitch": -2,
-        "MaxPitch": 2
-      },
-      "StartDelay": 0,
-      "Volume": 1.0
+      "Volume": 0.5
     }
   ],
   "PreventSoundInterruption": true,

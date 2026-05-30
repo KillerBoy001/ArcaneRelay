@@ -2,13 +2,14 @@ package com.arcanerelay.config.types;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.util.BlockUtil;
+import com.arcanerelay.util.BlockVectorUtil;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
-import static com.arcanerelay.util.BlockVectorUtil.*;
-import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
+import com.hypixel.hytale.builtin.hytalegenerator.noise.FastNoiseLite.Vector3;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -16,15 +17,29 @@ import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.vector.Rotation3f;
+
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RotateBlockActivation extends Activation {
     private String[] RotTypeID = new String[0];
@@ -50,423 +65,92 @@ public class RotateBlockActivation extends Activation {
         return id != null && id.toLowerCase().contains("rotatorl");
     }
 
-    public static int GetNewTarRotIndex(int OwnRotIndex,int TargetRotIndex, boolean Clockwise){
-        if(Clockwise && OwnRotIndex ==0) { //Inversed
-            return switch (TargetRotIndex) {
-                case 0 -> 3;
-                case 3 -> 2;
-                case 2 -> 1;
-                case 1 -> 0;
-
-                case 4 -> 7;
-                case 7 -> 6;
-                case 6 -> 5;
-                case 5 -> 4;
-
-                case 9 -> 8;
-                case 8 -> 11;
-                case 11 -> 10;
-                case 10 -> 9;
-
-                case 13 -> 12;
-                case 12 -> 15;
-                case 15 -> 14;
-                case 14 -> 13;
-
-                case 16 -> 19;
-                case 17 -> 16;
-                case 18 -> 17;
-                case 19 -> 18;
-
-                case 24 -> 27;
-                case 25 -> 24;
-                case 26 -> 25;
-                case 27 -> 26;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
+    private void rotateEntities(World world, Vector3i rotatorPos, Vector3i targetPos, boolean isClockWise, Vector3i rotatorUp, boolean targetBlockRotated) {
+        if (rotatorUp.x != 0 || rotatorUp.y != 1 || rotatorUp.z != 0) {
+            return;
         }
-        if(!Clockwise && OwnRotIndex ==0){ //Normal
-            return switch (TargetRotIndex) {
-                case 0 -> 1;
-                case 3 -> 0;
-                case 2 -> 3;
-                case 1 -> 2;
 
-                case 4 -> 5;
-                case 5 -> 6;
-                case 6 -> 7;
-                case 7 -> 4;
+        Store<EntityStore> entityStore = world.getEntityStore().getStore();
+        if (entityStore == null) return;
 
-                case 8 -> 9;
-                case 9 -> 10;
-                case 10 -> 11;
-                case 11 -> 8;
+        Set<Ref<EntityStore>> entitiesOnRotator = new HashSet<>();
+        BlockUtil.collectEntitiesOnTopOfBlock(entityStore, rotatorPos, entitiesOnRotator);
 
-                case 12 -> 13;
-                case 13 -> 14;
-                case 14 -> 15;
-                case 15 -> 12;
+        for (Ref<EntityStore> ref : entitiesOnRotator) {
+            if (ref == null || !ref.isValid()) continue;
 
-                case 16 -> 17;
-                case 17 -> 18;
-                case 18 -> 19;
-                case 19 -> 16;
+            TransformComponent transform = entityStore.getComponent(ref, TransformComponent.getComponentType());
+            if (transform == null) continue;
 
-                case 24 -> 25;
-                case 25 -> 26;
-                case 26 -> 27;
-                case 27 -> 24;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
+            rotateEntity(world, entityStore, ref, transform, isClockWise);
         }
-        if(Clockwise && OwnRotIndex ==4) { //Inversed
-            return switch (TargetRotIndex) {
-                case 10 -> 16;
-                case 16 -> 0;
-                case 0 -> 26;
-                case 26 -> 10;
 
-                case 9 -> 13;
-                case 13 -> 1;
-                case 1 -> 5;
-                case 5 -> 9;
+        if (targetBlockRotated) {
+            Set<Ref<EntityStore>> entitiesOnTarget = new HashSet<>();
+            BlockUtil.collectEntitiesOnTopOfBlock(entityStore, targetPos, entitiesOnTarget);
 
-                case 8 -> 24;
-                case 24 -> 2;
-                case 2 -> 18;
-                case 18 -> 8;
+            for (Ref<EntityStore> ref : entitiesOnTarget) {
+                if (ref == null || !ref.isValid()) continue;
 
-                case 11 -> 7;
-                case 7 -> 3;
-                case 3 -> 15;
-                case 15 -> 11;
+                TransformComponent transform = entityStore.getComponent(ref, TransformComponent.getComponentType());
+                if (transform == null) continue;
 
-                case 25 -> 14;
-                case 14 -> 17;
-                case 17 -> 4;
-                case 4 -> 25;
-
-                case 19 -> 12;
-                case 12 -> 27;
-                case 27 -> 6;
-                case 6 -> 19;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
+                rotateEntity(world, entityStore, ref, transform, isClockWise);
+            }
         }
-        if(!Clockwise && OwnRotIndex ==4){ //Normal
-            return switch (TargetRotIndex) {
-                case 10 -> 26;
-                case 26 -> 0;
-                case 0 -> 16;
-                case 16 -> 10;
+    }
 
-                case 9 -> 5;
-                case 5 -> 1;
-                case 1 -> 13;
-                case 13 -> 9;
+    private void rotateEntity( @Nonnull World world,
+            @Nonnull Store<EntityStore> entityStore,
+            @Nonnull Ref<EntityStore> ref,
+            @Nonnull TransformComponent transform,
+            boolean isClockWise) {
+        PlayerRef playerRef = entityStore.getComponent(ref, PlayerRef.getComponentType());
 
-                case 24 -> 8;
-                case 2 -> 24;
-                case 18 -> 2;
-                case 8 -> 18;
-
-                case 7 -> 11;
-                case 3 -> 7;
-                case 15 -> 3;
-                case 11 -> 15;
-
-                case 14 -> 25;
-                case 17 -> 14;
-                case 4 -> 17;
-                case 25 -> 4;
-
-                case 12 -> 19;
-                case 27 -> 12;
-                case 6 -> 27;
-                case 19 -> 6;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
+        if (playerRef == null) {
+            rotateEntityTransform(transform, isClockWise);
+            return;
         }
-        if(Clockwise && OwnRotIndex ==5) { //Inversed
-            return switch (TargetRotIndex) {
-                case 11 -> 17;
-                case 17 -> 1;
-                case 1 -> 27;
-                case 27 -> 11;
 
-                case 0 -> 12;
-                case 12 -> 8;
-                case 8 -> 4;
-                case 4 -> 0;
+        rotatePlayerWithTeleport(world, entityStore, ref, transform, isClockWise);
+    }
 
-                case 7 -> 16;
-                case 16 -> 13;
-                case 13 -> 24;
-                case 24 -> 7;
+    private void rotateEntityTransform(TransformComponent transform, boolean isClockWise) {
+        Rotation3f rotation = transform.getRotation();
+        float yawAdjustment = isClockWise ? (float) (-Math.PI / 2) : (float) (Math.PI / 2);
+        rotation.addYaw(yawAdjustment);
+    }
 
-                case 9 -> 25;
-                case 19 -> 9;
-                case 3 -> 19;
-                case 25 -> 3;
+    private static void rotatePlayerWithTeleport(
+            @Nonnull World world,
+            @Nonnull Store<EntityStore> entityStore,
+            @Nonnull Ref<EntityStore> ref,
+            @Nonnull TransformComponent transform,
+            boolean isClockWise) {
+        PlayerRef playerRef = entityStore.getComponent(ref, PlayerRef.getComponentType());
 
-                case 5 -> 26;
-                case 18 -> 5;
-                case 15 -> 18;
-                case 26 -> 15;
-
-                case 14 -> 2;
-                case 10 -> 14;
-                case 6 -> 10;
-                case 2 -> 6;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
+        if (playerRef == null) {
+            return;
         }
-        if(!Clockwise && OwnRotIndex ==5){ //Normal
-            return switch (TargetRotIndex) {
-                case 11 -> 27;
-                case 27 -> 1;
-                case 1 -> 17;
-                case 17 -> 11;
 
-                case 0 -> 4;
-                case 4 -> 8;
-                case 8 -> 12;
-                case 12 -> 0;
+        Rotation3f rotation = new Rotation3f(transform.getRotation());
+        float yawAdjustment = isClockWise ? (float) (-Math.PI / 2) : (float) (Math.PI / 2);
+        Rotation3f newRotation = new Rotation3f(
+                rotation.x,
+                rotation.y + yawAdjustment,
+                rotation.z
+        );
 
-                case 7 -> 24;
-                case 24 -> 13;
-                case 13 -> 16;
-                case 16 -> 7;
+        HeadRotation headComp = entityStore.getComponent(ref, HeadRotation.getComponentType());
+        Rotation3f headRot = headComp != null ? new Rotation3f(headComp.getRotation()) : new Rotation3f(transform.getRotation());
+        Rotation3f newHeadRot = new Rotation3f(
+                headRot.x,
+                headRot.y + yawAdjustment,
+                headRot.z
+        );
 
-                case 25 -> 9;
-                case 9 -> 19;
-                case 19 -> 3;
-                case 3 -> 25;
-
-                case 26 -> 5;
-                case 5 -> 18;
-                case 18 -> 15;
-                case 15 -> 26;
-
-                case 2 -> 14;
-                case 14 -> 10;
-                case 10 -> 6;
-                case 6 -> 2;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
-        }
-        if(Clockwise && OwnRotIndex ==6) { //Inversed
-            return switch (TargetRotIndex) {
-                case 10 -> 26;
-                case 26 -> 0;
-                case 0 -> 16;
-                case 16 -> 10;
-
-                case 9 -> 5;
-                case 5 -> 1;
-                case 1 -> 13;
-                case 13 -> 9;
-
-                case 24 -> 8;
-                case 2 -> 24;
-                case 18 -> 2;
-                case 8 -> 18;
-
-                case 7 -> 11;
-                case 3 -> 7;
-                case 15 -> 3;
-                case 11 -> 15;
-
-                case 14 -> 25;
-                case 17 -> 14;
-                case 4 -> 17;
-                case 25 -> 4;
-
-                case 12 -> 19;
-                case 27 -> 12;
-                case 6 -> 27;
-                case 19 -> 6;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
-        }
-        if(!Clockwise && OwnRotIndex ==6){ //Normal
-            return switch (TargetRotIndex) {
-                case 10 -> 16;
-                case 16 -> 0;
-                case 0 -> 26;
-                case 26 -> 10;
-
-                case 9 -> 13;
-                case 13 -> 1;
-                case 1 -> 5;
-                case 5 -> 9;
-
-                case 8 -> 24;
-                case 24 -> 2;
-                case 2 -> 18;
-                case 18 -> 8;
-
-                case 11 -> 7;
-                case 7 -> 3;
-                case 3 -> 15;
-                case 15 -> 11;
-
-                case 25 -> 14;
-                case 14 -> 17;
-                case 17 -> 4;
-                case 4 -> 25;
-
-                case 19 -> 12;
-                case 12 -> 27;
-                case 27 -> 6;
-                case 6 -> 19;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
-        }
-        if(Clockwise && OwnRotIndex ==7) { //Inversed
-            return switch (TargetRotIndex) {
-                case 11 -> 27;
-                case 27 -> 1;
-                case 1 -> 17;
-                case 17 -> 11;
-
-                case 0 -> 4;
-                case 4 -> 8;
-                case 8 -> 12;
-                case 12 -> 0;
-
-                case 7 -> 24;
-                case 24 -> 13;
-                case 13 -> 16;
-                case 16 -> 7;
-
-                case 25 -> 9;
-                case 9 -> 19;
-                case 19 -> 3;
-                case 3 -> 25;
-
-                case 26 -> 5;
-                case 5 -> 18;
-                case 18 -> 15;
-                case 15 -> 26;
-
-                case 2 -> 14;
-                case 14 -> 10;
-                case 10 -> 6;
-                case 6 -> 2;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
-        }
-        if(!Clockwise && OwnRotIndex ==7){ //Normal
-            return switch (TargetRotIndex) {
-                case 11 -> 17;
-                case 17 -> 1;
-                case 1 -> 27;
-                case 27 -> 11;
-
-                case 0 -> 12;
-                case 12 -> 8;
-                case 8 -> 4;
-                case 4 -> 0;
-
-                case 7 -> 16;
-                case 16 -> 13;
-                case 13 -> 24;
-                case 24 -> 7;
-
-                case 9 -> 25;
-                case 19 -> 9;
-                case 3 -> 19;
-                case 25 -> 3;
-
-                case 5 -> 26;
-                case 18 -> 5;
-                case 15 -> 18;
-                case 26 -> 15;
-
-                case 14 -> 2;
-                case 10 -> 14;
-                case 6 -> 10;
-                case 2 -> 6;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
-        }
-        if(Clockwise && OwnRotIndex ==8) { //Inversed
-            return switch (TargetRotIndex) {
-                case 0 -> 1;
-                case 3 -> 0;
-                case 2 -> 3;
-                case 1 -> 2;
-
-                case 4 -> 5;
-                case 5 -> 6;
-                case 6 -> 7;
-                case 7 -> 4;
-
-                case 8 -> 9;
-                case 9 -> 10;
-                case 10 -> 11;
-                case 11 -> 8;
-
-                case 12 -> 13;
-                case 13 -> 14;
-                case 14 -> 15;
-                case 15 -> 12;
-
-                case 16 -> 17;
-                case 17 -> 18;
-                case 18 -> 19;
-                case 19 -> 16;
-
-                case 24 -> 25;
-                case 25 -> 26;
-                case 26 -> 27;
-                case 27 -> 24;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
-        }
-        if(!Clockwise && OwnRotIndex ==8){ //Normal
-            return switch (TargetRotIndex) {
-                case 0 -> 3;
-                case 3 -> 2;
-                case 2 -> 1;
-                case 1 -> 0;
-
-                case 4 -> 7;
-                case 7 -> 6;
-                case 6 -> 5;
-                case 5 -> 4;
-
-                case 9 -> 8;
-                case 8 -> 11;
-                case 11 -> 10;
-                case 10 -> 9;
-
-                case 13 -> 12;
-                case 12 -> 15;
-                case 15 -> 14;
-                case 14 -> 13;
-
-                case 16 -> 19;
-                case 17 -> 16;
-                case 18 -> 17;
-                case 19 -> 18;
-
-                case 24 -> 27;
-                case 25 -> 24;
-                case 26 -> 25;
-                case 27 -> 26;
-                default -> TargetRotIndex; // If Rotation is not supported return source
-            };
-        }
-        if (OwnRotIndex >=9){
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Error, None supported Rotator rotation, Was a rotator turned with another rotator ?");
-            return TargetRotIndex;
-        }
-        else {
-            ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Unknown/Unsupported target rotation Rotator-RotIndex: %d, Target-RotIndex %d, No change's on target",OwnRotIndex,TargetRotIndex);
-            return TargetRotIndex; // If Rotation is not supported return source
-        }
+        Teleport teleport = Teleport.createForPlayer(world, transform.getPosition(), newRotation).setHeadRotation(newHeadRot);
+        entityStore.addComponent(ref, Teleport.getComponentType(), teleport);
     }
 
     @Override
@@ -479,40 +163,40 @@ public class RotateBlockActivation extends Activation {
     ) {
         ChunkStoreCommandBufferLike commandBuffer = accessor.getCommandBuffer();
         commandBuffer.run((@Nonnull Store<ChunkStore> store) -> {
-
             World world = store.getExternalData().getWorld();
             WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
+            if (chunk == null) return;
+
             BlockTypeAssetMap<String, BlockType> assetMap = BlockType.getAssetMap();
+
             // Rotator info
-            BlockType RotatorBlockType = chunk.getBlockType(worldX, worldY, worldZ);
-            Vector3i RotatorPos = new Vector3i(worldX, worldY, worldZ);
-            boolean IsClockWise = isClockWise(RotatorBlockType); // If RotatorL
+            BlockType rotatorBlockType = chunk.getBlockType(worldX, worldY, worldZ);
+            Vector3i rotatorPos = new Vector3i(worldX, worldY, worldZ);
+            boolean isClockWise = isClockWise(rotatorBlockType);
+            Vector3i rotatorUp = BlockVectorUtil.getUpVector(chunk, rotatorPos);
 
             // Target Info
-            Vector3i TempUp = GetUpVector(chunk, RotatorPos);
-            Vector3i TargetPos = new Vector3i (RotatorPos.x+TempUp.x,RotatorPos.y+TempUp.y,RotatorPos.z+TempUp.z);
-            BlockType TargetBlockType = chunk.getBlockType(TargetPos.x, TargetPos.y, TargetPos.z);
-            //String TargetID = TargetBlockType.getId();
-            String TargetID = com.arcanerelay.util.ArcaneUtil.getOriginalBlockTypeId(TargetBlockType); // Makes sure it doesnt do initial animation
-
-            int OwnRotIndex = chunk.getRotationIndex(worldX, worldY, worldZ);
-            int TargetRotIndex = chunk.getRotationIndex(TargetPos.x, TargetPos.y, TargetPos.z);
-
-            int NewRotInd = GetNewTarRotIndex(OwnRotIndex,TargetRotIndex,IsClockWise);
-
-            if (TargetRotIndex !=NewRotInd){
-                Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
-                if(isRotatable(TargetBlockType)) {
-                    chunk.setBlock(TargetPos.x, TargetPos.y, TargetPos.z, assetMap.getIndex(TargetID), TargetBlockType, NewRotInd, 0, 4);
-                    SetTickingAround(chunk,TargetPos,1);
-                } else {
-                    ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Block of type: '%s', is not allowed to be rotated",TargetBlockType.getId());
-                }
-
+            Vector3i tempUp = BlockVectorUtil.getUpVector(chunk, rotatorPos);
+            Vector3i targetPos = new Vector3i (rotatorPos.x + tempUp.x, rotatorPos.y + tempUp.y, rotatorPos.z + tempUp.z);
+            BlockType targetBlockType = chunk.getBlockType(targetPos.x, targetPos.y, targetPos.z);
+            if (targetBlockType == null) return;
+            
+            String targetID = ArcaneUtil.getOriginalBlockTypeId(targetBlockType);
+            RotationTuple currenRotation = RotationTuple.get(chunk.getRotationIndex(targetPos.x, targetPos.y, targetPos.z));
+            RotationTuple newRotation = BlockVectorUtil.rotateOverAxis90Degrees(currenRotation, rotatorUp, isClockWise);
+            
+            boolean blockWasRotated = BlockVectorUtil.isRotatable(targetBlockType);
+            if (blockWasRotated) {
+                chunk.setBlock(targetPos.x, targetPos.y, targetPos.z, assetMap.getIndex(targetID), targetBlockType, newRotation.index(), 0, 4);
+                BlockVectorUtil.setTickingAround(chunk,targetPos,1);
+            } else {
+                ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Block of type: '%s', is not allowed to be rotated", targetBlockType.getId());
             }
+
+            rotateEntities(world, rotatorPos, targetPos, isClockWise, rotatorUp, blockWasRotated);
         });
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;
     }
-
 }
+

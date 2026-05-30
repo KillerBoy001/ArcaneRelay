@@ -11,7 +11,7 @@
     "TimeSeconds": 0.5,
     "Input": [
       {
-        "Quantity": 2,
+        "Quantity": 4,
         "ItemId": "Ingredient_Crystal_Green"
       },
       {
@@ -35,9 +35,10 @@
     ]
   },
   "Categories": [
-    "Items.Tools"
+    "Items.Tools",
+    "Pseudo_Arcane_Category.Arcane_Relay"
   ],
-  "ItemLevel": 10,
+  "ItemLevel": 30,
   "BlockType": {
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
@@ -130,5 +131,6 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone",
-  "Quality": "Tool"
+  "Quality": "Vector_Artifacts",
+  "SubCategory": "Vector_Artifacts"
 }

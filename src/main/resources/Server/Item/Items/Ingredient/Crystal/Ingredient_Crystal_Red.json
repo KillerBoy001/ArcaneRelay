@@ -1,10 +1,10 @@
 {
   "Parent": "Ingredient_Crystal_White",
   "TranslationProperties": {
-    "Name": "server.items.Ingredient_Crystal_Purple.name"
+    "Name": "server.items.Ingredient_Crystal_Red.name"
   },
   "Model": "Resources/Crystals/Crystal_Fragment.blockymodel",
-  "Texture": "Resources/Crystals/Crystal_Fragment_Textures/Purple.png",
+  "Texture": "Resources/Crystals/Crystal_Fragment_Textures/Red.png",
   "IconProperties": {
     "Scale": 0.75,
     "Translation": [
@@ -25,18 +25,18 @@
       },
       {
         "Quantity": 1,
-        "ItemId": "Ingredient_Void_Essence"
+        "ItemId": "Ingredient_Fire_Essence"
       }
     ],
     "BenchRequirement": [
       {
         "Categories": [
-          "Void_Artifacts"
+          "Destructive_Artifacts"
         ],
         "Id": "Antiquarianbench"
       }
     ]
   },
   "ItemLevel": 100,
-  "Icon": "Icons/ItemsGenerated/Ingredient_Crystal_Fragments_Purple.png"
+  "Icon": "Icons/ItemsGenerated/Ingredient_Crystal_Fragments_Red.png"
 }

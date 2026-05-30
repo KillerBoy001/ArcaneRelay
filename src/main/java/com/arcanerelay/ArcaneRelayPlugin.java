@@ -131,7 +131,8 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 .register("RotateBlock", RotateBlockActivation.class, RotateBlockActivation.CODEC)
                 .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
                 .register("Chain", ChainActivation.class, ChainActivation.CODEC)
-                .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC);
+                .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC)
+                .register("Hit", HitActivation.class, HitActivation.CODEC);
 
         this.getEventRegistry().registerGlobal(BootEvent.class, event -> ActivationBinding.onBindingsLoaded());
     }

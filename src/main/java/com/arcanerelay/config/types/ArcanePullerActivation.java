@@ -7,9 +7,9 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
-import static com.arcanerelay.util.BlockVectorUtil.*;
 import com.arcanerelay.util.ArcaneConfig;
 import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.util.BlockVectorUtil;
 import com.arcanerelay.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.hypixel.hytale.codec.Codec;
@@ -18,9 +18,9 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -97,7 +97,7 @@ public class ArcanePullerActivation extends Activation {
 
 
         Vector3i pullerPos = new Vector3i(worldX, worldY, worldZ);
-        Vector3i globalUp = getGlobalUp(chunk, pullerBlockType, pullerPos);
+        Vector3i globalUp = BlockVectorUtil.getUpVector(chunk, pullerPos);
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
         int maxRange = getRange();
 
@@ -149,7 +149,7 @@ public class ArcanePullerActivation extends Activation {
                 "Puller EXTENDING at %d,%d,%d: extLen=%d tip=%d,%d,%d blockId=%d",
                 pullerPos.x, pullerPos.y, pullerPos.z, extLen, tipX, tipY, tipZ, tipBlockId);
 
-        if (isPullable(tipBlockType, tipBlockId)) {
+        if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)) {
             if (extLen == 0) {
                 puller.setIDLE();
                 commandBuffer.run((Store<ChunkStore> s) -> {
@@ -284,7 +284,7 @@ public class ArcanePullerActivation extends Activation {
 
         ArcaneRelayPlugin.LOGGER.atInfo().log(
                 "Puller move-entry check: extLen=%d tip=%d,%d,%d blockId=%d pullable=%s",
-                extLen, tipPos.x, tipPos.y, tipPos.z, tipBlockId, isPullable(tipBlockType, tipBlockId));
+                extLen, tipPos.x, tipPos.y, tipPos.z, tipBlockId, BlockVectorUtil.isPullable(tipBlockType, tipBlockId));
         commandBuffer.run((Store<ChunkStore> s) -> {
             WorldChunk lastChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(lastPos.x, lastPos.z));
             if (lastChunk != null) {
@@ -294,10 +294,10 @@ public class ArcanePullerActivation extends Activation {
             updateExtensionConnectedBlocks(s, world, pullerPos, globalUp, newLen, puller.getExtensionBlockKey());
 
 
-            if (isPullable(tipBlockType, tipBlockId)) {
+            if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)) {
                 ArcaneMoveState moveState = s.getResource(ArcaneMoveState.getResourceType());
                 if (moveState == null) return;
-                moveState.addMoveEntry(tipPos, globalUp.clone().scale(-1), tipBlockType, tipBlockId,
+                moveState.addMoveEntry(tipPos, new Vector3i(globalUp).mul(-1), tipBlockType, tipBlockId,
                         rotation, filler, 0, holder);
             }
         });
@@ -308,7 +308,7 @@ public class ArcanePullerActivation extends Activation {
             collectEntitiesInBlock(entityStore, new Vector3i(tipPos.x, tipPos.y, tipPos.z), entitiesInTip);
 
             if (!entitiesInTip.isEmpty()) {
-                Vector3i knockbackDir = globalUp.clone().scale(-1);
+                Vector3i knockbackDir = new Vector3i(globalUp).mul(-1);
                 for (Ref<EntityStore> ref : entitiesInTip) {
                     if (ref != null && ref.isValid()) {
                         float duration = computePullDuration(entityStore, ref, tipPos);
@@ -336,15 +336,6 @@ public class ArcanePullerActivation extends Activation {
 
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;
-    }
-
-    public static Vector3i getGlobalUp(WorldChunk chunk, BlockType blockType, Vector3i pullerPos) {
-        //int rotationIndex = chunk.getRotationIndex(pullerPos.x, pullerPos.y, pullerPos.z);
-        //RotationTuple rotationTuple = RotationTuple.get(rotationIndex);
-        //Vector3d global = rotationTuple.rotatedVector(localUp);
-        Vector3i global = GetUpVector(chunk,pullerPos);
-        //Vector3d global = rotationTuple.rotatedVector(localUp);
-        return global;
     }
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
@@ -456,8 +447,8 @@ public class ArcanePullerActivation extends Activation {
     }
 
     private static void applyKnockbackToward(Store<EntityStore> entityStore, Ref<EntityStore> ref, Vector3i direction, float duration) {
-        Vector3d velocity = new Vector3d(direction.clone().normalize());
-        velocity.scale(KNOCKBACK_MAX_SPEED);
+        Vector3d velocity = new Vector3d(direction).normalize();
+        velocity.mul(KNOCKBACK_MAX_SPEED);
         KnockbackComponent knockback = entityStore.ensureAndGetComponent(ref, KnockbackComponent.getComponentType());
         knockback.setVelocity(velocity);
         knockback.setVelocityType(ChangeVelocityType.Set);
@@ -470,7 +461,7 @@ public class ArcanePullerActivation extends Activation {
         if (transform == null) return KNOCKBACK_DURATION;
         Vector3d current = transform.getPosition();
         Vector3d target = new Vector3d(targetPos.x + 0.5, targetPos.y + 0.5, targetPos.z + 0.5);
-        double distance = current.distanceTo(target);
+        double distance = current.distance(target);
         float duration = (float) (distance / KNOCKBACK_MAX_SPEED);
         if (duration < KNOCKBACK_MIN_DURATION) duration = KNOCKBACK_MIN_DURATION;
         return duration;
