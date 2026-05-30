@@ -74,6 +74,11 @@
           "Id": "Destructive_Artifacts",
           "Icon": "Icons/CraftingCategories/Arcane/Destructive_Artifacts.png",
           "Name": "server.benchCategories.destructiveArtifacts"
+        },
+        {
+          "Id": "Void_Artifacts",
+          "Icon": "Icons/CraftingCategories/Arcane/Void_Artifacts.png",
+          "Name": "server.benchCategories.voidArtifacts"
         }
       ],
       "Id": "Antiquarianbench"

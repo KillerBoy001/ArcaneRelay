@@ -33,6 +33,12 @@
           "Name": "server.ui.arcanerelaycategory.subcategory.destructiveArtifacts.name",
           "Order": 40,
           "Description": "server.ui.arcanerelaycategory.subcategory.destructiveArtifacts.description"
+        },
+        {
+          "Id": "Void_Artifacts",
+          "Name": "server.ui.arcanerelaycategory.subcategory.voidArtifacts.name",
+          "Order": 50,
+          "Description": "server.ui.arcanerelaycategory.subcategory.voidArtifacts.description"
         }
       ]
     }

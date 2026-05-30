@@ -17,10 +17,10 @@ import java.util.Arrays;
 public class BlockVectorUtil {
 
     private static List<String> NoneMoveableIDs = Arrays.asList(
-            "Barrier", "Bedrock");
+            "Void_Suspender","Barrier", "Bedrock");
 
     private static List<String> NoneRotatableIDs = Arrays.asList(
-            "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock");
+            "Void_Suspender","Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock");
 
     public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i pos, int range) {
         for (int x = -range; x <= range; x++) {

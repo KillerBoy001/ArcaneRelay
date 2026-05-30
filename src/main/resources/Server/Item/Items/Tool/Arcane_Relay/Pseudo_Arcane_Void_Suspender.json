@@ -1,0 +1,98 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Suspender.name",
+    "Description": "server.items.Pseudo_Arcane_Suspender.description"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "ItemLevel": 40,
+  "Recipe": {
+    "TimeSeconds": 0.5,
+    "Input": [
+      {
+        "Quantity": 8,
+        "ItemId": "Ingredient_Crystal_Purple"
+      },
+      {
+        "ItemId": "Deco_Iron_Chain_Small",
+        "Quantity": 4
+      },
+      {
+        "ResourceTypeId": "Rock",
+        "Quantity": 1
+      }
+    ],
+    "OutputQuantity": 1,
+    "BenchRequirement": [
+      {
+        "Id": "Antiquarianbench",
+        "Type": "Crafting",
+        "Categories": [
+          "Void_Artifacts"
+        ]
+      }
+    ]
+  },
+  "Categories": [
+    "Items.Tools",
+    "Pseudo_Arcane_Category.Arcane_Relay"
+  ],
+  "BlockType": {
+    "BlockEntity": {
+      "Components": {
+        "ArcaneTrigger": {}
+      }
+    },
+    "DrawType": "Model",
+    "BlockSoundSetId": "Stone",
+    "Opacity": "Solid",
+    "CustomModel": "Blocks/Functional/Suspender.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Suspender_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "BlockParticleSetId": "Crystal",
+    "Material": "Solid",
+    "InteractionHint": "server.interactionHints.toggle",
+    "ParticleColor": "#bbac72",
+    "VariantRotation": "UpDownNESW",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "ItemId": "Pseudo_Arcane_Void_Suspender"
+      }
+    },
+    "CubeShadingMode": "Flat",
+    "CustomModelAnimation": "Blocks/Animations/Functional/Suspender/Suspender_Idle.blockyanim",
+    "Looping": true,
+    "InteractionSoundEventId": "SFX_Sticks_Break"
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      22.5,
+      47,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -14
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Void_Suspender.png",
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "Quality": "Void_Artifacts",
+  "SubCategory": "Void_Artifacts"
+}
