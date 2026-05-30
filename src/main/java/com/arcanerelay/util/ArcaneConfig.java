@@ -54,9 +54,9 @@ public class ArcaneConfig {
     private Double TargetDistance = 10.0;
     private int PusherRange = 15;
     private int PullerRange = 15;
-    private Double BreakerDamage = 0.3;
-    private String[] NoneMoveableBlocks = {"Void_Suspender", "Barrier", "Bedrock"};
-    private String[] NoneRotatableBlocks= {"Void_Suspender", "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"};
+    private Double BreakerDamage = 25.0;
+    private String[] NoneMoveableBlocks = {"Barrier", "Bedrock"};
+    private String[] NoneRotatableBlocks= {"Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"};
 
     public ArcaneConfig() {
     }

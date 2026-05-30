@@ -5,10 +5,12 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.components.ArcaneSection.BlockTickStrategy;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
+import com.arcanerelay.util.ArcaneConfig;
 import com.arcanerelay.util.BlockFlags;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.codec.Codec;
@@ -38,6 +40,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 
 public class HitActivation extends Activation {
+    ArcaneConfig config = ArcaneRelayPlugin.getConfig();
     public float damage;
     public Vector3i direction;
     public ItemTool itemTool;
@@ -70,6 +73,13 @@ public class HitActivation extends Activation {
             .add()
             .build();
 
+    public float getDamage() { return config.getBreakerDamage().floatValue();}
+
+    public void setDamage(float damage) {
+        config.setBreakerDamage((double)damage);
+        ArcaneRelayPlugin.get().saveConfig();
+    }
+
     @Override
     public BlockTickStrategy execute(
             @Nonnull ArcaneCachedAccessor accessor,
@@ -90,6 +100,7 @@ public class HitActivation extends Activation {
             int worldX, int worldY, int worldZ,
             @Nonnull List<int[]> sources) {
         Vector3i currentPosition = new Vector3i(worldX, worldY, worldZ);
+        damage = getDamage();
 
         World world = accessor.getCommandBuffer().getExternalData().getWorld();
         ChunkStore chunkStore = world.getChunkStore();

@@ -1,5 +1,6 @@
 package com.arcanerelay.util;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import org.joml.Vector3i;
 import com.hypixel.hytale.math.Axis;
 import org.joml.Vector3d;
@@ -19,13 +20,6 @@ public class BlockVectorUtil {
 
     static List<String> NoneMoveableIDs = Arrays.asList(config.getNoneMoveableBlocks());
     static List<String> NoneRotatableIDs = Arrays.asList(config.getNoneRotatableBlocks());
-    //static List<String> NoneMoveableIDs = Arrays.asList(
-    //        "Void_Suspender", "Barrier", "Bedrock"
-    //);
-
-    //static List<String> NoneRotatableIDs = Arrays.asList(
-    //        "Void_Suspender", "Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock"
-    //);
 
     public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i pos, int range) {
         for (int x = -range; x <= range; x++) {
@@ -47,16 +41,6 @@ public class BlockVectorUtil {
 
         String lower = id.toLowerCase();
         return lower.contains("puller") && lower.contains("extension");
-    }
-
-    public static void SetTickingAround(@Nonnull WorldChunk chnk,Vector3i Pos, int range) {
-        for (int x = -range; x <= range; x++) {
-            for (int y = -range; y <= range; y++) {
-                for (int z = -range; z <= range; z++) {
-                    chnk.setTicking(Pos.x+x, Pos.y+y, Pos.z+z,true);
-                }
-            }
-        }
     }
 
     public static boolean isEmpty(@Nullable BlockType blockType, int blockID) {
