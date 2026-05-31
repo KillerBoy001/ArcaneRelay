@@ -74,7 +74,8 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     }
 
     public void saveConfig() {
-            config.save();
+        if (configRef != null)
+            configRef.save();
     }
 
     @Override

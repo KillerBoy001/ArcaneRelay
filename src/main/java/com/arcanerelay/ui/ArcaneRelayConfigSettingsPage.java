@@ -28,7 +28,7 @@ import java.util.Arrays;
  */
 public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<ArcaneRelayConfigSettingsPage.PageEventData> {
     @Nonnull
-    private ArcaneRelayConfig config;
+    private final ArcaneRelayConfig config;
 
     public ArcaneRelayConfigSettingsPage(@Nonnull PlayerRef playerRef, @Nonnull ArcaneRelayConfig config) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, PageEventData.CODEC);
@@ -53,6 +53,16 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
         commandBuilder.set("#NonRotatableBlacklistInput.Value", String.join(", ", config.getNoneRotatableBlocks()));
 
         // Set up textbox event bindings
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TriggerDistanceInput", EventData.of("@TriggerDistanceInput", "#TriggerDistanceInput.Value"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TargetDistanceInput", EventData.of("@TargetDistanceInput", "#TargetDistanceInput.Value"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#PusherRangeInput", EventData.of("@PusherRangeInput", "#PusherRangeInput.Value"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#PullerRangeInput", EventData.of("@PullerRangeInput", "#PullerRangeInput.Value"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#BreakerDamageInput", EventData.of("@BreakerDamageInput", "#BreakerDamageInput.Value"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonMovableListInput", EventData.of("@NonMovableListInput", "#NonMovableListInput.Value"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonRotatableBlacklistInput", EventData.of("@NonRotatableBlacklistInput", "#NonRotatableBlacklistInput.Value"), false);
+
+
+        /* Original
         EventData triggerData = EventData.of("Action", "UpdateTriggerDistance");
         triggerData.put("TriggerDistanceValue", "$el.Value");
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TriggerDistanceInput", triggerData, false);
@@ -81,6 +91,8 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
         nonRotatableData.put("NonRotatableListValue", "$el.Value");
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonRotatableBlacklistInput", nonRotatableData, false);
 
+         */
+
         // Set up button event bindings
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#SaveButton", EventData.of("Action", "Save"));
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CancelButton", EventData.of("Action", "Cancel"));
@@ -88,9 +100,96 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
 
     @Override
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull PageEventData data) {
-        if (data.action == null || data.action.isEmpty()) return;
+        super.handleDataEvent(ref, store, data);
+        boolean changed = false;
 
+        if (data.TriggerDistanceInput != null) {
+            try {
+                int value = Integer.parseInt(data.TriggerDistanceInput);
+                if (value >= 0) {
+                    this.playerRef.sendMessage(Message.raw("Trigger Distance updated to: " + data.TriggerDistanceInput));
+                    config.setTriggerDistance(value);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            changed = true;
+        }
+
+        if (data.TargetDistanceInput != null) {
+            try {
+                int value = Integer.parseInt(data.TargetDistanceInput);
+                if (value >= 0) {
+                    this.playerRef.sendMessage(Message.raw("Target Distance updated to: " + data.TargetDistanceInput));
+                    config.setTargetDistance(value);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            changed = true;
+        }
+
+        if (data.PusherRangeInput != null) {
+            try {
+                int value = Integer.parseInt(data.PusherRangeInput);
+                if (value >= 0) {
+                    this.playerRef.sendMessage(Message.raw("Pusher Range updated to: " + data.PusherRangeInput));
+                    config.setPusherRange(value);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            changed = true;
+        }
+
+        if (data.PullerRangeInput != null) {
+            try {
+                int value = Integer.parseInt(data.PullerRangeInput);
+                if (value >= 0) {
+                    this.playerRef.sendMessage(Message.raw("Puller Range updated to: " + data.PullerRangeInput));
+                    config.setPullerRange(value);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            changed = true;
+        }
+
+        if (data.BreakerDamageInput != null) {
+            try {
+                double value = Double.parseDouble(data.BreakerDamageInput);
+                if (value >= 0.0) {
+                    this.playerRef.sendMessage(Message.raw("Breaker DMG updated to: " + data.BreakerDamageInput));
+                    config.setBreakerDamage(value);
+                }
+            } catch (NumberFormatException ignored) {
+            }
+            changed = true;
+        }
+
+        if (data.NonMovableListInput != null) {
+            if (!data.NonMovableListInput.isEmpty()) {
+                String[] blocks = Arrays.stream(data.NonMovableListInput.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .toArray(String[]::new);
+                config.setNoneMoveableBlocks(blocks);
+                this.playerRef.sendMessage(Message.raw("Non-Moveable updated to: " + data.NonMovableListInput));
+            }
+            changed = true;
+        }
+
+        if (data.NonRotatableBlacklistInput != null) {
+            if (!data.NonRotatableBlacklistInput.isEmpty()) {
+                String[] blocks = Arrays.stream(data.NonRotatableBlacklistInput.split(","))
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .toArray(String[]::new);
+                config.setNoneRotatableBlocks(blocks);
+                this.playerRef.sendMessage(Message.raw("Non-Moveable updated to: " + data.NonRotatableBlacklistInput));
+            }
+            changed = true;
+        }
+
+        if (data.action == null || data.action.isEmpty()) return;
         switch (data.action) {
+            /* Original
             case "UpdateTriggerDistance":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
                     try {
@@ -100,7 +199,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                         }
                     } catch (NumberFormatException ignored) {
                     }
-                }
+                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateTriggerDistance Textfield data null or empty"));}
                 return;
             case "UpdateTargetDistance":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
@@ -111,7 +210,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                         }
                     } catch (NumberFormatException ignored) {
                     }
-                }
+                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateTargetDistance Textfield data null or empty"));}
                 return;
             case "UpdatePusherRange":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
@@ -122,7 +221,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                         }
                     } catch (NumberFormatException ignored) {
                     }
-                }
+                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdatePusherRange Textfield data null or empty"));}
                 return;
             case "UpdatePullerRange":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
@@ -133,7 +232,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                         }
                     } catch (NumberFormatException ignored) {
                     }
-                }
+                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdatePullerRange Textfield data null or empty"));}
                 return;
             case "UpdateBreakerDamage":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
@@ -144,7 +243,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                         }
                     } catch (NumberFormatException ignored) {
                     }
-                }
+                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateBreakerDamage Textfield data null or empty"));}
                 return;
             case "UpdateNonMovableList":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
@@ -153,7 +252,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                             .filter(s -> !s.isEmpty())
                             .toArray(String[]::new);
                     config.setNoneMoveableBlocks(blocks);
-                }
+                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateNonMovableList Textfield data null or empty"));}
                 return;
             case "UpdateNonRotatableList":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
@@ -162,8 +261,9 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                             .filter(s -> !s.isEmpty())
                             .toArray(String[]::new);
                     config.setNoneRotatableBlocks(blocks);
-                }
+                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateNonRotatableList Textfield data null or empty"));}
                 return;
+                */
             case "Save":
                 ArcaneRelayPlugin.get().saveConfig();
                 store.getExternalData().getWorld().execute(() -> {
@@ -191,6 +291,13 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
     public static final class PageEventData {
         public String action;
         public String textValue;
+        public String TriggerDistanceInput;
+        public String TargetDistanceInput;
+        public String PusherRangeInput;
+        public String PullerRangeInput;
+        public String BreakerDamageInput;
+        public String NonMovableListInput;
+        public String NonRotatableBlacklistInput;
 
         public static final BuilderCodec<PageEventData> CODEC =
                 BuilderCodec.builder(PageEventData.class, PageEventData::new)
@@ -204,6 +311,13 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                                 (d, v) -> d.textValue = v,
                                 d -> d.textValue)
                         .add()
+                        .append(new KeyedCodec<>("@TriggerDistanceInput", Codec.STRING), (data, s) -> data.TriggerDistanceInput = s, data -> data.TriggerDistanceInput).add()
+                        .append(new KeyedCodec<>("@TargetDistanceInput", Codec.STRING), (data, s) -> data.TargetDistanceInput = s, data -> data.TargetDistanceInput).add()
+                        .append(new KeyedCodec<>("@PusherRangeInput", Codec.STRING), (data, s) -> data.PusherRangeInput = s, data -> data.PusherRangeInput).add()
+                        .append(new KeyedCodec<>("@PullerRangeInput", Codec.STRING), (data, s) -> data.PullerRangeInput = s, data -> data.PullerRangeInput).add()
+                        .append(new KeyedCodec<>("@BreakerDamageInput", Codec.STRING), (data, s) -> data.BreakerDamageInput = s, data -> data.BreakerDamageInput).add()
+                        .append(new KeyedCodec<>("@NonMovableListInput", Codec.STRING), (data, s) -> data.NonMovableListInput = s, data -> data.NonMovableListInput).add()
+                        .append(new KeyedCodec<>("@NonRotatableBlacklistInput", Codec.STRING), (data, s) -> data.NonRotatableBlacklistInput = s, data -> data.NonRotatableBlacklistInput).add()
                         .build();
     }
 }

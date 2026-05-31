@@ -13,7 +13,7 @@ public class ArcaneRelayConfig {
             .append(new KeyedCodec<Integer>("TriggerDistance", Codec.INTEGER),
                     (config, value, info) -> config.triggerDistance = value,
                     (config, info) -> config.triggerDistance)
-            .documentation("Maximum distance at which the Arcane Staff can succesfully create a connection.")
+            .documentation("Maximum distance at which a Arcane block can trigger a connection")
             .addValidator(new RangeValidator<Integer>(0, Integer.MAX_VALUE, false))
             .add()
 

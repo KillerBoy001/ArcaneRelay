@@ -81,8 +81,8 @@ customUI.ConnectionRow.buttonRemoveTitle = Remove
 
 customUI.ArcaneRelayConfig.title = Arcane Relay Settings
 customUI.ArcaneRelayConfig.failedToLoadDataMessage = Could not load configuration data.
-customUI.ArcaneRelayConfig.triggerDistanceTitle = Max Connection Distance
-customUI.ArcaneRelayConfig.targetDistanceTitle = Max Connection Distance
+customUI.ArcaneRelayConfig.triggerDistanceTitle = Max Trigger Distance
+customUI.ArcaneRelayConfig.targetDistanceTitle = Max Target Distance
 customUI.ArcaneRelayConfig.pusherRangeTitle = Max Pusher Range
 customUI.ArcaneRelayConfig.pullerRangeTitle = Max Puller Range
 customUI.ArcaneRelayConfig.breakerDamageTitle = Breaker Damage
