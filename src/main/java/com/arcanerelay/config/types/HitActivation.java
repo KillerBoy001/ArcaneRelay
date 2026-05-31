@@ -11,7 +11,6 @@ import com.arcanerelay.components.ArcaneSection.BlockTickStrategy;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
-import com.arcanerelay.util.ArcaneConfig;
 import com.arcanerelay.util.BlockFlags;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.codec.Codec;

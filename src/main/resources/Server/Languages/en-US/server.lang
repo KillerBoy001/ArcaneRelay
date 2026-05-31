@@ -81,13 +81,21 @@ customUI.ConnectionRow.buttonRemoveTitle = Remove
 
 customUI.ArcaneRelayConfig.title = Arcane Relay Settings
 customUI.ArcaneRelayConfig.failedToLoadDataMessage = Could not load configuration data.
+customUI.ArcaneRelayConfig.ChangesNotificationTitle = Some changes might require a reload.
 customUI.ArcaneRelayConfig.triggerDistanceTitle = Max Trigger Distance
+customUI.ArcaneRelayConfig.triggerDistanceTooltip = Maximum distance at which a Arcane block can trigger a connection
 customUI.ArcaneRelayConfig.targetDistanceTitle = Max Target Distance
+customUI.ArcaneRelayConfig.targetDistanceTooltip = Maximum distance at which the Arcane Staff can succesfully create a connection.
 customUI.ArcaneRelayConfig.pusherRangeTitle = Max Pusher Range
+customUI.ArcaneRelayConfig.pusherRangeTooltip = Maximum number of blocks the pusher is allowed to succesfully push before being blocked.
 customUI.ArcaneRelayConfig.pullerRangeTitle = Max Puller Range
+customUI.ArcaneRelayConfig.pullerRangeTooltip = The maximum range at which the Puller will extend to before starting to retract.
 customUI.ArcaneRelayConfig.breakerDamageTitle = Breaker Damage
+customUI.ArcaneRelayConfig.breakerDamageTooltip = The damage dealt by the Breaker to entities.
 customUI.ArcaneRelayConfig.moveableBlacklistTitle = Non-Moveable Blocks
+customUI.ArcaneRelayConfig.moveableBlacklistTooltip = List of blocks that cannot be moved, This can be partial block ID's.
 customUI.ArcaneRelayConfig.rotatableBlacklistTitle = Non-Rotatable Blocks
+customUI.ArcaneRelayConfig.rotatableBlacklistTooltip = List of blocks that cannot be rotated, This can be partial block ID's.
 customUI.ArcaneRelayConfig.save = Save
 customUI.ArcaneRelayConfig.cancel = Cancel
 

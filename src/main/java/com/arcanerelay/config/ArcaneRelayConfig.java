@@ -27,7 +27,7 @@ public class ArcaneRelayConfig {
             .append(new KeyedCodec<Integer>("PusherRange", Codec.INTEGER),
                     (config, value, info) -> config.pusherRange = value,
                     (config, info) -> config.pusherRange)
-            .documentation("Maximum number of blocks the pusher is allowed to succesfully block before being blocked.")
+            .documentation("Maximum number of blocks the pusher is allowed to succesfully push before being blocked.")
             .addValidator(new RangeValidator<Integer>(0, Integer.MAX_VALUE, true))
             .add()
 

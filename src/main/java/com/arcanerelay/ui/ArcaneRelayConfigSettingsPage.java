@@ -61,38 +61,6 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonMovableListInput", EventData.of("@NonMovableListInput", "#NonMovableListInput.Value"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonRotatableBlacklistInput", EventData.of("@NonRotatableBlacklistInput", "#NonRotatableBlacklistInput.Value"), false);
 
-
-        /* Original
-        EventData triggerData = EventData.of("Action", "UpdateTriggerDistance");
-        triggerData.put("TriggerDistanceValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TriggerDistanceInput", triggerData, false);
-
-        EventData targetData = EventData.of("Action", "UpdateTargetDistance");
-        targetData.put("TargetDistanceValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TargetDistanceInput", targetData, false);
-
-        EventData pusherData = EventData.of("Action", "UpdatePusherRange");
-        pusherData.put("PusherRangeValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#PusherRangeInput", pusherData, false);
-
-        EventData pullerData = EventData.of("Action", "UpdatePullerRange");
-        pullerData.put("PullerRangeValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#PullerRangeInput", pullerData, false);
-
-        EventData breakerData = EventData.of("Action", "UpdateBreakerDamage");
-        breakerData.put("BreakerDamageValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#BreakerDamageInput", breakerData, false);
-
-        EventData nonMovableData = EventData.of("Action", "UpdateNonMovableList");
-        nonMovableData.put("NonMovableListValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonMovableListInput", nonMovableData, false);
-
-        EventData nonRotatableData = EventData.of("Action", "UpdateNonRotatableList");
-        nonRotatableData.put("NonRotatableListValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonRotatableBlacklistInput", nonRotatableData, false);
-
-         */
-
         // Set up button event bindings
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#SaveButton", EventData.of("Action", "Save"));
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#CancelButton", EventData.of("Action", "Cancel"));
@@ -189,81 +157,6 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
 
         if (data.action == null || data.action.isEmpty()) return;
         switch (data.action) {
-            /* Original
-            case "UpdateTriggerDistance":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    try {
-                        int value = Integer.parseInt(data.textValue);
-                        if (value >= 0) {
-                            config.setTriggerDistance(value);
-                        }
-                    } catch (NumberFormatException ignored) {
-                    }
-                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateTriggerDistance Textfield data null or empty"));}
-                return;
-            case "UpdateTargetDistance":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    try {
-                        int value = Integer.parseInt(data.textValue);
-                        if (value >= 0) {
-                            config.setTargetDistance(value);
-                        }
-                    } catch (NumberFormatException ignored) {
-                    }
-                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateTargetDistance Textfield data null or empty"));}
-                return;
-            case "UpdatePusherRange":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    try {
-                        int value = Integer.parseInt(data.textValue);
-                        if (value >= 0) {
-                            config.setPusherRange(value);
-                        }
-                    } catch (NumberFormatException ignored) {
-                    }
-                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdatePusherRange Textfield data null or empty"));}
-                return;
-            case "UpdatePullerRange":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    try {
-                        int value = Integer.parseInt(data.textValue);
-                        if (value >= 0) {
-                            config.setPullerRange(value);
-                        }
-                    } catch (NumberFormatException ignored) {
-                    }
-                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdatePullerRange Textfield data null or empty"));}
-                return;
-            case "UpdateBreakerDamage":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    try {
-                        double value = Double.parseDouble(data.textValue    );
-                        if (value >= 0.0) {
-                            config.setBreakerDamage(value);
-                        }
-                    } catch (NumberFormatException ignored) {
-                    }
-                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateBreakerDamage Textfield data null or empty"));}
-                return;
-            case "UpdateNonMovableList":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    String[] blocks = Arrays.stream(data.textValue.split(","))
-                            .map(String::trim)
-                            .filter(s -> !s.isEmpty())
-                            .toArray(String[]::new);
-                    config.setNoneMoveableBlocks(blocks);
-                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateNonMovableList Textfield data null or empty"));}
-                return;
-            case "UpdateNonRotatableList":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    String[] blocks = Arrays.stream(data.textValue.split(","))
-                            .map(String::trim)
-                            .filter(s -> !s.isEmpty())
-                            .toArray(String[]::new);
-                    config.setNoneRotatableBlocks(blocks);
-                }else {this.playerRef.sendMessage(Message.raw("ConfigUI: UpdateNonRotatableList Textfield data null or empty"));}
-                return;
-                */
             case "Save":
                 ArcaneRelayPlugin.get().saveConfig();
                 store.getExternalData().getWorld().execute(() -> {

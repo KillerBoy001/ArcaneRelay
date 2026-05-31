@@ -4,7 +4,7 @@ $C.@PageOverlay {
   LayoutMode: Middle;
 
   $C.@DecoratedContainer {
-    Anchor: (Width: 480, Height: 522);
+    Anchor: (Width: 480, Height: 572);
 
     #Title {
       $C.@Title {
@@ -30,7 +30,25 @@ $C.@PageOverlay {
       Group #MainContent {
         LayoutMode: Top;
 
-        // Row 1: Trigger Distance and Target Distance
+        // Row 1: Notification label
+        Group {
+          LayoutMode: Middle;
+          Anchor: (Bottom: 8);
+
+          Group {
+            LayoutMode: Middle;
+            FlexWeight: 1;
+            Anchor: (Right: 8);
+
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #a30d0d, RenderBold: true);
+              Text: %server.customUI.ArcaneRelayConfig.ChangesNotificationTitle;
+            }
+          }
+        }
+
+        // Row 2: Trigger Distance and Target Distance
         Group {
           LayoutMode: Left;
           Anchor: (Bottom: 8);
@@ -48,6 +66,7 @@ $C.@PageOverlay {
 
             TextField #TriggerDistanceInput {
               Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.triggerDistanceTooltip;
               Style: $C.@DefaultInputFieldStyle;
               PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
               Background: $C.@InputBoxBackground;
@@ -67,6 +86,7 @@ $C.@PageOverlay {
 
             TextField #TargetDistanceInput {
               Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.targetDistanceTooltip;
               Style: $C.@DefaultInputFieldStyle;
               PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
               Background: $C.@InputBoxBackground;
@@ -75,7 +95,7 @@ $C.@PageOverlay {
           }
         }
 
-        // Row 2: Pusher Range and Puller Range
+        // Row 3: Pusher Range and Puller Range
         Group {
           LayoutMode: Left;
           Anchor: (Bottom: 8);
@@ -93,6 +113,7 @@ $C.@PageOverlay {
 
             TextField #PusherRangeInput {
               Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.pusherRangeTooltip;
               Style: $C.@DefaultInputFieldStyle;
               PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
               Background: $C.@InputBoxBackground;
@@ -112,6 +133,7 @@ $C.@PageOverlay {
 
             TextField #PullerRangeInput {
               Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.pullerRangeTooltip;
               Style: $C.@DefaultInputFieldStyle;
               PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
               Background: $C.@InputBoxBackground;
@@ -120,7 +142,7 @@ $C.@PageOverlay {
           }
         }
 
-        // Row 3: Breaker Damage
+        // Row 4: Breaker Damage
         Group {
           LayoutMode: Top;
           Anchor: (Bottom: 16);
@@ -133,6 +155,7 @@ $C.@PageOverlay {
 
           TextField #BreakerDamageInput {
             Anchor: (Height: 38);
+            TooltipText: %server.customUI.ArcaneRelayConfig.breakerDamageTooltip;
             Style: $C.@DefaultInputFieldStyle;
             PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
             Background: $C.@InputBoxBackground;
@@ -146,7 +169,7 @@ $C.@PageOverlay {
           Background: #5e512c;
         }
 
-        // Row 4: Non-Movable List
+        // Row 5: Non-Movable List
         Group {
           LayoutMode: Top;
           Anchor: (Bottom: 8);
@@ -159,6 +182,7 @@ $C.@PageOverlay {
 
           TextField #NonMovableListInput {
             Anchor: (Height: 38);
+            TooltipText: %server.customUI.ArcaneRelayConfig.moveableBlacklistTooltip;
             Style: $C.@DefaultInputFieldStyle;
             PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
             Background: $C.@InputBoxBackground;
@@ -166,7 +190,7 @@ $C.@PageOverlay {
           }
         }
 
-        // Row 5: Non-Rotatable List
+        // Row 6: Non-Rotatable List
         Group {
           LayoutMode: Top;
           Anchor: (Bottom: 16);
@@ -179,6 +203,7 @@ $C.@PageOverlay {
 
           TextField #NonRotatableBlacklistInput {
             Anchor: (Height: 38);
+            TooltipText: %server.customUI.ArcaneRelayConfig.rotatableBlacklistTooltip;
             Style: $C.@DefaultInputFieldStyle;
             PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
             Background: $C.@InputBoxBackground;

@@ -8,7 +8,6 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
-import com.arcanerelay.util.ArcaneConfig;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.arcanerelay.util.ArcaneConnectedBlocksUtil;

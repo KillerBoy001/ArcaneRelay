@@ -43,7 +43,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.Config;
 import com.hypixel.hytale.server.core.util.TargetUtil;
-import com.arcanerelay.util.ArcaneConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
