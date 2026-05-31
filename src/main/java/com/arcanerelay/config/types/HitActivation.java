@@ -9,6 +9,7 @@ import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.components.ArcaneSection.BlockTickStrategy;
 import com.arcanerelay.config.Activation;
+import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.util.ArcaneConfig;
 import com.arcanerelay.util.BlockFlags;
@@ -40,7 +41,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 
 public class HitActivation extends Activation {
-    ArcaneConfig config = ArcaneRelayPlugin.getConfig();
+    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
     public float damage;
     public Vector3i direction;
     public ItemTool itemTool;
@@ -73,7 +74,9 @@ public class HitActivation extends Activation {
             .add()
             .build();
 
-    public float getDamage() { return config.getBreakerDamage().floatValue();}
+    public float getDamage() {
+        return (float) ArcaneRelayPlugin.getConfig().getBreakerDamage();
+    }
 
     public void setDamage(float damage) {
         config.setBreakerDamage((double)damage);

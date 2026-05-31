@@ -3,6 +3,7 @@ package com.arcanerelay.config.types;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
+import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.resources.ArcaneMoveState;
@@ -52,8 +53,8 @@ import java.util.List;
 import java.util.Set;
 
 public class MoveBlockActivation extends Activation {
-    ArcaneConfig config = ArcaneRelayPlugin.getConfig();
-    private int range = 1;
+    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
+    private int range = ArcaneRelayPlugin.getConfig().getPusherRange();
     private int upAmount = 1;
     private boolean isWall = false;
 
@@ -82,7 +83,7 @@ public class MoveBlockActivation extends Activation {
         .build();
 
     public int getRange() {
-        return config.getPusherRange(); // util.ArcaneConfig now sets default: 15
+        return ArcaneRelayPlugin.getConfig().getPusherRange(); // util.ArcaneConfig now sets default: 15
     }
 
     public void setRange(int range) {

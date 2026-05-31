@@ -1,6 +1,7 @@
 package com.arcanerelay.util;
 
 import com.arcanerelay.ArcaneRelayPlugin;
+import com.arcanerelay.config.ArcaneRelayConfig;
 import org.joml.Vector3i;
 import com.hypixel.hytale.math.Axis;
 import org.joml.Vector3d;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Arrays;
 
 public class BlockVectorUtil {
-    static ArcaneConfig config = ArcaneRelayPlugin.getConfig();
+    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
 
     static List<String> NoneMoveableIDs = Arrays.asList(config.getNoneMoveableBlocks());
     static List<String> NoneRotatableIDs = Arrays.asList(config.getNoneRotatableBlocks());

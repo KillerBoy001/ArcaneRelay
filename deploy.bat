@@ -15,11 +15,18 @@ if exist "%HYTALE_MODS%\arcanerelay-*.jar" (
     powershell Write-Host "[" -NoNewline; Write-Host "INFO" -ForegroundColor Blue -NoNewline; Write-Host '] '-NoNewline; Write-Host "Removed old mod from Hytale Mods folder"
 )
 
-copy ".\target\arcanerelay-%VERSION%.jar" "%HYTALE_MODS%\" && powershell Write-Host "[" -NoNewline; Write-Host "INFO" -ForegroundColor Blue -NoNewline; Write-Host '] '-NoNewline; Write-Host "COPY SUCCES" -ForegroundColor Green
+copy ".\target\arcanerelay-%VERSION%.jar" "%HYTALE_MODS%\" 
 
-
-powershell Write-Host "[" -NoNewline; Write-Host "INFO" -ForegroundColor Blue -NoNewline; Write-Host '] '-NoNewline; Write-Host 'DEPLOY COMPLETED' -ForegroundColor Yellow
-powershell Write-Host ""
-powershell Write-Host Press Enter to close window
+if %errorlevel%==0 (
+    	powershell Write-Host "[" -NoNewline; Write-Host "INFO" -ForegroundColor Blue -NoNewline; Write-Host '] '-NoNewline; Write-Host "COPY SUCCES" -ForegroundColor Green
+	powershell Write-Host "[" -NoNewline; Write-Host "INFO" -ForegroundColor Blue -NoNewline; Write-Host '] '-NoNewline; Write-Host 'DEPLOY COMPLETED' -ForegroundColor Yellow
+	powershell Write-Host ""
+	powershell Write-Host Press Enter to close window
+) else (
+    	powershell Write-Host "[" -NoNewline; Write-Host "INFO" -ForegroundColor Blue -NoNewline; Write-Host '] '-NoNewline; Write-Host "COPY FAILED" -ForegroundColor Red
+	powershell Write-Host "[" -NoNewline; Write-Host "INFO" -ForegroundColor Blue -NoNewline; Write-Host '] '-NoNewline; Write-Host 'DEPLOY FAILED' -ForegroundColor Red
+	powershell Write-Host ""
+	powershell Write-Host Press Enter to close window
+)
 
 pause>nul
