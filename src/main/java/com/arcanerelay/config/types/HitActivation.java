@@ -9,7 +9,6 @@ import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.components.ArcaneSection.BlockTickStrategy;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.util.BlockFlags;
 import com.arcanerelay.util.BlockVectorUtil;
@@ -21,13 +20,11 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Vector3iUtil;
 import org.joml.Vector3d;
+import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
-import com.hypixel.hytale.server.core.entity.LivingEntity;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
@@ -40,7 +37,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.TargetUtil;
 
 public class HitActivation extends Activation {
-    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
     public float damage;
     public Vector3i direction;
     public ItemTool itemTool;
@@ -75,11 +71,6 @@ public class HitActivation extends Activation {
 
     public float getDamage() {
         return (float) ArcaneRelayPlugin.getConfig().getBreakerDamage();
-    }
-
-    public void setDamage(float damage) {
-        config.setBreakerDamage((double)damage);
-        ArcaneRelayPlugin.get().saveConfig();
     }
 
     @Override

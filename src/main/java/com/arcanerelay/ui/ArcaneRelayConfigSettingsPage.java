@@ -2,9 +2,11 @@ package com.arcanerelay.ui;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.config.ArcaneRelayConfig;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
@@ -18,6 +20,7 @@ import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.NotificationUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -29,6 +32,13 @@ import java.util.Arrays;
 public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<ArcaneRelayConfigSettingsPage.PageEventData> {
     @Nonnull
     private final ArcaneRelayConfig config;
+    private Integer TmpTriggerDist;
+    private Integer TmpTargetDist;
+    private Integer TmpPusherRange;
+    private Integer TmpPullerRange;
+    private Double TmpBreakerDMG;
+    private String[] TmpMoveableBlacklist;
+    private String[] TmpRotatableBlacklist;
 
     public ArcaneRelayConfigSettingsPage(@Nonnull PlayerRef playerRef, @Nonnull ArcaneRelayConfig config) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, PageEventData.CODEC);
@@ -75,8 +85,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
             try {
                 int value = Integer.parseInt(data.TriggerDistanceInput);
                 if (value >= 0) {
-                    this.playerRef.sendMessage(Message.raw("Trigger Distance updated to: " + data.TriggerDistanceInput));
-                    config.setTriggerDistance(value);
+                    TmpTriggerDist = value;
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -87,8 +96,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
             try {
                 int value = Integer.parseInt(data.TargetDistanceInput);
                 if (value >= 0) {
-                    this.playerRef.sendMessage(Message.raw("Target Distance updated to: " + data.TargetDistanceInput));
-                    config.setTargetDistance(value);
+                    TmpTargetDist = value;
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -99,8 +107,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
             try {
                 int value = Integer.parseInt(data.PusherRangeInput);
                 if (value >= 0) {
-                    this.playerRef.sendMessage(Message.raw("Pusher Range updated to: " + data.PusherRangeInput));
-                    config.setPusherRange(value);
+                    TmpPusherRange = value;
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -111,8 +118,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
             try {
                 int value = Integer.parseInt(data.PullerRangeInput);
                 if (value >= 0) {
-                    this.playerRef.sendMessage(Message.raw("Puller Range updated to: " + data.PullerRangeInput));
-                    config.setPullerRange(value);
+                    TmpPullerRange = value;
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -123,8 +129,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
             try {
                 double value = Double.parseDouble(data.BreakerDamageInput);
                 if (value >= 0.0) {
-                    this.playerRef.sendMessage(Message.raw("Breaker DMG updated to: " + data.BreakerDamageInput));
-                    config.setBreakerDamage(value);
+                    TmpBreakerDMG = value;
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -137,8 +142,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                         .map(String::trim)
                         .filter(s -> !s.isEmpty())
                         .toArray(String[]::new);
-                config.setNoneMoveableBlocks(blocks);
-                this.playerRef.sendMessage(Message.raw("Non-Moveable updated to: " + data.NonMovableListInput));
+                TmpMoveableBlacklist = blocks;
             }
             changed = true;
         }
@@ -149,8 +153,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                         .map(String::trim)
                         .filter(s -> !s.isEmpty())
                         .toArray(String[]::new);
-                config.setNoneRotatableBlocks(blocks);
-                this.playerRef.sendMessage(Message.raw("Non-Moveable updated to: " + data.NonRotatableBlacklistInput));
+                TmpRotatableBlacklist = blocks;
             }
             changed = true;
         }
@@ -158,12 +161,28 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
         if (data.action == null || data.action.isEmpty()) return;
         switch (data.action) {
             case "Save":
-                ArcaneRelayPlugin.get().saveConfig();
+                boolean c = false;
+                if (TmpTriggerDist!=null){config.setTriggerDistance(TmpTriggerDist);TmpTriggerDist=null;c=true;}
+                if (TmpTargetDist!=null){config.setTargetDistance(TmpTargetDist);TmpTargetDist=null;c=true;}
+                if (TmpPusherRange!=null){config.setPusherRange(TmpPusherRange);TmpPusherRange=null;c=true;}
+                if (TmpPullerRange!=null){config.setPullerRange(TmpPullerRange);TmpPullerRange=null;c=true;}
+                if (TmpBreakerDMG!=null){config.setBreakerDamage(TmpBreakerDMG);TmpBreakerDMG=null;c=true;}
+                if (TmpMoveableBlacklist!=null){config.setNoneMoveableBlocks(TmpMoveableBlacklist);TmpMoveableBlacklist=null;c=true;}
+                if (TmpRotatableBlacklist!=null){config.setNoneRotatableBlocks(TmpRotatableBlacklist);TmpRotatableBlacklist=null;c=true;}
+
+                if (c) {
+                    ArcaneRelayPlugin.get().saveConfig();
+                    NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsSucces"), NotificationStyle.Success);
+                }else{
+                    NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsNoChange"), NotificationStyle.Warning);
+                }
+
                 store.getExternalData().getWorld().execute(() -> {
                     closePage();
                 });
                 return;
             case "Cancel":
+                NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsNoChange"), NotificationStyle.Warning);
                 store.getExternalData().getWorld().execute(() -> {
                     closePage();
                 });

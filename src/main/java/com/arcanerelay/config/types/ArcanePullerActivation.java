@@ -1,7 +1,6 @@
 package com.arcanerelay.config.types;
 
 import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.components.ArcanePullerBlock;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
@@ -12,6 +11,7 @@ import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.arcanerelay.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.resources.ArcaneMoveState;
+
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -19,8 +19,9 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.Ref;
 import org.joml.Vector3d;
-import com.hypixel.hytale.math.util.ChunkUtil;
+import org.joml.Vector3f;
 import org.joml.Vector3i;
+import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -42,7 +43,6 @@ import java.util.Set;
 
 
 public class ArcanePullerActivation extends Activation {
-    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
     private int range = ArcaneRelayPlugin.getConfig().getPullerRange();
     private static final double KNOCKBACK_MAX_SPEED = 30;
     private static final float KNOCKBACK_DURATION = 0.1f;
@@ -64,11 +64,6 @@ public class ArcanePullerActivation extends Activation {
 
     public int getRange() {
         return ArcaneRelayPlugin.getConfig().getPullerRange();
-    }
-
-    public void setRange(int range) {
-        config.setPusherRange(range);
-        ArcaneRelayPlugin.get().saveConfig();
     }
 
     @Override
@@ -99,7 +94,7 @@ public class ArcanePullerActivation extends Activation {
         Vector3i pullerPos = new Vector3i(worldX, worldY, worldZ);
         Vector3i globalUp = BlockVectorUtil.getUpVector(chunk, pullerPos);
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
-        int maxRange = getRange();
+        int maxRange = getRange()+1;
 
         int[] source = sources.isEmpty() ? null : sources.get(0);
 

@@ -48,6 +48,9 @@ arcanerelay.notifications.outputAdded = Output has been added.
 arcanerelay.notifications.signalSentToTrigger = Signal sent to trigger.
 arcanerelay.notifications.blockActivationNotSupported = Block activation not supported for this block.
 arcanerelay.notifications.pullerChainResynced = Puller chain resynced.
+arcanerelay.notifications.SettingsSucces = Changes saved and applied
+arcanerelay.notifications.SettingsNoChange = No changes where saved.
+
 
 # === UI ===
 
@@ -93,9 +96,9 @@ customUI.ArcaneRelayConfig.pullerRangeTooltip = The maximum range at which the P
 customUI.ArcaneRelayConfig.breakerDamageTitle = Breaker Damage
 customUI.ArcaneRelayConfig.breakerDamageTooltip = The damage dealt by the Breaker to entities.
 customUI.ArcaneRelayConfig.moveableBlacklistTitle = Non-Moveable Blocks
-customUI.ArcaneRelayConfig.moveableBlacklistTooltip = List of blocks that cannot be moved, This can be partial block ID's.
+customUI.ArcaneRelayConfig.moveableBlacklistTooltip = List of blocks that cannot be moved, This can be partial block ID's.\nValues are split by a comma
 customUI.ArcaneRelayConfig.rotatableBlacklistTitle = Non-Rotatable Blocks
-customUI.ArcaneRelayConfig.rotatableBlacklistTooltip = List of blocks that cannot be rotated, This can be partial block ID's.
+customUI.ArcaneRelayConfig.rotatableBlacklistTooltip = List of blocks that cannot be rotated, This can be partial block ID's.\nValues are split by a comma
 customUI.ArcaneRelayConfig.save = Save
 customUI.ArcaneRelayConfig.cancel = Cancel
 

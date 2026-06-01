@@ -3,11 +3,9 @@ package com.arcanerelay.config.types;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.resources.ArcaneMoveState;
-import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.BlockUtil;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.codec.Codec;
@@ -26,12 +24,9 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.VariantRotation;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
@@ -41,8 +36,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.Config;
-import com.hypixel.hytale.server.core.util.TargetUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -52,7 +45,6 @@ import java.util.List;
 import java.util.Set;
 
 public class MoveBlockActivation extends Activation {
-    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
     private int range = ArcaneRelayPlugin.getConfig().getPusherRange();
     private int upAmount = 1;
     private boolean isWall = false;
@@ -83,11 +75,6 @@ public class MoveBlockActivation extends Activation {
 
     public int getRange() {
         return ArcaneRelayPlugin.getConfig().getPusherRange(); // util.ArcaneConfig now sets default: 15
-    }
-
-    public void setRange(int range) {
-        config.setPusherRange(range);
-        ArcaneRelayPlugin.get().saveConfig();
     }
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
