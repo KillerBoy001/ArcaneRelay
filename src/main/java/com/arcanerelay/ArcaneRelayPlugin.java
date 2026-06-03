@@ -14,7 +14,7 @@ import com.arcanerelay.interactions.SelectTriggerInteraction;
 import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.resources.CustomHudRestoreState;
-import com.arcanerelay.volumetrigger.ArcaneRelayEffect;
+import com.arcanerelay.triggervolumes.effect.ArcaneRelayEffect;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
 import com.arcanerelay.systems.ArcaneStaffHudSystem;
 import com.arcanerelay.systems.ArcaneSystems;

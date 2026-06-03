@@ -1,8 +1,9 @@
-package com.arcanerelay.volumetrigger;
+package com.arcanerelay.triggervolumes.effect;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 
 import com.arcanerelay.core.activation.ActivationExecutor;
+import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerContext;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
@@ -16,12 +17,9 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.util.MathUtil;
 
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -40,8 +38,8 @@ public class ArcaneRelayEffect extends TriggerEffect {
     public static final BuilderCodec<ArcaneRelayEffect> CODEC;
     @Nonnull
     private TriggerType action;
-    private Vector3i pos;
-    private PlayerRef PRef;
+    private Ref<ChunkStore> ChunkRef;
+    private Store<ChunkStore> ChunkStore;
 
     public ArcaneRelayEffect() {
         this.action = TriggerType.TRIGGER_ALL;
@@ -120,51 +118,25 @@ public class ArcaneRelayEffect extends TriggerEffect {
     }
 
     private void SendTrigger(@Nonnull TriggerContext context, @Nonnull World world, @Nonnull WorldChunk chunk, @Nonnull BlockType blockType, int x, int y, int z) {
+        ChunkRef = chunk.getReference();
+        ChunkStore = ChunkRef.getStore();
+
         switch(this.action) {
             //------------------------------//
             case TRIGGER_ALL:
-                PRef = context.getStore().getComponent(context.getEntityRef(), PlayerRef.getComponentType());
-                PRef.sendMessage(Message.raw("VolumeTrigger: WIP Trigger All on block: "+blockType.getId()+" at: "+x+", "+y+", "+z));
-                ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger All on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
-
-
-                // Grabbing some data for usage, just remove what's not needed at the end
-                Ref<ChunkStore> ChunkRef = chunk.getReference();
-                Store<ChunkStore> ChunkStore = ChunkRef.getStore();
-                Vector3i WorldBlockPos = new Vector3i(x, y, z);
-                Vector3i ChunkPos = WorldPosToChunkPos(x, y, z);
-                Vector3i BlockLocalPos = WorldPosToBlockChunkPos(x, y, z);
-                int index = ChunkUtil.indexBlockInColumn(BlockLocalPos.x, BlockLocalPos.y, BlockLocalPos.z);
-                Ref<ChunkStore> blockRef = chunk.getReference();
-
-
-                ActivationExecutor.sendSignals(ChunkStore, blockRef, x, y, z);
-                // Do Actual Triggering for TRIGGER ALL
+                ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: Trigger All on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
+                ArcaneUtil.setTicking(ChunkStore, x, y, z); // Set ticking so arcane blocks trigger
                 break;
             //------------------------------//
             case TRIGGER_CONNECTIONS:
-                PRef = context.getStore().getComponent(context.getEntityRef(), PlayerRef.getComponentType());
-                PRef.sendMessage(Message.raw("VolumeTrigger: WIP Trigger Connections on block: "+blockType.getId()+" at: "+x+", "+y+", "+z));
                 ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger Connections on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
-                // Do Actual Triggering for TRIGGER CONNECTIONS
+                int blockIndex = ChunkUtil.indexBlockInColumn(x, y, z);
+                BlockComponentChunk blockComponentChunk = ChunkStore.getComponent(ChunkRef, BlockComponentChunk.getComponentType());
+                Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(blockIndex);
+                ActivationExecutor.sendSignals(ChunkStore,blockRef,x, y, z);
                 break;
         }
     }
-
-
-    private Vector3i WorldPosToChunkPos(int x, int y, int z){
-        int cX = x >> 5;
-        int cZ = y >> 5;
-        return new Vector3i(cX,0,cZ);
-    }
-
-    private Vector3i WorldPosToBlockChunkPos(int x, int y, int z){
-        int X = x & 31;
-        int Z = z & 31;
-        int Y = y;
-        return new Vector3i(X,Y,Z);
-    }
-
 }
 
 
