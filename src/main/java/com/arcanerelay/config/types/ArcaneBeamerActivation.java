@@ -193,7 +193,7 @@ public class ArcaneBeamerActivation extends Activation {
                 End.setComponent(i,End.get(i)-Shrink);
             }
 
-            if (End.x <0.1 ){Start.x=1; End.x = End.x+1;} // not sure why but only in this orientations
+            if (End.x <0.1 ){Start.x=Start.x+1; End.x = End.x+1;} // not sure why but only in this orientations
 
             TriggerVolumeShape shape = new BoxShape(Start,End);
 
