@@ -2,6 +2,7 @@ package com.arcanerelay.triggervolumes.effect;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 
+import com.arcanerelay.components.ArcaneTriggerBlock;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerContext;
@@ -129,11 +130,15 @@ public class ArcaneRelayEffect extends TriggerEffect {
                 break;
             //------------------------------//
             case TRIGGER_CONNECTIONS:
-                ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger Connections on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
                 int blockIndex = ChunkUtil.indexBlockInColumn(x, y, z);
                 BlockComponentChunk blockComponentChunk = ChunkStore.getComponent(ChunkRef, BlockComponentChunk.getComponentType());
                 Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(blockIndex);
-                ActivationExecutor.sendSignals(ChunkStore,blockRef,x, y, z);
+
+                ArcaneTriggerBlock trigger = ChunkStore.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
+                if (trigger != null) { // if not null it has the Trigger Block Component
+                    ArcaneUtil.setTicking(ChunkStore, x, y, z);
+                    ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger Connections on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
+                }
                 break;
         }
     }

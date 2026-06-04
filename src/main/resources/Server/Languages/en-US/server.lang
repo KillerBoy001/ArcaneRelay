@@ -69,7 +69,7 @@ customUI.ArcaneStaffLegend.listSectionTitle = List Connections
 customUI.ArcaneStaffLegend.listSectionDescription = Press 'Crouch Key' + 'Block Interaction Key' on an Arcane block to view it's connections.
 
 customUI.triggerVolumeEffectEditor.field.Arcane relay trigger.TriggerType = Trigger type
-customUI.triggerVolumeEffectEditor.field.Arcane relay trigger.TriggerType.tooltip = TRIGGER ALL, Will trigger all the Arcane Blocks within the Volume \n\nTRIGGER CONNECTION,Will only trigger the connected blocks.
+customUI.triggerVolumeEffectEditor.field.Arcane relay trigger.TriggerType.tooltip = TRIGGER ALL, Will trigger all the Arcane Blocks within the Volume \n\nTRIGGER CONNECTION, Will only trigger Arcane blocks that can have other linked blocks.
 
 customUI.ArcaneTrigger.title = Arcane Trigger
 customUI.ArcaneTrigger.failedToLoadDataMessage = Could not load trigger data.
