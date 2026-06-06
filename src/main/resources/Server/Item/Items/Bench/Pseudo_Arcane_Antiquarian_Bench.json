@@ -5,9 +5,11 @@
   },
   "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Antiquarian_Bench.png",
   "Categories": [
-    "Furniture.Benches"
+    "Furniture.Benches",
+    "Pseudo_Arcane_Category.Arcane_Relay"
   ],
-  "Quality": "Tool",
+  "Quality": "Arcane_Tools",
+  "SubCategory": "Arcane_Tools",
   "Recipe": {
     "TimeSeconds": 3,
     "Input": [
@@ -67,6 +69,11 @@
           "Id": "Vector_Artifacts",
           "Icon": "Icons/CraftingCategories/Arcane/Vector_Artifacts.png",
           "Name": "server.benchCategories.vectorArtifacts"
+        },
+        {
+          "Id": "Destructive_Artifacts",
+          "Icon": "Icons/CraftingCategories/Arcane/Destructive_Artifacts.png",
+          "Name": "server.benchCategories.destructiveArtifacts"
         }
       ],
       "Id": "Antiquarianbench"

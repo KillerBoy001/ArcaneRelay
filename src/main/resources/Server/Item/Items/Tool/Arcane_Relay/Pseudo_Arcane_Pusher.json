@@ -35,7 +35,8 @@
     ]
   },
   "Categories": [
-    "Items.Tools"
+    "Items.Tools",
+    "Pseudo_Arcane_Category.Arcane_Relay"
   ],
   "ItemLevel": 10,
   "BlockType": {
@@ -74,9 +75,9 @@
               "Type": "ArcaneActivator",
               "Activator": "Pusher_Chain"
             }
-            }
-          ]
-        }
+          }
+        ]
+      }
     },
     "State": {
       "Definitions": {
@@ -120,5 +121,6 @@
     ]
   },
   "ItemSoundSetId": "ISS_Blocks_Stone",
-  "Quality": "Tool"
+  "Quality": "Vector_Artifacts",
+  "SubCategory": "Vector_Artifacts"
 }

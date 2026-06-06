@@ -1,5 +1,6 @@
 package com.arcanerelay.systems;
 
+
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneStaffLegendVisible;
 import com.arcanerelay.externalplugins.MultipleHudBridge;
@@ -41,6 +42,7 @@ public class ArcaneStaffHudSystem extends EntityTickingSystem<EntityStore> {
     public void tick(
         float dt,
         int index,
+
         @Nonnull ArchetypeChunk<EntityStore> archetypeChunk,
         @Nonnull Store<EntityStore> store,
         @Nonnull CommandBuffer<EntityStore> commandBuffer
@@ -52,42 +54,39 @@ public class ArcaneStaffHudSystem extends EntityTickingSystem<EntityStore> {
 
         HudManager hudManager = player.getHudManager();
 
+        //Get visible components according to ShowBuilderHudCommand.class this only gets hidden if the command is executed
+
         boolean hasLegendVisible = store.getComponent(ref, ArcaneStaffLegendVisible.getComponentType()) != null;
         boolean isHoldingStaff = isHoldingArcaneStaff(player);
 
         if (isHoldingStaff && !hasLegendVisible) {
             commandBuffer.addComponent(ref, ArcaneStaffLegendVisible.getComponentType(), new ArcaneStaffLegendVisible());
-            
             // IF MULTI HUD
             if (PluginManager.get().hasPlugin(new PluginIdentifier("Buuz135", "MultipleHUD"), SemverRange.WILDCARD)) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("MultipleHUD found, setting ArcaneStaffLegend HUD");
-                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new ArcaneStaffHud(playerRef));
+                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new ArcaneStaffHud(playerRef, "ArcaneStaffLegend"));
                 return;
-            } 
-            
-            hudManager.setCustomHud(playerRef, new ArcaneStaffHud(playerRef));
-            
-        
+            }
+
+            hudManager.addCustomHud(playerRef, new ArcaneStaffHud(playerRef, "ArcaneStaffLegend"));
             return;
         }
-        
+
         if (!isHoldingStaff && hasLegendVisible) {
             commandBuffer.removeComponent(ref, ArcaneStaffLegendVisible.getComponentType());
             // IF MULTI HUD
             if (PluginManager.get().hasPlugin(new PluginIdentifier("Buuz135", "MultipleHUD"), SemverRange.WILDCARD)) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("MultipleHUD found, setting EmptyHUD");
-                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new EmptyHud(playerRef));
+                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new EmptyHud(playerRef, "ArcaneStaffLegend"));
                 return;
-            } 
-            
-            hudManager.setCustomHud(playerRef, new EmptyHud(playerRef));
+            }
+            hudManager.addCustomHud(playerRef, new EmptyHud(playerRef, "ArcaneStaffLegend"));
         }
     }
 
     private static boolean isHoldingArcaneStaff(@Nonnull Player player) {
         ItemStack itemInHand = player.getInventory().getItemInHand();
         if (ItemStack.isEmpty(itemInHand)) return false;
-
         String id = itemInHand.getItem().getId();
         return ARCANE_STAFF_ITEM_ID.equals(id);
     }

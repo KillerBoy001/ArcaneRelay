@@ -1,10 +1,14 @@
 package com.arcanerelay.config.types;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.resources.ArcaneMoveState;
+import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.util.BlockUtil;
+import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -14,11 +18,14 @@ import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.math.vector.Vector3d;
-import com.hypixel.hytale.math.vector.Vector3f;
-import com.hypixel.hytale.math.vector.Vector3i;
+import com.hypixel.hytale.math.vector.Rotation3f;
+
+import org.joml.Vector3d;
+import org.joml.Vector3f;
+import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.VariantRotation;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
@@ -79,33 +86,13 @@ public class MoveBlockActivation extends Activation {
         this.range = range;
     }
 
-    private static Vector3d getForwardFromBlockType(@Nonnull BlockType blockType, boolean isWall) {
-        return switch (blockType.getVariantRotation()) {
-            case UpDown -> new Vector3d(0, 1, 0);
-            default -> isWall ? new Vector3d(0, -1, 0) : new Vector3d(0, 0, -1);
-        };
-    }
-
-    private static Vector3d getUpFromBlockType(@Nonnull BlockType blockType, boolean isWall) {
-        return switch (blockType.getVariantRotation()) {
-            case UpDown -> new Vector3d(0, 1, 0);
-            default -> isWall ? new Vector3d(0, 0, 1) : new Vector3d(0, 1, 0);
-        };
-    }
-
-    private static boolean isPushable(@Nullable BlockType blockType, int blockId) {
-        if (blockId == 0)
-            return false;
-        if (blockType == null)
-            return false;
-        return blockType.getMaterial() != BlockMaterial.Empty;
-    }
-
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
             return true;
+
         if (blockType == null)
             return true;
+
         return blockType.getMaterial() == BlockMaterial.Empty;
     }
 
@@ -113,48 +100,36 @@ public class MoveBlockActivation extends Activation {
         World world = commandBuffer.getExternalData().getWorld();
         WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (chunk == null) return false;
+
         BlockType blockType = chunk.getBlockType(worldX, worldY, worldZ);
         if (blockType == null) return false;
+
         if (isWall)
             return true;
+
         if (blockType.getVariantRotation() == VariantRotation.Wall)
             return true;
+        
         String id = blockType.getId();
         return id != null && id.toLowerCase().contains("wall");
     }
 
     private Vector3i getGlobalForwardVector(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ, Vector3i pusherPosition) {
         boolean isWallPusher = isWallPusherVariant(commandBuffer, blockRef, sectionRef, worldX, worldY, worldZ);
-        BlockType pusherBlockType = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ)).getBlockType(worldX, worldY, worldZ);
-        if (pusherBlockType == null) return new Vector3i(0, 0, 0);
+        
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
-        int pusherRotationIndex = pusherChunk.getRotationIndex(pusherPosition.x, pusherPosition.y, pusherPosition.z);
-        RotationTuple pusherRotationTuple = RotationTuple.get(pusherRotationIndex);
-        Vector3d localForward = getForwardFromBlockType(pusherBlockType, isWallPusher);
-        Vector3d globalForwardDouble = pusherRotationTuple.rotatedVector(localForward.clone());
-        return new Vector3i(
-            (int) Math.round(globalForwardDouble.getX()),
-            (int) Math.round(globalForwardDouble.getY()),
-            (int) Math.round(globalForwardDouble.getZ())
-        );
+
+        return BlockVectorUtil.getForwardVector(pusherChunk, pusherPosition, isWallPusher);
     }
 
     private Vector3i getGlobalUpVector(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ, Vector3i pusherPosition) {
         boolean isWallPusher = isWallPusherVariant(commandBuffer, blockRef, sectionRef, worldX, worldY, worldZ);
-        BlockType pusherBlockType = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ)).getBlockType(worldX, worldY, worldZ);
-        if (pusherBlockType == null) return new Vector3i(0, 0, 0);
+                
         WorldChunk pusherChunk = commandBuffer.getExternalData().getWorld().getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
         if (pusherChunk == null) return new Vector3i(0, 0, 0);
-        int pusherRotationIndex = pusherChunk.getRotationIndex(pusherPosition.x, pusherPosition.y, pusherPosition.z);
-        Vector3d localUp = getUpFromBlockType(pusherBlockType, isWallPusher);
-        RotationTuple upRotationTuple = RotationTuple.get(pusherRotationIndex);
-        Vector3d upDirection = upRotationTuple.rotatedVector(localUp.clone());
-        return new Vector3i(
-            (int) Math.round(upDirection.getX()),
-            (int) Math.round(upDirection.getY()),
-            (int) Math.round(upDirection.getZ())
-        );
+
+        return BlockVectorUtil.getUpVector(pusherChunk, pusherPosition, isWallPusher);
     }
 
     @Override
@@ -177,11 +152,11 @@ public class MoveBlockActivation extends Activation {
             }
 
             Vector3i scaledGlobalUpVector = getGlobalUpVector(accessor.getCommandBuffer(), blockRef, sectionRef,
-                worldX, worldY, worldZ, pusherPosition).scale(this.upAmount);
+                worldX, worldY, worldZ, pusherPosition).mul(this.upAmount);
             if (scaledGlobalUpVector.length() == 0)
                 return;
 
-            Vector3i frontPusherPosition = pusherPosition.clone();
+            Vector3i frontPusherPosition = new Vector3i(pusherPosition);
             int maxRange = Math.max(1, range);
 
             int[] chainBlockIds               = new int[maxRange];
@@ -192,7 +167,7 @@ public class MoveBlockActivation extends Activation {
 
             int chainLength = 0;
             for (int i = 0; i < maxRange; i++) {
-                Vector3i c = frontPusherPosition.clone().add(globalForward.clone().scale(i).add(scaledGlobalUpVector));
+                Vector3i c = new Vector3i(frontPusherPosition).add(new Vector3i(globalForward).mul(i).add(scaledGlobalUpVector));
 
                 WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(c.x, c.z));
                 if (chunk == null)
@@ -200,7 +175,7 @@ public class MoveBlockActivation extends Activation {
 
                 int blockId = chunk.getBlock(c.x, c.y, c.z);
                 BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
-                if (!isPushable(blockType, blockId))
+                if (!BlockVectorUtil.isMoveable(blockType,blockId))
                     break;
 
                 chainBlockIds[chainLength]     = blockId;
@@ -214,8 +189,8 @@ public class MoveBlockActivation extends Activation {
                 chainLength++;
             }
 
-            Vector3i nextEmptyPosition = frontPusherPosition.clone().add(globalForward.clone().scale(chainLength).add(scaledGlobalUpVector));
-                
+            Vector3i nextEmptyPosition = new Vector3i(frontPusherPosition).add(new Vector3i(globalForward).mul(chainLength).add(scaledGlobalUpVector));
+
             WorldChunk emptyChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(nextEmptyPosition.x, nextEmptyPosition.z));
             if (emptyChunk == null)
                 return;
@@ -231,8 +206,8 @@ public class MoveBlockActivation extends Activation {
                 return;
 
             for (int j = chainLength - 1; j >= 0; j--) {
-                Vector3i fromPosition = frontPusherPosition.clone().add(globalForward.clone().scale(j).add(scaledGlobalUpVector));
-                Vector3i toPosition = frontPusherPosition.clone().add(globalForward.clone().scale(j + 1).add(scaledGlobalUpVector));
+                Vector3i fromPosition = new Vector3i(frontPusherPosition).add(new Vector3i(globalForward).mul(j).add(scaledGlobalUpVector));
+                Vector3i toPosition = new Vector3i(frontPusherPosition).add(new Vector3i(globalForward).mul(j + 1).add(scaledGlobalUpVector));
 
                 WorldChunk fromChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(fromPosition.x, fromPosition.z));
                 WorldChunk toChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(toPosition.x, toPosition.z));
@@ -242,11 +217,11 @@ public class MoveBlockActivation extends Activation {
                 ArcaneMoveState arcaneMoveState = store.getResource(ArcaneMoveState.getResourceType());
 
                 arcaneMoveState.addMoveEntry(fromPosition,
-                    toPosition.clone().subtract(fromPosition), chainBlockTypes[j], chainBlockIds[j],
+                    new Vector3i(toPosition).sub(fromPosition), chainBlockTypes[j], chainBlockIds[j],
                     chainRotations[j], chainFillers[j], 0, chainHolders[j]);
 
                 
-                Vector3i destinationPosition = frontPusherPosition.clone().add(globalForward).add(scaledGlobalUpVector);
+                Vector3i destinationPosition = new Vector3i(frontPusherPosition).add(globalForward).add(scaledGlobalUpVector);
                 ActivationExecutor.playEffects(world, destinationPosition.x, destinationPosition.y, destinationPosition.z,
                     getEffects());
             }
@@ -261,12 +236,12 @@ public class MoveBlockActivation extends Activation {
         if (entityStore == null) return;
 
         Set<Ref<EntityStore>> entitiesOnTop = new HashSet<>();
-        collectEntitiesOnTopOfBlock(entityStore, nextEmptyPosition, entitiesOnTop);
-        collectEntitiesOnTopOfBlock(entityStore, frontPusherPosition.clone(), entitiesOnTop);
+        BlockUtil.collectEntitiesOnTopOfBlock(entityStore, nextEmptyPosition, entitiesOnTop);
+        BlockUtil.collectEntitiesOnTopOfBlock(entityStore, new Vector3i(frontPusherPosition), entitiesOnTop);
 
         for (int i = 0; i < len; i++) {
-            Vector3i fromPosition = frontPusherPosition.clone().add(globalForward.clone().scale(i).add(scaledGlobalUpVector));
-            collectEntitiesOnTopOfBlock(entityStore, fromPosition, entitiesOnTop);
+            Vector3i fromPosition = new Vector3i(frontPusherPosition).add(new Vector3i(globalForward).mul(i).add(scaledGlobalUpVector));
+            BlockUtil.collectEntitiesOnTopOfBlock(entityStore, fromPosition, entitiesOnTop);
         }
 
         final List<Ref<EntityStore>> entitiesOnTopList = new ArrayList<>(entitiesOnTop);
@@ -283,50 +258,6 @@ public class MoveBlockActivation extends Activation {
         }
     }
 
-    private static final double FEET_Y_OFFSET = -0.5;
-
-    private static Vector3d getFeetPosition(@Nonnull TransformComponent transform,
-            @Nullable BoundingBox boundingBox) {
-        Vector3d feetPosition = transform.getPosition().clone();
-
-        if (boundingBox != null) {
-            feetPosition.add(0, boundingBox.getBoundingBox().min.y, 0);
-        } else {
-            feetPosition.add(0, FEET_Y_OFFSET, 0);
-        }
-
-        return feetPosition;
-    }
-
-    private static boolean isFeetOnTopOfBlock(Vector3d feetPosition, Vector3i blockPosition) {
-        return feetPosition.x >= blockPosition.x - 0.1 && feetPosition.x <= blockPosition.x + 1.1
-            && feetPosition.y >= blockPosition.y + 0.95 && feetPosition.y <= blockPosition.y + 1.1
-            && feetPosition.z >= blockPosition.z - 0.1 && feetPosition.z <= blockPosition.z + 1.1;
-    }
-
-    private static void collectEntitiesOnTopOfBlock(
-            @Nonnull Store<EntityStore> entityStore,
-            Vector3i blockPosition,
-            @Nonnull Set<Ref<EntityStore>> out) {
-        Vector3d min = new Vector3d(blockPosition.x - 0.1, blockPosition.y + 0.9, blockPosition.z - 0.1);
-        Vector3d max = new Vector3d(blockPosition.x + 1.1, blockPosition.y + 2.1, blockPosition.z + 1.1);
-
-        for (var ref : TargetUtil.getAllEntitiesInBox(min, max, entityStore)) {
-            if (ref == null || !ref.isValid())
-                continue;
-
-            TransformComponent transform = entityStore.getComponent(ref, TransformComponent.getComponentType());
-            if (transform == null)
-                continue;
-
-            BoundingBox boundingBox = entityStore.getComponent(ref, BoundingBox.getComponentType());
-            Vector3d feet = getFeetPosition(transform, boundingBox);
-
-            if (isFeetOnTopOfBlock(feet, blockPosition))
-                out.add(ref);
-        }
-    }
-
     private static boolean isPushUp(Vector3i direction) {
         return direction.y > 0 && direction.x == 0 && direction.z == 0;
     }
@@ -335,8 +266,8 @@ public class MoveBlockActivation extends Activation {
             @Nonnull Store<EntityStore> entityStore,
             @Nonnull Ref<EntityStore> ref,
             Vector3i direction) {
-        Vector3d velocity = new Vector3d(direction.clone().normalize());
-        velocity.scale(KNOCKBACK_MAX_SPEED);
+        Vector3d velocity = new Vector3d(direction).normalize();
+        velocity.mul(KNOCKBACK_MAX_SPEED);
 
         KnockbackComponent knockback = entityStore.ensureAndGetComponent(ref, KnockbackComponent.getComponentType());
         knockback.setVelocity(velocity);
@@ -366,11 +297,11 @@ public class MoveBlockActivation extends Activation {
             @Nonnull Ref<EntityStore> ref,
             @Nonnull TransformComponent transform,
             Vector3i direction) {
-        Vector3d pos = transform.getPosition().clone();
-        Vector3d newPos = pos.add(direction);
+        Vector3d pos = new Vector3d(transform.getPosition());
+        Vector3d newPos = pos.add(new Vector3d(direction));
 
         HeadRotation headComp = entityStore.getComponent(ref, HeadRotation.getComponentType());
-        Vector3f headRot = headComp != null ? headComp.getRotation().clone() : transform.getRotation().clone();
+        Rotation3f headRot = headComp != null ? new Rotation3f(headComp.getRotation()) : new Rotation3f(transform.getRotation());
 
         Teleport teleport = Teleport.createForPlayer(world, newPos, transform.getRotation()).setHeadRotation(headRot);
         entityStore.addComponent(ref, Teleport.getComponentType(), teleport);
