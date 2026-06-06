@@ -14,9 +14,11 @@ import com.arcanerelay.interactions.SelectTriggerInteraction;
 import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.resources.CustomHudRestoreState;
+import com.arcanerelay.systems.ArcaneBreakBlockSystem;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
 import com.arcanerelay.systems.ArcaneStaffHudSystem;
 import com.arcanerelay.systems.ArcaneSystems;
+import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
@@ -33,7 +35,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 
 public class ArcaneRelayPlugin extends JavaPlugin {
-
+    public boolean DebugMsg = true;
     private static ArcaneRelayPlugin instance;
     /** Thread that ran plugin setup(); used to detect main thread for world.execute() etc. */
     private static Thread mainThread;
@@ -94,6 +96,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 CustomHudRestoreState::new);
         entityRegistry.registerSystem(new ArcaneConfiguratorAddSystem());
         entityRegistry.registerSystem(new ArcaneStaffHudSystem());
+        entityRegistry.registerSystem(new ArcaneBreakBlockSystem());
 
         Interaction.CODEC.register("SelectTrigger", SelectTriggerInteraction.class, SelectTriggerInteraction.CODEC);
         Interaction.CODEC.register("AddOutput", AddOutputInteraction.class, AddOutputInteraction.CODEC);

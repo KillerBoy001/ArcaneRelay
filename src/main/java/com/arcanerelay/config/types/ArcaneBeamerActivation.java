@@ -14,6 +14,8 @@ import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.builtin.triggervolumes.EntityTargetType;
 import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
+import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
+import com.hypixel.hytale.builtin.triggervolumes.manager.GroupEntry;
 import com.hypixel.hytale.builtin.triggervolumes.manager.TriggerVolumeManager;
 import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
 import com.hypixel.hytale.builtin.triggervolumes.shape.BoxShape;
@@ -49,7 +51,7 @@ import java.util.concurrent.*;
 
 
 public class ArcaneBeamerActivation extends Activation {
-    private int range = 15;
+    private static int range = 15;
     private String LaserKey ="Pseudo_Arcane_Beamer_Extension";
     public static final BuilderCodec<ArcaneBeamerActivation> CODEC = BuilderCodec.builder(
                     ArcaneBeamerActivation.class,
@@ -65,7 +67,7 @@ public class ArcaneBeamerActivation extends Activation {
             .add()
             .build();
 
-    public int getRange() {
+    public static int getRange() {
         return range;
     }
 
@@ -98,9 +100,7 @@ public class ArcaneBeamerActivation extends Activation {
 
         if (TriggerBlockType.getId().equals(LaserKey)){                             // Handle laser trigger
             int maxRange = getRange();
-            Vector3i BeamerPos = GetBeamerPosFromLaser(commandBuffer,TriggerPos,Triggerchunk,maxRange);
-            WorldChunk BeamerChunk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(BeamerPos.x, BeamerPos.z));
-            SendTriggerFromSourceBeamer(commandBuffer, BeamerPos, BeamerChunk);
+            SendTriggerFromSourceBeamer(world, TriggerPos, Triggerchunk, maxRange);
         } else {                                                                    // Handle beamer trigger
             String state = TriggerBlockType.getStateForBlock(TriggerBlockType);
             if (state == null || state.isEmpty() || "null".equals(state)) {
@@ -111,13 +111,13 @@ public class ArcaneBeamerActivation extends Activation {
 
             if (state.contains("On")) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Enabling");
-                BuildLaserBeam(commandBuffer, TriggerPos, Triggerchunk, maxRange);
-                CreateTriggerVolume(commandBuffer, TriggerPos, Triggerchunk, maxRange);
+                BuildLaserBeam(world, TriggerPos, Triggerchunk, maxRange);
+                //CreateTriggerVolume(commandBuffer, TriggerPos, Triggerchunk, maxRange);   // for future functionality
                 return ArcaneSection.BlockTickStrategy.PROCESSED;
             } else if (state.contains("Off")) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Disabling");
                 BlockVectorUtil.setTickingAround(Triggerchunk, TriggerPos, 1);
-                RemoveTriggerVolume(commandBuffer, TriggerPos, Triggerchunk);
+                //RemoveTriggerVolume(world, TriggerPos, Triggerchunk);                     // for future functionality
                 return ArcaneSection.BlockTickStrategy.PROCESSED;
             }
         }
@@ -125,8 +125,8 @@ public class ArcaneBeamerActivation extends Activation {
         return ArcaneSection.BlockTickStrategy.PROCESSED;
     }
 
-    private ArcaneSection.BlockTickStrategy BuildLaserBeam(
-            ChunkStoreCommandBufferLike commandBuffer,
+    public static void BuildLaserBeam(
+            World world,
             Vector3i BeamerPos,
             WorldChunk beamerChunk,
             int maxRange
@@ -138,10 +138,11 @@ public class ArcaneBeamerActivation extends Activation {
             Vector3i Localforward = BlockVectorUtil.getForwardVector(beamerChunk,BeamerPos,i+1 );
             Vector3i NextPos = new Vector3i (BeamerPos.x + Localforward.x, BeamerPos.y + Localforward.y, BeamerPos.z + Localforward.z);
 
-            WorldChunk chnk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(NextPos.x, NextPos.z));
+            WorldChunk chnk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(NextPos.x, NextPos.z));
             BlockType Block = chnk.getBlockType(NextPos.x,NextPos.y,NextPos.z);
             int rotind = beamerChunk.getRotationIndex(BeamerPos.x,BeamerPos.y,BeamerPos.z);
 
+            String LaserKey= "Pseudo_Arcane_Beamer_Extension";
             int LaserID = assetMap.getIndex(LaserKey);
             BlockType LaserType = assetMap.getAsset(LaserKey);
 
@@ -158,8 +159,9 @@ public class ArcaneBeamerActivation extends Activation {
             }
             if(i == maxRange) ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Created laser with maxrange: %d", i);
         }
-        return ArcaneSection.BlockTickStrategy.CONTINUE;
     }
+
+
     private void CreateTriggerVolume(
             ChunkStoreCommandBufferLike commandBuffer,
             Vector3i BeamerPos,
@@ -185,21 +187,53 @@ public class ArcaneBeamerActivation extends Activation {
             Vector3d End = new Vector3d(forward);
             double Shrink = 0.3F;
 
+            int rot = beamerChunk.getRotationIndex(BeamerPos.x,BeamerPos.y,BeamerPos.z);
             for (int i = 0; i < 3; i++) {
                 if (End.get(i)==0){End.setComponent(i,1);}
             }
-            for (int i = 0; i < 3; i++) {
-                Start.setComponent(i,Start.get(i)+Shrink);
-                End.setComponent(i,End.get(i)-Shrink);
-            }
 
-            if (End.x <0.1 ){Start.x=Start.x+1; End.x = End.x+1;} // not sure why but only in this orientations
+            /*
+            When it gets set on negative scale it start infront of the beamer instead of inside, This is the case of RotInd 1 for X and RotInd 0 on Z
+            */
+            if (rot==1){
+                Start.x = Start.x+1;
+                End.x = End.x+1;
+
+                Start.x = Start.x-Shrink;
+                Start.y = Start.y+Shrink;
+                Start.z = Start.z+Shrink;
+                End.x = End.x+Shrink;
+                End.y = End.y-Shrink;
+                End.z = End.z-Shrink;
+            }else if (rot==0){
+                Start.z = Start.z+1;
+                End.z = End.z+1;
+
+                Start.x = Start.x+Shrink;
+                Start.y = Start.y+Shrink;
+                Start.z = Start.z-Shrink;
+                End.x = End.x-Shrink;
+                End.y = End.y-Shrink;
+                End.z = End.z+Shrink;
+            }
+            else {
+                Start.x = Start.x+Shrink;
+                Start.y = Start.y+Shrink;
+                Start.z = Start.z+Shrink;
+                End.x = End.x-Shrink;
+                End.y = End.y-Shrink;
+                End.z = End.z-Shrink;
+            }
 
             TriggerVolumeShape shape = new BoxShape(Start,End);
 
-            entry = new VolumeEntry(name, worldName, Pos, shape, new ArrayList(), EnumSet.of(EntityTargetType.PLAYER), true);
+            entry = new VolumeEntry(name, worldName, Pos, shape, new ArrayList(), EnumSet.of(EntityTargetType.PLAYER,EntityTargetType.NPC), true);
+
             manager.register(name, entry);
             manager.notifyViewersAdd(entry);
+            if(!manager.hasGroup("Arcane_Beamers_Generated")){
+                //Create group and assign
+            }
         }else {
             entry.setEnabled(true);
             manager.markSpatialDirty();
@@ -207,15 +241,14 @@ public class ArcaneBeamerActivation extends Activation {
         }
     }
 
-    private void RemoveTriggerVolume(
-            ChunkStoreCommandBufferLike commandBuffer,
+    public static void RemoveTriggerVolume(
+            World world,
             Vector3i BeamerPos,
             WorldChunk beamerChunk
     ){
         int blockIndex = ChunkUtil.indexBlockInColumn(BeamerPos.x, BeamerPos.y, BeamerPos.z);
         String name = "Auto_TV_"+blockIndex;
 
-        World world = commandBuffer.getExternalData().getWorld();
         EntityStore entityStore = world.getEntityStore();
         Store<EntityStore> store = entityStore.getStore();
 
@@ -223,11 +256,9 @@ public class ArcaneBeamerActivation extends Activation {
         TriggerVolumeManager manager = store.getResource(plugin.getManagerResourceType());
         if (manager != null) {
             VolumeEntry entry = manager.getVolume(name);
-            if (entry == null) {
-            } else {
+            if (entry != null) {
                 manager.unregister(name);
                 manager.notifyViewersRemove(name);
-                manager.notifyViewersAdd(entry);
             }
         }
     }
@@ -253,35 +284,36 @@ public class ArcaneBeamerActivation extends Activation {
         return maxRange;
     }
 
-    private void SendTriggerFromSourceBeamer (
-            ChunkStoreCommandBufferLike commandBuffer,
-            Vector3i BeamerPos,
-            WorldChunk beamerChunk
+    public static void SendTriggerFromSourceBeamer (
+            World world,
+            Vector3i TriggerPos,
+            WorldChunk Triggerchunk,
+            int maxRange
     ) {
-        World world = commandBuffer.getExternalData().getWorld();
-        Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
-        ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Send signal now - WIP");
+        Vector3i BeamerPos = GetBeamerPosFromLaser(TriggerPos,Triggerchunk,maxRange);
+        WorldChunk BeamerChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(BeamerPos.x, BeamerPos.z));
 
-        Ref<ChunkStore> ChunkRef = beamerChunk.getReference();
+        Store<ChunkStore> chunkStore = world.getChunkStore().getStore();
+        //ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Send signal now - WIP");
+
+        Ref<ChunkStore> ChunkRef = BeamerChunk.getReference();
         int blockIndex = ChunkUtil.indexBlockInColumn(BeamerPos.x,BeamerPos.y,BeamerPos.z);
         BlockComponentChunk blockComponentChunk = chunkStore.getComponent(ChunkRef, BlockComponentChunk.getComponentType());
         Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(blockIndex);
         ArcaneTriggerBlock trigger = chunkStore.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
 
         if (trigger == null) return;
-
         for (Vector3i out : trigger.getOutputPositions()) {
             ArcaneUtil.setTicking(chunkStore, out.x, out.y, out.z, BeamerPos.x,BeamerPos.y,BeamerPos.z);
         }
     }
 
-    private Vector3i GetBeamerPosFromLaser(ChunkStoreCommandBufferLike commandBuffer,Vector3i TriggerPos,WorldChunk Chunk,int maxRange){
+    public static Vector3i GetBeamerPosFromLaser(Vector3i TriggerPos,WorldChunk Chunk,int maxRange){
         for (int i = 1; i <= maxRange+1; i++){
             Vector3i LocalBackward = BlockVectorUtil.getForwardVector(Chunk,TriggerPos,i-i*2 );
             Vector3i NextPos = new Vector3i (TriggerPos.x + LocalBackward.x, TriggerPos.y + LocalBackward.y, TriggerPos.z + LocalBackward.z);
 
-            WorldChunk chnk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(NextPos.x, NextPos.z));
-            BlockType Block = chnk.getBlockType(NextPos.x,NextPos.y,NextPos.z);
+            BlockType Block = Chunk.getBlockType(NextPos.x,NextPos.y,NextPos.z);
             String BlockId = Block.getId();
             if (!BlockId.contains("Extension")&&BlockId.contains("On")){
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Found laser source at : %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
@@ -290,4 +322,6 @@ public class ArcaneBeamerActivation extends Activation {
         }
         return null;
     }
+
+
 }
