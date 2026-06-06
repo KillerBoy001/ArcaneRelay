@@ -35,7 +35,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 
 public class ArcaneRelayPlugin extends JavaPlugin {
-    public boolean DebugMsg = true;
     private static ArcaneRelayPlugin instance;
     /** Thread that ran plugin setup(); used to detect main thread for world.execute() etc. */
     private static Thread mainThread;

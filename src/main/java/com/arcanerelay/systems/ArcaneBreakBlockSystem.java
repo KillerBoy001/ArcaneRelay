@@ -2,20 +2,18 @@ package com.arcanerelay.systems;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.config.types.ArcaneBeamerActivation;
+import com.arcanerelay.util.ArcaneUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.protocol.BlockNeighbor;
-import com.hypixel.hytale.server.core.universe.world.accessor.BlockAccessor;
 import com.hypixel.hytale.server.core.HytaleServer;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.NotificationUtil;
 import org.joml.Vector3i;
 
 import java.util.List;
@@ -37,13 +35,16 @@ public class ArcaneBreakBlockSystem extends EntityEventSystem<EntityStore, Break
                        CommandBuffer<EntityStore> commandBuffer,
                        BreakBlockEvent event)
     {
-        Boolean debug = ArcaneRelayPlugin.get().DebugMsg;
         BlockType blockType = event.getBlockType();
-        String BlockStr = blockType.getId();
+        String BlockStr = ArcaneUtil.getOriginalBlockTypeId(blockType);
         Vector3i position = event.getTargetBlock();
         World world = commandBuffer.getExternalData().getWorld();
         WorldChunk chnk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(position.x, position.z));
         int BeamRange = ArcaneBeamerActivation.getRange();
+
+        if (BlockStr.equals("Pseudo_Arcane_Beamer")){
+            //ArcaneBeamerActivation.RemoveTriggerVolume(world,position,chnk);
+        }
 
         if (BlockStr.contains("Beamer_Extension")) {
             ArcaneBeamerActivation.SendTriggerFromSourceBeamer(world,position,chnk,BeamRange);
@@ -52,7 +53,7 @@ public class ArcaneBreakBlockSystem extends EntityEventSystem<EntityStore, Break
         if (!BlockStr.contains("Beamer_Extension")) {  // when it's not an Extension block itself it needs to check if its neighbors might be
             for (String value : GetNeighborsBlockNames(world, position, chnk)) {
                 if (value.contains("Beamer_Extension")) {
-                    Vector3i LaserPos= GetNeighBorLaser(position,chnk);
+                    Vector3i LaserPos= GetNeighBorLaserPos(position,chnk);
                     Vector3i BeamPos = ArcaneBeamerActivation.GetBeamerPosFromLaser(LaserPos,chnk,BeamRange);
                     if (BeamPos !=null){
                         WorldChunk BeamChnk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(BeamPos.x, BeamPos.z));
@@ -78,7 +79,7 @@ public class ArcaneBreakBlockSystem extends EntityEventSystem<EntityStore, Break
         return Archetype.empty();
     }
 
-    private Vector3i GetNeighBorLaser(Vector3i BlockPos,WorldChunk Chnk){
+    private Vector3i GetNeighBorLaserPos(Vector3i BlockPos, WorldChunk Chnk){
         int[][] directions = {
                 { 1,  0,  0}, // right
                 {-1,  0,  0}, // left
