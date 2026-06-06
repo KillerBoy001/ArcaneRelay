@@ -39,9 +39,20 @@ This is our own take on a Piston. It pushes the block above it in the direction 
 
 ---
 
-![Arcane Pusher](./art/Affinity/BlockNameCards/Puller.png)
+![Arcane Rotator](./art/Affinity/BlockNameCards/Rotator.png)
+This block can rotate clockwise or counterclockwise depending on it's orientation. Use it to position Pusher or other things! Might break the game a little bit, but its fun while we patch things out :D
+
+---
+
+![Arcane Puller](./art/Affinity/BlockNameCards/Puller.png)
 
 This block only pulls! But it has an extended range, use it to pull back the first block it encounters within 15 blocks!
+
+---
+
+![Arcane Breaker](./art/Affinity/BlockNameCards/Breaker.png)
+
+Hit blocks or players and break or kill almost everything that might stand in the way of this block!
 
 ![More to come](./art/Affinity/BlockNameCards/MoreToCome.png)
 

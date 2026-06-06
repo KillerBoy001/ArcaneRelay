@@ -5,6 +5,7 @@
     "Pseudo_Arcane_Puller": "Puller_Chain",
     "Pseudo_Arcane_Pusher": "Pusher_Chain",
     "Pseudo_Arcane_Pusher_Wall": "Pusher_Chain_Wall",
+    "Pseudo_Arcane_Breaker": "Breaker_Chain",
     "Pseudo_Arcane_Relay": "Arcane_Relay",
     "Pseudo_Arcane_Toggle_Relay": "Toggle_Arcane_Relay",
     "Furniture_Village_Brazier": "Toggle_Torch_Crude",

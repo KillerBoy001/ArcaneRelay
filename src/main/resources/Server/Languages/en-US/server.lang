@@ -16,6 +16,8 @@ items.Pseudo_Arcane_Puller.name = Puller
 items.Pseudo_Arcane_Puller.description = Used to pull back a block from far away. When a signal is received it will either extend to reach a target or pull back once it has one.
 items.Pseudo_Arcane_Puller_Extension.name = Puller Extension
 items.Pseudo_Arcane_Puller_Extension.description = Block responsible for pulling back entities and blocks with the Puller.
+items.Pseudo_Arcane_Breaker.name = Breaker
+items.Pseudo_Arcane_Breaker.description = Used to slowley break the block on top of it. Can be triggered remotely and rotated.
 items.Pseudo_Arcane_Rotator.name = Rotator
 items.Pseudo_Arcane_Rotator.description = Used to rotate blocks 90 degrees.\n\nInteract while crouching to switch between clockwise and counterclockwise rotation.
 items.Pseudo_Arcane_Sensor.name = Step Sensor
@@ -83,6 +85,7 @@ customUI.ConnectionRow.buttonRemoveTitle = Remove
 
 benchCategories.relayArtifacts = Relay Artifacts
 benchCategories.vectorArtifacts = Vector Artifacts
+benchCategories.destructiveArtifacts = Destructive Artifacts
 benchCategories.voidArtifacts = Void Artifacts
 
 # === Qualities ===
@@ -90,6 +93,7 @@ benchCategories.voidArtifacts = Void Artifacts
 arcanerelay.qualities.arcaneTool = Arcane Tool
 arcanerelay.qualities.relayArtifact = Relay Artifact
 arcanerelay.qualities.vectorArtifact = Vector Artifact
+arcanerelay.qualities.destructiveArtifact = Destructive Artifact
 
 # === Creative Category ===
 ui.arcanerelaycategory.name = Arcane Relay
@@ -99,3 +103,5 @@ ui.arcanerelaycategory.subcategory.relayArtifacts.name = Relay Artifacts
 ui.arcanerelaycategory.subcategory.relayArtifacts.description = Used to relay signals within other arcane artifacts or other Hytale components like doors, trapdoors, and lights.  
 ui.arcanerelaycategory.subcategory.vectorArtifacts.name = Vector Artifacts
 ui.arcanerelaycategory.subcategory.vectorArtifacts.description = Used to move or rotate blocks within the world. Trigger them manualy or remotely via a signal and reshape the world around you. 
+ui.arcanerelaycategory.subcategory.destructiveArtifacts.name = Destructive Artifacts
+ui.arcanerelaycategory.subcategory.destructiveArtifacts.description = Used to destroy or cause damage to the world or the entities in it.
