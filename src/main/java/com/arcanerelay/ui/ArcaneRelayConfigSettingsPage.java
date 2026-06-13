@@ -165,7 +165,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                 }
                 return;
             case "Save":
-                ArcaneRelayPlugin.saveConfig();
+                ArcaneRelayPlugin.get().saveConfig();
                 store.getExternalData().getWorld().execute(() -> {
                     closePage();
                 });

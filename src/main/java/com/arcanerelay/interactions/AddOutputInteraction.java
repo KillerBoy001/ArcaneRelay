@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * Uses ArcaneConfiguratorComponent to find the trigger block.
  */
 public class AddOutputInteraction extends SimpleInstantInteraction {
-    private static final double TRIGGER_DISTANCE = ArcaneRelayPlugin.getConfig().getTriggerDistance();
+    private static final double TRIGGER_DISTANCE = ArcaneRelayPlugin.get().getConfig().getTriggerDistance();
 
     @Nonnull
     public static final BuilderCodec<AddOutputInteraction> CODEC = BuilderCodec.builder(

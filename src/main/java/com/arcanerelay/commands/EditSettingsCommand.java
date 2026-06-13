@@ -28,6 +28,6 @@ public class EditSettingsCommand extends AbstractPlayerCommand {
         }
 
         playerComponent.getPageManager().openCustomPage(ref, store,
-            new ArcaneRelayConfigSettingsPage(playerRef, ArcaneRelayPlugin.getConfig()));
+            new ArcaneRelayConfigSettingsPage(playerRef, ArcaneRelayPlugin.get().getConfig()));
     }
 }

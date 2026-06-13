@@ -27,7 +27,7 @@ public class ArcaneRelayConfigPageSupplier implements OpenCustomUIInteraction.Cu
     private ArcaneRelayConfig config;
 
     public ArcaneRelayConfigPageSupplier() {
-        this.config = ArcaneRelayPlugin.getConfig();
+        this.config = ArcaneRelayPlugin.get().getConfig();
     }
 
     public ArcaneRelayConfigPageSupplier(@Nonnull ArcaneRelayConfig config) {

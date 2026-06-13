@@ -38,7 +38,6 @@ import com.hypixel.hytale.server.core.util.Config;
 import javax.annotation.Nonnull;
 
 public class ArcaneRelayPlugin extends JavaPlugin {
-    private static Config<ArcaneRelayConfig> configRef;
     private final Config<ArcaneRelayConfig> config = this.withConfig("ArcaneRelayConfig", ArcaneRelayConfig.CODEC);
 
     private static ArcaneRelayPlugin instance;
@@ -72,8 +71,8 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         return instance;
     }
 
-    public static void saveConfig() {
-        configRef.save();
+    public void saveConfig() {
+        config.save();
     }
 
     @Override
@@ -82,7 +81,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         mainThread = Thread.currentThread();
 
         config.save();
-        configRef = this.config;
 
         registerCodecs();
         registerInteractions();
@@ -96,8 +94,8 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     }
 
     @Nonnull
-    public static ArcaneRelayConfig getConfig() {
-        ArcaneRelayConfig config = configRef.get();
+    public ArcaneRelayConfig getConfig() {
+        ArcaneRelayConfig config = this.config.get();
         if (config == null) {
             config = new ArcaneRelayConfig();
         }

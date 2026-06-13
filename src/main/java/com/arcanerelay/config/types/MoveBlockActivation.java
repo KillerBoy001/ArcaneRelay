@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.Set;
 
 public class MoveBlockActivation extends Activation {
-    private int range = ArcaneRelayPlugin.getConfig().getPusherRange();
+    private int range = ArcaneRelayPlugin.get().getConfig().getPusherRange();
     private int upAmount = 1;
     private boolean isWall = false;
 

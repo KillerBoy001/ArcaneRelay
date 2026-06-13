@@ -42,7 +42,7 @@ import java.util.Set;
 
 
 public class ArcanePullerActivation extends Activation {
-    private int range = ArcaneRelayPlugin.getConfig().getPullerRange();
+    private int range = ArcaneRelayPlugin.get().getConfig().getPullerRange();
     private static final double KNOCKBACK_MAX_SPEED = 30;
     private static final float KNOCKBACK_DURATION = 0.1f;
     private static final float KNOCKBACK_MIN_DURATION = 0.05f;
@@ -62,7 +62,7 @@ public class ArcanePullerActivation extends Activation {
             .build();
 
     public int getRange() {
-        return ArcaneRelayPlugin.getConfig().getPullerRange();
+        return ArcaneRelayPlugin.get().getConfig().getPullerRange();
     }
 
     @Override

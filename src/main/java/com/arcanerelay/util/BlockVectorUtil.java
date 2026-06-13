@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Arrays;
 
 public class BlockVectorUtil {
-    private static ArcaneRelayConfig config = ArcaneRelayPlugin.getConfig();
+    private static ArcaneRelayConfig config = ArcaneRelayPlugin.get().getConfig();
 
     private static List<String> NoneMoveableIDs = Arrays.asList(config.getNoneMoveableBlocks());
 

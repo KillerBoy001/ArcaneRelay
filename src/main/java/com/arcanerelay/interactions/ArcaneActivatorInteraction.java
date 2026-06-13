@@ -45,7 +45,7 @@ import javax.annotation.Nonnull;
  * Executes the activation immediately (e.g. Pusher_Chain for the pusher).
  */
 public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
-    private static final double TARGET_DISTANCE = ArcaneRelayPlugin.getConfig().getTargetDistance();
+    private static final double TARGET_DISTANCE = ArcaneRelayPlugin.get().getConfig().getTargetDistance();
 
     @Nonnull
     public static final BuilderCodec<ArcaneActivatorInteraction> CODEC = BuilderCodec.builder(
