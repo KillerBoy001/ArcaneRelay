@@ -1,10 +1,10 @@
 package com.arcanerelay.util;
 
-import com.hypixel.hytale.math.vector.Vector3i;
+import org.joml.Vector3i;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.config.ArcaneRelayConfig;
 import com.hypixel.hytale.math.Axis;
-import com.hypixel.hytale.math.vector.Vector3d;
+import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
@@ -138,7 +138,7 @@ public class BlockVectorUtil {
         Vector3i localUp = isWallPusher ? new Vector3i(0, 0, 1) : new Vector3i(0, 1, 0);
         Vector3i resultVector = applyRotationToVector(localUp, blockRotation);
 
-        return resultVector.scale(distance);
+        return resultVector.mul(distance);
     }
 
     public static Vector3i getForwardVector(@Nonnull WorldChunk chnk, Vector3i sourcePos) {
@@ -160,7 +160,7 @@ public class BlockVectorUtil {
         Vector3i localForward = isWallPusher ? new Vector3i(0, -1, 0) : new Vector3i(0, 0, -1);
         Vector3i resultVector = applyRotationToVector(localForward, blockRotation);
 
-        return resultVector.scale(distance);
+        return resultVector.mul(distance);
     }
 
     /**

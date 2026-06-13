@@ -64,11 +64,11 @@ public class ArcaneStaffHudSystem extends EntityTickingSystem<EntityStore> {
             // IF MULTI HUD
             if (PluginManager.get().hasPlugin(new PluginIdentifier("Buuz135", "MultipleHUD"), SemverRange.WILDCARD)) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("MultipleHUD found, setting ArcaneStaffLegend HUD");
-                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new ArcaneStaffHud(playerRef));
+                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new ArcaneStaffHud(playerRef, "ArcaneStaffLegend"));
                 return;
             }
 
-            hudManager.setCustomHud(playerRef, new ArcaneStaffHud(playerRef));
+            hudManager.addCustomHud(playerRef, new ArcaneStaffHud(playerRef, "ArcaneStaffLegend"));
             return;
         }
 
@@ -77,11 +77,10 @@ public class ArcaneStaffHudSystem extends EntityTickingSystem<EntityStore> {
             // IF MULTI HUD
             if (PluginManager.get().hasPlugin(new PluginIdentifier("Buuz135", "MultipleHUD"), SemverRange.WILDCARD)) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("MultipleHUD found, setting EmptyHUD");
-                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new EmptyHud(playerRef));
+                MultipleHudBridge.setCustomHud(player, playerRef, "ArcaneStaffLegend", new EmptyHud(playerRef, "ArcaneStaffLegend"));
                 return;
             }
-            hudManager.setCustomHud(playerRef, new EmptyHud(playerRef));
-
+            hudManager.addCustomHud(playerRef, new EmptyHud(playerRef, "ArcaneStaffLegend"));
         }
     }
 
