@@ -70,7 +70,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     public static ArcaneRelayPlugin get() {
         return instance;
     }
-
+    
     public void saveConfig() {
         config.save();
     }
@@ -101,6 +101,12 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         }
 
         return config;
+    }
+
+    public void resetConfig() {
+        ArcaneRelayConfig configValues = this.getConfig();
+        configValues.resetToDefaults();
+        this.config.save();
     }
 
     @Nonnull
@@ -155,7 +161,8 @@ public class ArcaneRelayPlugin extends JavaPlugin {
                 .register("RotateBlock", RotateBlockActivation.class, RotateBlockActivation.CODEC)
                 .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
                 .register("Chain", ChainActivation.class, ChainActivation.CODEC)
-                .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC);
+                .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC)
+                .register("Hit", HitActivation.class, HitActivation.CODEC);
     }
 
     private void registerEvents() {

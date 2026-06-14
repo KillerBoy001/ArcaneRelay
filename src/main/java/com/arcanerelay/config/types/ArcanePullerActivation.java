@@ -61,8 +61,12 @@ public class ArcanePullerActivation extends Activation {
             .add()
             .build();
 
-    public int getRange() {
-        return ArcaneRelayPlugin.get().getConfig().getPullerRange();
+    public int getRange(BlockType blockType) {
+        if (blockType != null && ArcaneUtil.getOriginalBlockTypeId(blockType).contains("Pseudo_Arcane_Puller")) {
+            return ArcaneRelayPlugin.get().getConfig().getPullerRange();
+        }
+
+        return range;
     }
 
     @Override
@@ -93,9 +97,7 @@ public class ArcanePullerActivation extends Activation {
         Vector3i pullerPos = new Vector3i(worldX, worldY, worldZ);
         Vector3i globalUp = BlockVectorUtil.getUpVector(chunk, pullerPos);
         if (globalUp.length() == 0) return ArcaneSection.BlockTickStrategy.PROCESSED;
-        int maxRange = getRange();
-
-        int[] source = sources.isEmpty() ? null : sources.get(0);
+        int maxRange = getRange(pullerBlockType);
 
         syncExtensionChain(commandBuffer, world, puller, pullerPos, globalUp, maxRange);
 
@@ -127,7 +129,7 @@ public class ArcanePullerActivation extends Activation {
             int maxRange
     ) {
         int extLen = puller.getExtensionLength();
-        int maxExtend = Math.max(0, maxRange - 1);
+        int maxExtend = Math.max(0, maxRange);
 
         int tipX = pullerPos.x + globalForward.x * (extLen + 1);
         int tipY = pullerPos.y + globalForward.y * (extLen + 1);
@@ -286,7 +288,7 @@ public class ArcanePullerActivation extends Activation {
             }
             int newLen = extLen - 1;
             updateExtensionConnectedBlocks(s, world, pullerPos, globalUp, newLen, puller.getExtensionBlockKey());
-
+            BlockVectorUtil.setTickingAround(lastChunk, lastPos, 1);
 
             if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)) {
                 ArcaneMoveState moveState = s.getResource(ArcaneMoveState.getResourceType());
@@ -373,7 +375,7 @@ public class ArcanePullerActivation extends Activation {
         if (extensionKey == null || extensionKey.isEmpty()) return 10;
 
         int length = 0;
-        int limit = Math.max(0, maxRange - 1);
+        int limit = Math.max(0, maxRange);
         for (int i = 1; i <= limit; i++) {
             int x = pullerPos.x + forward.x * i;
             int y = pullerPos.y + forward.y * i;

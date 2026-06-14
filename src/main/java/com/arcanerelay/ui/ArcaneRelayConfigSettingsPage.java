@@ -15,12 +15,16 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
 import com.hypixel.hytale.protocol.packets.interface_.Page;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.NotificationUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Custom UI page for Arcane Relay Config: view and modify configuration settings.
@@ -28,11 +32,17 @@ import java.util.Arrays;
  */
 public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<ArcaneRelayConfigSettingsPage.PageEventData> {
     @Nonnull
-    private ArcaneRelayConfig config;
+    private ArcaneRelayConfig originalConfig;
+
+    @Nonnull
+    private ArcaneRelayConfig stagingConfig;
+
+    private final Set<String> invalidFields = new HashSet<>();
 
     public ArcaneRelayConfigSettingsPage(@Nonnull PlayerRef playerRef, @Nonnull ArcaneRelayConfig config) {
         super(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction, PageEventData.CODEC);
-        this.config = config != null ? config : new ArcaneRelayConfig();
+        this.originalConfig = config != null ? config : new ArcaneRelayConfig();
+        this.stagingConfig = new ArcaneRelayConfig(this.originalConfig);
     }
 
     @Override
@@ -44,41 +54,41 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
         commandBuilder.append("Pages/ArcaneRelayConfig.ui");
 
         // Set values for all numeric settings
-        commandBuilder.set("#TriggerDistanceInput.Value", String.valueOf(config.getTriggerDistance()));
-        commandBuilder.set("#TargetDistanceInput.Value", String.valueOf(config.getTargetDistance()));
-        commandBuilder.set("#PusherRangeInput.Value", String.valueOf(config.getPusherRange()));
-        commandBuilder.set("#PullerRangeInput.Value", String.valueOf(config.getPullerRange()));
-        commandBuilder.set("#BreakerDamageInput.Value", String.format("%.2f", config.getBreakerDamage()));
-        commandBuilder.set("#NonMovableListInput.Value", String.join(", ", config.getNoneMoveableBlocks()));
-        commandBuilder.set("#NonRotatableBlacklistInput.Value", String.join(", ", config.getNoneRotatableBlocks()));
+        commandBuilder.set("#RelayDistanceInput.Value", String.valueOf(stagingConfig.getRelayDistance()));
+        commandBuilder.set("#PusherRangeInput.Value", String.valueOf(stagingConfig.getPusherRange()));
+        commandBuilder.set("#PullerRangeInput.Value", String.valueOf(stagingConfig.getPullerRange()));
+        commandBuilder.set("#BreakerDamageInput.Value", String.format("%.2f", stagingConfig.getBreakerEntityDamage()));
+        commandBuilder.set("#BreakerBlockDamageScalarInput.Value", String.format("%.2f", stagingConfig.getBreakerBlockDamageScalar()));
+        commandBuilder.set("#NonMovableListInput.Value", String.join(", ", stagingConfig.getNoneMoveableBlocks()));
+        commandBuilder.set("#NonRotatableBlacklistInput.Value", String.join(", ", stagingConfig.getNoneRotatableBlocks()));
 
         // Set up textbox event bindings
-        EventData triggerData = EventData.of("Action", "UpdateTriggerDistance");
-        triggerData.put("TriggerDistanceValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TriggerDistanceInput", triggerData, false);
-
-        EventData targetData = EventData.of("Action", "UpdateTargetDistance");
-        targetData.put("TargetDistanceValue", "$el.Value");
-        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#TargetDistanceInput", targetData, false);
+        EventData triggerData = EventData.of("Action", "UpdateRelayDistance");
+        triggerData.put("@TextValue", "#RelayDistanceInput.Value");
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#RelayDistanceInput", triggerData, false);
 
         EventData pusherData = EventData.of("Action", "UpdatePusherRange");
-        pusherData.put("PusherRangeValue", "$el.Value");
+        pusherData.put("@TextValue", "#PusherRangeInput.Value");
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#PusherRangeInput", pusherData, false);
 
         EventData pullerData = EventData.of("Action", "UpdatePullerRange");
-        pullerData.put("PullerRangeValue", "$el.Value");
+        pullerData.put("@TextValue", "#PullerRangeInput.Value");
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#PullerRangeInput", pullerData, false);
 
         EventData breakerData = EventData.of("Action", "UpdateBreakerDamage");
-        breakerData.put("BreakerDamageValue", "$el.Value");
+        breakerData.put("@TextValue", "#BreakerDamageInput.Value");
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#BreakerDamageInput", breakerData, false);
 
+        EventData breakerBlockData = EventData.of("Action", "UpdateBreakerBlockDamageScalar");
+        breakerBlockData.put("@TextValue", "#BreakerBlockDamageScalarInput.Value");
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#BreakerBlockDamageScalarInput", breakerBlockData, false);
+
         EventData nonMovableData = EventData.of("Action", "UpdateNonMovableList");
-        nonMovableData.put("NonMovableListValue", "$el.Value");
+        nonMovableData.put("@TextValue", "#NonMovableListInput.Value");
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonMovableListInput", nonMovableData, false);
 
         EventData nonRotatableData = EventData.of("Action", "UpdateNonRotatableList");
-        nonRotatableData.put("NonRotatableListValue", "$el.Value");
+        nonRotatableData.put("@TextValue", "#NonRotatableBlacklistInput.Value");
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NonRotatableBlacklistInput", nonRotatableData, false);
 
         // Set up button event bindings
@@ -91,25 +101,16 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
         if (data.action == null || data.action.isEmpty()) return;
 
         switch (data.action) {
-            case "UpdateTriggerDistance":
+            case "UpdateRelayDistance":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
                     try {
                         int value = Integer.parseInt(data.textValue);
                         if (value >= 0) {
-                            config.setTriggerDistance(value);
+                            stagingConfig.setRelayDistance(value);
+                            invalidFields.remove(data.action);
                         }
                     } catch (NumberFormatException ignored) {
-                    }
-                }
-                return;
-            case "UpdateTargetDistance":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
-                    try {
-                        int value = Integer.parseInt(data.textValue);
-                        if (value >= 0) {
-                            config.setTargetDistance(value);
-                        }
-                    } catch (NumberFormatException ignored) {
+                        invalidFields.add(data.action);
                     }
                 }
                 return;
@@ -118,9 +119,11 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                     try {
                         int value = Integer.parseInt(data.textValue);
                         if (value >= 0) {
-                            config.setPusherRange(value);
+                            stagingConfig.setPusherRange(value);
+                            invalidFields.remove(data.action);
                         }
                     } catch (NumberFormatException ignored) {
+                        invalidFields.add(data.action);
                     }
                 }
                 return;
@@ -129,30 +132,47 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                     try {
                         int value = Integer.parseInt(data.textValue);
                         if (value >= 0) {
-                            config.setPullerRange(value);
+                            stagingConfig.setPullerRange(value);
+                            invalidFields.remove(data.action);
                         }
                     } catch (NumberFormatException ignored) {
+                        invalidFields.add(data.action);
                     }
                 }
                 return;
             case "UpdateBreakerDamage":
                 if (data.textValue != null && !data.textValue.isEmpty()) {
                     try {
-                        double value = Double.parseDouble(data.textValue    );
-                        if (value >= 0.0) {
-                            config.setBreakerDamage(value);
+                        float value = Float.parseFloat(data.textValue);
+                        if (value >= 0.0f) {
+                            stagingConfig.setBreakerEntityDamage(value);
+                            invalidFields.remove(data.action);
                         }
                     } catch (NumberFormatException ignored) {
+                        invalidFields.add(data.action);
+                    }
+                }
+                return;
+            case "UpdateBreakerBlockDamageScalar":
+                if (data.textValue != null && !data.textValue.isEmpty()) {
+                    try {
+                        float value = Float.parseFloat(data.textValue);
+                        if (value >= 0.0f) {
+                            stagingConfig.setBreakerBlockDamageScalar(value);
+                            invalidFields.remove(data.action);
+                        }
+                    } catch (NumberFormatException ignored) {
+                        invalidFields.add(data.action);
                     }
                 }
                 return;
             case "UpdateNonMovableList":
-                if (data.textValue != null && !data.textValue.isEmpty()) {
+                 if (data.textValue != null && !data.textValue.isEmpty()) {
                     String[] blocks = Arrays.stream(data.textValue.split(","))
                             .map(String::trim)
                             .filter(s -> !s.isEmpty())
                             .toArray(String[]::new);
-                    config.setNoneMoveableBlocks(blocks);
+                    stagingConfig.setNoneMoveableBlocks(blocks);
                 }
                 return;
             case "UpdateNonRotatableList":
@@ -161,19 +181,32 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                             .map(String::trim)
                             .filter(s -> !s.isEmpty())
                             .toArray(String[]::new);
-                    config.setNoneRotatableBlocks(blocks);
+                    stagingConfig.setNoneRotatableBlocks(blocks);
                 }
                 return;
             case "Save":
-                ArcaneRelayPlugin.get().saveConfig();
-                store.getExternalData().getWorld().execute(() -> {
-                    closePage();
-                });
+                if (!originalConfig.equals(stagingConfig)) { 
+                    originalConfig.copyFrom(stagingConfig); 
+                    ArcaneRelayPlugin.get().saveConfig();
+
+                    if (invalidFields.isEmpty()) {
+                        NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsSucces"), NotificationStyle.Success);
+                    } else {
+                        NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsSuccesWithInvalid"), NotificationStyle.Warning);
+                    }
+                } else {
+                    if (invalidFields.isEmpty()) {
+                        NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsSuccesNoChange"), NotificationStyle.Success);
+                    } else {
+                        NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsSuccesNoChangeWithInvalid"), NotificationStyle.Warning);
+                    }
+                }
+
+                store.getExternalData().getWorld().execute(this::closePage);
                 return;
             case "Cancel":
-                store.getExternalData().getWorld().execute(() -> {
-                    closePage();
-                });
+                NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.SettingsNoChange"), NotificationStyle.Warning);
+                store.getExternalData().getWorld().execute(this::closePage);
                 return;
         }
     }
@@ -200,7 +233,7 @@ public class ArcaneRelayConfigSettingsPage extends InteractiveCustomUIPage<Arcan
                     d -> d.action)
                 .add()
                 .append(
-                    new KeyedCodec<>("TextValue", Codec.STRING),
+                    new KeyedCodec<>("@TextValue", Codec.STRING),
                     (d, v) -> d.textValue = v,
                     d -> d.textValue)
                 .add()

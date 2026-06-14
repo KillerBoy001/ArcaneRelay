@@ -30,9 +30,6 @@ import javax.annotation.Nonnull;
  * The next wave will process that block and propagate along its outputs.
  */
 public class SendSignalInteraction extends SimpleInstantInteraction {
-
-   private static final double TARGET_DISTANCE = 20.0;
-
    @Nonnull
    public static final BuilderCodec<SendSignalInteraction> CODEC = BuilderCodec.builder(
       SendSignalInteraction.class, SendSignalInteraction::new, SimpleInstantInteraction.CODEC)

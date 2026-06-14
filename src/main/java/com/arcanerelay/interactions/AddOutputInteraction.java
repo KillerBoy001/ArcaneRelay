@@ -31,8 +31,6 @@ import javax.annotation.Nonnull;
  * Uses ArcaneConfiguratorComponent to find the trigger block.
  */
 public class AddOutputInteraction extends SimpleInstantInteraction {
-    private static final double TRIGGER_DISTANCE = ArcaneRelayPlugin.get().getConfig().getTriggerDistance();
-
     @Nonnull
     public static final BuilderCodec<AddOutputInteraction> CODEC = BuilderCodec.builder(
             AddOutputInteraction.class, AddOutputInteraction::new, SimpleInstantInteraction.CODEC)
@@ -79,7 +77,8 @@ public class AddOutputInteraction extends SimpleInstantInteraction {
             return;
         }
 
-        if (triggerPos.distance(target) > TRIGGER_DISTANCE) {
+        int maxRelayDistance = ArcaneRelayPlugin.get().getConfig().getRelayDistance();
+        if (triggerPos.distance(target) > maxRelayDistance) {
             NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.targetTooFarFromTrigger"), NotificationStyle.Warning);
             context.getState().state = InteractionState.Failed; 
             return;

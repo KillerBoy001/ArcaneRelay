@@ -4,7 +4,7 @@ $C.@PageOverlay {
   LayoutMode: Middle;
 
   $C.@DecoratedContainer {
-    Anchor: (Width: 480, Height: 522);
+    Anchor: (Width: 480, Height: 524);
 
     #Title {
       $C.@Title {
@@ -32,46 +32,22 @@ $C.@PageOverlay {
 
         // Row 1: Trigger Distance and Target Distance
         Group {
-          LayoutMode: Left;
+          LayoutMode: Top;
           Anchor: (Bottom: 8);
 
-          Group {
-            LayoutMode: Top;
-            FlexWeight: 1;
-            Anchor: (Right: 8);
-
-            Label {
-              Anchor: (Bottom: 5);
-              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
-              Text: %server.customUI.ArcaneRelayConfig.triggerDistanceTitle;
-            }
-
-            TextField #TriggerDistanceInput {
-              Anchor: (Height: 38);
-              Style: $C.@DefaultInputFieldStyle;
-              PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
-              Background: $C.@InputBoxBackground;
-              Padding: (Horizontal: 10);
-            }
+          Label {
+            Anchor: (Bottom: 5);
+            Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+            Text: %server.customUI.ArcaneRelayConfig.relayDistanceTitle;
           }
 
-          Group {
-            LayoutMode: Top;
-            FlexWeight: 1;
-
-            Label {
-              Anchor: (Bottom: 5);
-              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
-              Text: %server.customUI.ArcaneRelayConfig.targetDistanceTitle;
-            }
-
-            TextField #TargetDistanceInput {
-              Anchor: (Height: 38);
-              Style: $C.@DefaultInputFieldStyle;
-              PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
-              Background: $C.@InputBoxBackground;
-              Padding: (Horizontal: 10);
-            }
+          TextField #RelayDistanceInput {
+            Anchor: (Height: 38);
+            TooltipText: %server.customUI.ArcaneRelayConfig.relayDistanceTooltip;
+            Style: $C.@DefaultInputFieldStyle;
+            PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
+            Background: $C.@InputBoxBackground;
+            Padding: (Horizontal: 10);
           }
         }
 
@@ -93,6 +69,7 @@ $C.@PageOverlay {
 
             TextField #PusherRangeInput {
               Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.pusherRangeTooltip;
               Style: $C.@DefaultInputFieldStyle;
               PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
               Background: $C.@InputBoxBackground;
@@ -112,6 +89,7 @@ $C.@PageOverlay {
 
             TextField #PullerRangeInput {
               Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.pullerRangeTooltip;
               Style: $C.@DefaultInputFieldStyle;
               PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
               Background: $C.@InputBoxBackground;
@@ -120,23 +98,50 @@ $C.@PageOverlay {
           }
         }
 
-        // Row 3: Breaker Damage
+        // Row 3: Breaker Damage Entity and Breaker Block Damage Scalar
         Group {
-          LayoutMode: Top;
+          LayoutMode: Left;
           Anchor: (Bottom: 16);
 
-          Label {
-            Anchor: (Bottom: 5);
-            Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
-            Text: %server.customUI.ArcaneRelayConfig.breakerDamageTitle;
+          Group {
+            LayoutMode: Top;
+            FlexWeight: 1;
+            Anchor: (Right: 8);
+
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+              Text: %server.customUI.ArcaneRelayConfig.breakerDamageTitle;
+            }
+
+            TextField #BreakerDamageInput {
+              Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.breakerDamageTooltip;
+              Style: $C.@DefaultInputFieldStyle;
+              PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
+              Background: $C.@InputBoxBackground;
+              Padding: (Horizontal: 10);
+            }
           }
 
-          TextField #BreakerDamageInput {
-            Anchor: (Height: 38);
-            Style: $C.@DefaultInputFieldStyle;
-            PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
-            Background: $C.@InputBoxBackground;
-            Padding: (Horizontal: 10);
+          Group {
+            LayoutMode: Top;
+            FlexWeight: 1;
+
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+              Text: %server.customUI.ArcaneRelayConfig.breakerBlockDamageScalarTitle;
+            }
+
+            TextField #BreakerBlockDamageScalarInput {
+              Anchor: (Height: 38);
+              TooltipText: %server.customUI.ArcaneRelayConfig.breakerBlockDamageScalarTooltip;
+              Style: $C.@DefaultInputFieldStyle;
+              PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
+              Background: $C.@InputBoxBackground;
+              Padding: (Horizontal: 10);
+            }
           }
         }
 
@@ -159,6 +164,7 @@ $C.@PageOverlay {
 
           TextField #NonMovableListInput {
             Anchor: (Height: 38);
+            TooltipText: %server.customUI.ArcaneRelayConfig.moveableBlacklistTooltip;
             Style: $C.@DefaultInputFieldStyle;
             PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
             Background: $C.@InputBoxBackground;
@@ -179,6 +185,7 @@ $C.@PageOverlay {
 
           TextField #NonRotatableBlacklistInput {
             Anchor: (Height: 38);
+            TooltipText: %server.customUI.ArcaneRelayConfig.rotatableBlacklistTooltip;
             Style: $C.@DefaultInputFieldStyle;
             PlaceholderStyle: $C.@DefaultInputFieldPlaceholderStyle;
             Background: $C.@InputBoxBackground;

@@ -13,15 +13,10 @@ import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Arrays;
 
 public class BlockVectorUtil {
     private static ArcaneRelayConfig config = ArcaneRelayPlugin.get().getConfig();
-
-    private static List<String> NoneMoveableIDs = Arrays.asList(config.getNoneMoveableBlocks());
-
-    private static List<String> NoneRotatableIDs = Arrays.asList(config.getNoneRotatableBlocks());
 
     public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i pos, int range) {
         for (int x = -range; x <= range; x++) {
@@ -70,7 +65,7 @@ public class BlockVectorUtil {
 
         if (isExtensionBlock(blockType))
             return false;
-        for (String keyword : NoneMoveableIDs) {
+        for (String keyword : Arrays.asList(config.getNoneMoveableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -90,7 +85,7 @@ public class BlockVectorUtil {
             return false;
         String id = blockType.getId();
 
-        for (String keyword : NoneMoveableIDs) {
+        for (String keyword : Arrays.asList(config.getNoneMoveableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -110,7 +105,7 @@ public class BlockVectorUtil {
             return false;
         String id = blockType.getId();
 
-        for (String keyword : NoneRotatableIDs) {
+        for (String keyword : Arrays.asList(config.getNoneRotatableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
