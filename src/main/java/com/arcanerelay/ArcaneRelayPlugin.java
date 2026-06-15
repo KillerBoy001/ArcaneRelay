@@ -2,7 +2,9 @@ package com.arcanerelay;
 
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.config.ActivationBinding;
+import com.arcanerelay.config.ArcaneRelayConfig;
 import com.arcanerelay.config.types.*;
+import com.arcanerelay.commands.ArcaneRelayCommandCollection;
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.components.ArcanePullerBlock;
 import com.arcanerelay.components.ArcaneSection;
@@ -21,7 +23,9 @@ import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.ResourceType;
+import com.hypixel.hytale.event.EventRegistry;
 import com.hypixel.hytale.logger.HytaleLogger;
+import com.hypixel.hytale.server.core.command.system.CommandRegistry;
 import com.hypixel.hytale.server.core.event.events.BootEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -29,10 +33,12 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Int
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenCustomUIInteraction;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import com.hypixel.hytale.server.core.util.Config;
 
 import javax.annotation.Nonnull;
 
 public class ArcaneRelayPlugin extends JavaPlugin {
+    private final Config<ArcaneRelayConfig> config = this.withConfig("ArcaneRelayConfig", ArcaneRelayConfig.CODEC);
 
     private static ArcaneRelayPlugin instance;
     /** Thread that ran plugin setup(); used to detect main thread for world.execute() etc. */
@@ -64,60 +70,43 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     public static ArcaneRelayPlugin get() {
         return instance;
     }
+    
+    public void saveConfig() {
+        config.save();
+    }
 
     @Override
     protected void setup() {
         instance = this;
         mainThread = Thread.currentThread();
 
-        ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
-        this.arcaneMoveStateResourceType = chunkRegistry.registerResource(ArcaneMoveState.class, ArcaneMoveState::new);
-        this.arcaneTriggerBlockComponentType = chunkRegistry.registerComponent(ArcaneTriggerBlock.class,
-                "ArcaneTrigger", ArcaneTriggerBlock.CODEC);
-        this.arcaneSectionComponentType = chunkRegistry.registerComponent(ArcaneSection.class, "ArcaneSection",
-                ArcaneSection.CODEC);
-        this.arcanePullerBlockComponentType = chunkRegistry.registerComponent(ArcanePullerBlock.class,
-                "ArcanePuller", ArcanePullerBlock.CODEC);
+        config.save();
 
-        chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
-        chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
-        chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
-        chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
-
-
-        ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
-        this.arcaneConfiguratorComponentType = entityRegistry.registerComponent(ArcaneConfiguratorComponent.class,
-                ArcaneConfiguratorComponent::new);
-        this.arcaneStaffLegendVisibleComponentType = entityRegistry.registerComponent(ArcaneStaffLegendVisible.class,
-                ArcaneStaffLegendVisible::new);
-        this.customHudRestoreStateResourceType = entityRegistry.registerResource(CustomHudRestoreState.class,
-                CustomHudRestoreState::new);
-        entityRegistry.registerSystem(new ArcaneConfiguratorAddSystem());
-        entityRegistry.registerSystem(new ArcaneStaffHudSystem());
-
-        Interaction.CODEC.register("SelectTrigger", SelectTriggerInteraction.class, SelectTriggerInteraction.CODEC);
-        Interaction.CODEC.register("AddOutput", AddOutputInteraction.class, AddOutputInteraction.CODEC);
-        Interaction.CODEC.register("SendSignal", SendSignalInteraction.class, SendSignalInteraction.CODEC);
-        Interaction.CODEC.register("ArcaneActivator", ArcaneActivatorInteraction.class,
-                ArcaneActivatorInteraction.CODEC);
-
-        this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
-                .register("ArcaneTrigger", ArcaneTriggerPageSupplier.class, ArcaneTriggerPageSupplier.CODEC);
-
+        registerCodecs();
+        registerInteractions();
+        registerComponents();
+        registerResources();
+        registerSystems();
+        registerCommands();
+        registerEvents();
         Activation.registerAssetStore();
         ActivationBinding.registerAssetStore();
+    }
 
-        this.getCodecRegistry(Activation.CODEC)
-                .register("ToggleState", ToggleStateActivation.class, ToggleStateActivation.CODEC)
-                .register("SendSignal", SendSignalActivation.class, SendSignalActivation.CODEC)
-                .register("MoveBlock", MoveBlockActivation.class, MoveBlockActivation.CODEC)
-                .register("RotateBlock", RotateBlockActivation.class, RotateBlockActivation.CODEC)
-                .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
-                .register("Chain", ChainActivation.class, ChainActivation.CODEC)
-                .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC)
-                .register("Hit", HitActivation.class, HitActivation.CODEC);
+    @Nonnull
+    public ArcaneRelayConfig getConfig() {
+        ArcaneRelayConfig config = this.config.get();
+        if (config == null) {
+            config = new ArcaneRelayConfig();
+        }
 
-        this.getEventRegistry().registerGlobal(BootEvent.class, event -> ActivationBinding.onBindingsLoaded());
+        return config;
+    }
+
+    public void resetConfig() {
+        ArcaneRelayConfig configValues = this.getConfig();
+        configValues.resetToDefaults();
+        this.config.save();
     }
 
     @Nonnull
@@ -129,7 +118,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     public ResourceType<ChunkStore, ArcaneMoveState> getArcaneMoveStateResourceType() {
         return this.arcaneMoveStateResourceType;
     }
-
 
     @Nonnull
     public ComponentType<EntityStore, ArcaneStaffLegendVisible> getArcaneStaffLegendVisibleComponentType() {
@@ -153,5 +141,97 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     @Nonnull
     public ComponentType<ChunkStore, ArcanePullerBlock> getArcanePullerBlockComponentType() {
         return this.arcanePullerBlockComponentType;
+    }
+
+    private void registerInteractions() {
+        Interaction.CODEC.register("SelectTrigger", SelectTriggerInteraction.class, SelectTriggerInteraction.CODEC);
+        Interaction.CODEC.register("AddOutput", AddOutputInteraction.class, AddOutputInteraction.CODEC);
+        Interaction.CODEC.register("SendSignal", SendSignalInteraction.class, SendSignalInteraction.CODEC);
+        Interaction.CODEC.register("ArcaneActivator", ArcaneActivatorInteraction.class, ArcaneActivatorInteraction.CODEC);
+    }
+
+    private void registerCodecs() {
+        this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
+                .register("ArcaneTrigger", ArcaneTriggerPageSupplier.class, ArcaneTriggerPageSupplier.CODEC);
+
+        this.getCodecRegistry(Activation.CODEC)
+                .register("ToggleState", ToggleStateActivation.class, ToggleStateActivation.CODEC)
+                .register("SendSignal", SendSignalActivation.class, SendSignalActivation.CODEC)
+                .register("MoveBlock", MoveBlockActivation.class, MoveBlockActivation.CODEC)
+                .register("RotateBlock", RotateBlockActivation.class, RotateBlockActivation.CODEC)
+                .register("ArcanePuller", ArcanePullerActivation.class, ArcanePullerActivation.CODEC)
+                .register("Chain", ChainActivation.class, ChainActivation.CODEC)
+                .register("ToggleDoor", ToggleDoorActivation.class, ToggleDoorActivation.CODEC)
+                .register("Hit", HitActivation.class, HitActivation.CODEC);
+    }
+
+    private void registerEvents() {
+        EventRegistry registry = this.getEventRegistry();
+        
+        registry.registerGlobal(BootEvent.class, event -> ActivationBinding.onBindingsLoaded());
+    }
+
+    private void registerSystems() {
+        registerEntitySystems(); 
+        registerChunkSystems();
+    }
+
+    private void registerChunkSystems() {
+        ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
+
+        chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
+        chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
+        chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
+        chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
+    }
+
+    private void registerEntitySystems() {
+        ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
+
+        entityRegistry.registerSystem(new ArcaneConfiguratorAddSystem());
+        entityRegistry.registerSystem(new ArcaneStaffHudSystem());
+    }
+
+    private void registerResources() {
+        registerEntityResources();
+        registerChunkResources();
+    }
+
+    private void registerChunkResources() {
+        ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
+
+        this.arcaneMoveStateResourceType = chunkRegistry.registerResource(ArcaneMoveState.class, ArcaneMoveState::new);
+    }
+
+    private void registerEntityResources() {
+        ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
+
+        this.customHudRestoreStateResourceType = entityRegistry.registerResource(CustomHudRestoreState.class, CustomHudRestoreState::new);
+    }
+
+    private void registerComponents() {
+        registerChunkComponents();
+        registerEntityComponents();
+    }
+
+    private void registerChunkComponents() {
+        ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
+
+        this.arcaneTriggerBlockComponentType = chunkRegistry.registerComponent(ArcaneTriggerBlock.class, "ArcaneTrigger", ArcaneTriggerBlock.CODEC);
+        this.arcaneSectionComponentType = chunkRegistry.registerComponent(ArcaneSection.class, "ArcaneSection", ArcaneSection.CODEC);
+        this.arcanePullerBlockComponentType = chunkRegistry.registerComponent(ArcanePullerBlock.class, "ArcanePuller", ArcanePullerBlock.CODEC);
+    }
+
+    private void registerEntityComponents() {
+        ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
+
+        this.arcaneConfiguratorComponentType = entityRegistry.registerComponent(ArcaneConfiguratorComponent.class, ArcaneConfiguratorComponent::new);
+        this.arcaneStaffLegendVisibleComponentType = entityRegistry.registerComponent(ArcaneStaffLegendVisible.class, ArcaneStaffLegendVisible::new);
+    }
+
+    private void registerCommands() {
+        CommandRegistry registry = this.getCommandRegistry();
+        
+        registry.registerCommand(new ArcaneRelayCommandCollection());
     }
 }

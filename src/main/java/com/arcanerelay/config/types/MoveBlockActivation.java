@@ -21,16 +21,12 @@ import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
 import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.VariantRotation;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
 import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
@@ -40,7 +36,6 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,7 +45,7 @@ import java.util.List;
 import java.util.Set;
 
 public class MoveBlockActivation extends Activation {
-    private int range = 1;
+    private int range = ArcaneRelayPlugin.get().getConfig().getPusherRange();
     private int upAmount = 1;
     private boolean isWall = false;
 
@@ -77,14 +72,6 @@ public class MoveBlockActivation extends Activation {
         .documentation("Whether the block is a wall (default: false).")
         .add()
         .build();
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
-    }
 
     private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
         if (blockId == 0)
@@ -157,7 +144,12 @@ public class MoveBlockActivation extends Activation {
                 return;
 
             Vector3i frontPusherPosition = new Vector3i(pusherPosition);
-            int maxRange = Math.max(1, range);
+           
+            WorldChunk blockChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
+            int pusherBlockId = blockChunk.getBlock(worldX, worldY, worldZ);
+            BlockType pusherBlockType = BlockType.getAssetMap().getAsset(pusherBlockId);
+
+            int maxRange = getMaxRange(pusherBlockType);
 
             int[] chainBlockIds               = new int[maxRange];
             int[] chainRotations              = new int[maxRange];
@@ -228,6 +220,14 @@ public class MoveBlockActivation extends Activation {
         });
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;
+    }
+
+    private int getMaxRange(BlockType blockType) {
+        if (blockType != null && ArcaneUtil.getOriginalBlockTypeId(blockType).contains("Pseudo_Arcane_Pusher")) {
+            return ArcaneRelayPlugin.get().getConfig().getPusherRange();
+        }
+
+        return range;
     }
 
     private void movePlayers(World world, Vector3i globalForward, Vector3i scaledGlobalUpVector,

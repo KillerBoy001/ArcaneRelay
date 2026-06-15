@@ -1,5 +1,6 @@
 package com.arcanerelay.interactions;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
@@ -44,8 +45,6 @@ import javax.annotation.Nonnull;
  * Executes the activation immediately (e.g. Pusher_Chain for the pusher).
  */
 public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
-    private static final double TARGET_DISTANCE = 10.0;
-
     @Nonnull
     public static final BuilderCodec<ArcaneActivatorInteraction> CODEC = BuilderCodec.builder(
             ArcaneActivatorInteraction.class, ArcaneActivatorInteraction::new, SimpleInstantInteraction.CODEC)
@@ -94,7 +93,8 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
             blockY = targetRaw.y;
             blockZ = targetRaw.z;
         } else {
-            var target = TargetUtil.getTargetBlock(ref, TARGET_DISTANCE, cb);
+            int interactionDistance = ArcaneRelayPlugin.get().getConfig().getRelayDistance();
+            var target = TargetUtil.getTargetBlock(ref, interactionDistance, cb);
             if (target == null) {
                 NotificationUtil.sendNotification(playerRef.getPacketHandler(), Message.translation("server.arcanerelay.notifications.noBlockInRange"), NotificationStyle.Warning);
                 context.getState().state = InteractionState.Failed;

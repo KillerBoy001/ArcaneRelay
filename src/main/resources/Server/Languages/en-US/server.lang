@@ -48,6 +48,12 @@ arcanerelay.notifications.outputAdded = Output has been added.
 arcanerelay.notifications.signalSentToTrigger = Signal sent to trigger.
 arcanerelay.notifications.blockActivationNotSupported = Block activation not supported for this block.
 arcanerelay.notifications.pullerChainResynced = Puller chain resynced.
+arcanerelay.notifications.SettingsSucces = Changes have been saved and applied.
+arcanerelay.notifications.SettingsSuccesNoChange = There were no changes to apply.
+arcanerelay.notifications.SettingsSuccesWithInvalid = Partial Save: Incorrectly formatted values skipped.
+arcanerelay.notifications.SettingsNoChange = No changes have been applied.
+arcanerelay.notifications.SettingsSuccesNoChangeWithInvalid = Incorrectly formatted values skipped. No changes applied. 
+arcanerelay.notifications.ResetSucces = Settings have been reset successfully.
 
 # === UI ===
 
@@ -78,6 +84,25 @@ customUi.ArcaneTrigger.connectionCountPlural = {amount} connections
 customUI.ArcaneTrigger.buttonClearAllTitle = Clear All
 
 customUI.ConnectionRow.buttonRemoveTitle = Remove
+
+customUI.ArcaneRelayConfig.title = Arcane Relay Settings
+customUI.ArcaneRelayConfig.failedToLoadDataMessage = Could not load configuration data.
+customUI.ArcaneRelayConfig.relayDistanceTitle = Max Relay Distance
+customUI.ArcaneRelayConfig.pusherRangeTitle = Max Pusher Range
+customUI.ArcaneRelayConfig.pullerRangeTitle = Max Puller Range
+customUI.ArcaneRelayConfig.breakerDamageTitle = Breaker Entity Damage
+customUI.ArcaneRelayConfig.breakerBlockDamageScalarTitle = Breaker Block Damage
+customUI.ArcaneRelayConfig.moveableBlacklistTitle = Non-Moveable Blocks
+customUI.ArcaneRelayConfig.rotatableBlacklistTitle = Non-Rotatable Blocks
+customUI.ArcaneRelayConfig.save = Save
+customUI.ArcaneRelayConfig.cancel = Cancel
+customUI.ArcaneRelayConfig.relayDistanceTooltip = Controls the max connection distance for Relay connections. Default: 10.
+customUI.ArcaneRelayConfig.pusherRangeTooltip = The max number of blocks the Pusher can succesfully move. Default: 15.
+customUI.ArcaneRelayConfig.pullerRangeTooltip = The extension range of the Puller. Default 15.
+customUI.ArcaneRelayConfig.breakerDamageTooltip = Damage dealt by the Breaker to entities. For reference, the player starts with 100 HP. Default: 5.
+customUI.ArcaneRelayConfig.breakerBlockDamageScalarTooltip = Scales the tool's power against blocks. Default: 1.
+customUI.ArcaneRelayConfig.moveableBlacklistTooltip = List of blocks that can't be moved via Vector Artifacts.
+customUI.ArcaneRelayConfig.rotatableBlacklistTooltip = List of blocks that can't be rotated via Vector Artifacts.
 
 # === Benches ===
 

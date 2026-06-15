@@ -24,7 +24,9 @@ out/
 bin/
 
 # IDE - VS Code
-.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 *.code-workspace
 
 # IDE - NetBeans
@@ -110,7 +112,6 @@ hs_err_pid*
 *.hytale
 *.hytalemod
 
-/scripts/
 /local-server/
 /decompiled/
 
