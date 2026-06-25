@@ -4,12 +4,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.arcanerelay.components.ArcaneSection;
-import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.server.core.universe.world.chunk.AbstractCachedAccessor;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
-import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 /**
  * Cached accessor for activations. Mirrors
@@ -18,8 +15,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
  */
 public final class ArcaneCachedAccessor extends AbstractCachedAccessor implements ArcaneActivationAccessor {
 
-    private static final ThreadLocal<ArcaneCachedAccessor> THREAD_LOCAL =
-        ThreadLocal.withInitial(ArcaneCachedAccessor::new);
     private static final int ARCANE_COMPONENT = 0;
     private static final int BLOCK_COMPONENT = 1;
     private static final int CHUNK_COMPONENT = 2;
@@ -28,37 +23,11 @@ public final class ArcaneCachedAccessor extends AbstractCachedAccessor implement
     protected ChunkSection selfChunkSection;
     protected ChunkStoreCommandBufferLike selfCommandBuffer;
 
-    ArcaneCachedAccessor() {
+    public ArcaneCachedAccessor() {
         super(3);
     }
 
-    @Nonnull
-    public static ArcaneCachedAccessor of(
-        @Nonnull CommandBuffer<ChunkStore> commandBuffer,
-        @Nonnull ArcaneSection section,
-        @Nonnull BlockSection blockSection,
-        @Nonnull ChunkSection chunkSection,
-        int radius
-    ) {
-        ArcaneCachedAccessor accessor = THREAD_LOCAL.get();
-        accessor.init(new ChunkStoreCommandBufferAdapter(commandBuffer), section, blockSection, chunkSection, radius);
-        return accessor;
-    }
-
-    @Nonnull
-    public static ArcaneCachedAccessor ofForInteraction(
-        @Nonnull CommandBuffer<EntityStore> commandBuffer,
-        @Nonnull ArcaneSection section,
-        @Nonnull BlockSection blockSection,
-        @Nonnull ChunkSection chunkSection,
-        int radius
-    ) {
-        ArcaneCachedAccessor accessor = THREAD_LOCAL.get();
-        accessor.init(new EntityStoreChunkStoreAdapter(commandBuffer), section, blockSection, chunkSection, radius);
-        return accessor;
-    }
-
-    private void init(
+    public void init(
         @Nonnull ChunkStoreCommandBufferLike commandBuffer,
         @Nonnull ArcaneSection section,
         @Nonnull BlockSection blockSection,
