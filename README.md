@@ -56,6 +56,14 @@ Hit blocks or players and break or kill almost everything that might stand in th
 
 ![More to come](./art/Affinity/BlockNameCards/MoreToCome.png)
 
+## Customize Your Playthrough
+
+![Arcane Relay Settings Page](./art/Affinity/BlockNameCards/SettingsMenu.png)
+
+Added a new command `/arcanerelay settings` to allow you to override most of the important values in our mod! 
+
+**Important Note:** These take effect as soon as you hit the save button (_no_ reload required). So if you are a server owner make sure only the people you want to access this can access it.
+
 ## Plugin Development
 
 ### Activations
