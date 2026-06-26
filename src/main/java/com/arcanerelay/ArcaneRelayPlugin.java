@@ -17,7 +17,6 @@ import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.resources.CustomHudRestoreState;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
-import com.arcanerelay.systems.ArcaneStaffHudSystem;
 import com.arcanerelay.systems.ArcaneSystems;
 import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
@@ -189,7 +188,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
 
         entityRegistry.registerSystem(new ArcaneConfiguratorAddSystem());
-        entityRegistry.registerSystem(new ArcaneStaffHudSystem());
     }
 
     private void registerResources() {
