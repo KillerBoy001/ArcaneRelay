@@ -5,10 +5,12 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.components.ArcaneSection.BlockTickStrategy;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
+import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.BlockFlags;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.codec.Codec;
@@ -23,6 +25,8 @@ import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
+import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool.DurabilityLossBlockTypes;
+import com.hypixel.hytale.server.core.asset.type.item.config.ItemToolSpec;
 import com.hypixel.hytale.server.core.entity.LivingEntity;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
@@ -122,6 +126,7 @@ public class HitActivation extends Activation {
             return;
         }
 
+        float finalDamage = getEntityDamage(currentBlockType);
         for (Ref<EntityStore> target : targets) {
             if (target == null || !target.isValid()) {
                 continue;
@@ -131,11 +136,20 @@ public class HitActivation extends Activation {
                 Damage damageEvent = new Damage(
                         new EnvironmentSource("hit_activation"),
                         DamageCause.PHYSICAL,
-                        this.damage);
+                        finalDamage
+                    );
 
                 DamageSystems.executeDamage(target, store, damageEvent);
             });
         }
+    }
+
+    private float getEntityDamage(BlockType blockType) {
+        if (blockType != null && ArcaneUtil.getOriginalBlockTypeId(blockType).contains("Pseudo_Arcane_Breaker")) {
+            return ArcaneRelayPlugin.get().getConfig().getBreakerEntityDamage();
+        }
+
+        return damage;
     }
 
     // Hitbox for the player is odd, get entities in sphere will only return the player if the players feet are in it, so we are hacking the hitboxes a bit here to make it feel like it makes sense.
@@ -200,10 +214,38 @@ public class HitActivation extends Activation {
         BlockFlags damageFlags = new BlockFlags(BlockFlags.BREAK_BLOCK_VFX)
                 .add(BlockFlags.BREAK_BLOCK_SFX);
 
+        ItemTool tool = getItemTool(currentBlockType);
+
         world.execute(() -> {
             BlockHarvestUtils.performBlockDamage(
-                    (Ref<EntityStore>) null, targetPosition, null, itemTool, (String) null, false,
+                    (Ref<EntityStore>) null, targetPosition, null, tool, (String) null, false,
                     .4f, damageFlags.getValue(), chunkRef, entityStore.getStore(), chunkStore.getStore());
         });
+    }
+
+    private ItemTool getItemTool(BlockType blockType) {
+        if (blockType != null && ArcaneUtil.getOriginalBlockTypeId(blockType).contains("Pseudo_Arcane_Breaker")) {
+            return getScaledItemTool(itemTool, ArcaneRelayPlugin.get().getConfig().getBreakerBlockDamageScalar());
+        }
+
+        return itemTool;
+    }
+
+    private ItemTool getScaledItemTool(@Nonnull ItemTool tool, float scalar) {
+        final ItemToolSpec[] originalSpecs = tool.getSpecs();
+        final float speed = tool.getSpeed();
+        final DurabilityLossBlockTypes[] durabilityLossBlockTypes = tool.getDurabilityLossBlockTypes();
+        
+        ItemToolSpec[] newSpecs = new ItemToolSpec[originalSpecs.length];
+        for (int i = 0; i < originalSpecs.length; i++) {
+            ItemToolSpec spec = originalSpecs[i];
+            String gatherType = spec.getGatherType();
+            float power = spec.getPower();
+            int quality = spec.getQuality();
+
+            newSpecs[i] = new ItemToolSpec(gatherType, power * scalar, quality);
+        }
+
+        return new ItemTool(newSpecs, speed, durabilityLossBlockTypes);
     }
 }

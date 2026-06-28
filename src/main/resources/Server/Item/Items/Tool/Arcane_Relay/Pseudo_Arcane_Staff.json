@@ -7,6 +7,13 @@
     "Items.Tools",
     "Pseudo_Arcane_Category.Arcane_Relay"
   ],
+  "HudUI": [
+    { "Path": "Hud/ToolsLegends/ArcaneStaffLegend.ui", "Type": "Legend" }
+  ],
+  "BuilderTool": {
+    "Id": "ArcaneRelayStaff",
+    "IsBrush": false
+  },
   "Quality": "Arcane_Tools",
   "SubCategory": "Arcane_Tools",
   "ItemLevel": 10,
