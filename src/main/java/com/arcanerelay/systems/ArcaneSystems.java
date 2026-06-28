@@ -122,6 +122,8 @@ public class ArcaneSystems {
     }
 
     public static class Ticking extends EntityTickingSystem<ChunkStore> {
+        private final ArcaneCachedAccessor cachedAccessor = new ArcaneCachedAccessor();
+
         @Nonnull
         private static final Query<ChunkStore> QUERY = Query.and(ChunkSection.getComponentType(), BlockSection.getComponentType(), ArcaneSection.getComponentType());
         
@@ -172,23 +174,18 @@ public class ArcaneSystems {
             WorldChunk worldChunkComponent = commandBuffer.getComponent(chunkSection.getChunkColumnReference(), WorldChunk.getComponentType());
             if (worldChunkComponent == null) return;
 
-            ArcaneCachedAccessor accessor = ArcaneCachedAccessor.of(
-                commandBuffer, 
-                arcaneSection, 
-                blockSection, 
-                chunkSection, 
-                1);
+            cachedAccessor.init(new ChunkStoreCommandBufferAdapter(commandBuffer), arcaneSection, blockSection, chunkSection, 1);
 
             var world = commandBuffer.getExternalData().getWorld();
             long tick = world.getTick();
             long rateLimitTicks = 10L; // process each block every 10 ticks
 
-            int arcaneTicksProcessed = arcaneSection.forEachTicking(accessor, commandBuffer, blockSection, chunkSection.getY(),
+            int arcaneTicksProcessed = arcaneSection.forEachTicking(cachedAccessor, commandBuffer, blockSection, chunkSection.getY(),
                 (commandBuffer1, arcaneSection1, x, y, z, blockId) -> {
                     int worldX = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getX(), x);
                     int worldZ = ChunkUtil.worldCoordFromLocalCoord(chunkSection.getZ(), z);
                     // long hash = HashUtil.rehash(worldX, y, worldZ, 4030921250L);
-                    BlockType blockType = accessor.getBlockType(worldX, y, worldZ);
+                    BlockType blockType = cachedAccessor.getBlockType(worldX, y, worldZ);
                     if (blockType == null) return ArcaneSection.BlockTickStrategy.PROCESSED;
 
                     Activation activation = ArcaneUtil.getActivationForBlock(blockType);
@@ -210,7 +207,7 @@ public class ArcaneSystems {
                     try {
                         ArcaneRelayPlugin.LOGGER.atInfo().log("Executing activation %s at %d,%d,%d", activation.getId(), worldX, y, worldZ);
                         ArcaneSection.BlockTickStrategy strategy = activation.execute(
-                            accessor, sectionRef, blockRef, worldX, y, worldZ,
+                            cachedAccessor, sectionRef, blockRef, worldX, y, worldZ,
                             sources);
                         return strategy != null ? strategy : ArcaneSection.BlockTickStrategy.PROCESSED;
                     } catch (Throwable t) {

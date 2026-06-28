@@ -1,6 +1,8 @@
 package com.arcanerelay.util;
 
 import org.joml.Vector3i;
+import com.arcanerelay.ArcaneRelayPlugin;
+import com.arcanerelay.config.ArcaneRelayConfig;
 import com.hypixel.hytale.math.Axis;
 import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.BlockMaterial;
@@ -11,16 +13,10 @@ import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Arrays;
 
 public class BlockVectorUtil {
-
-    private static List<String> NoneMoveableIDs = Arrays.asList(
-            "Void_Suspender","Barrier", "Bedrock");
-
-    private static List<String> NoneRotatableIDs = Arrays.asList(
-            "Void_Suspender","Soil_Grass", "Bench", "Bed", "Rotator", "Barrier", "Bedrock");
+    private static ArcaneRelayConfig config = ArcaneRelayPlugin.get().getConfig();
 
     public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i pos, int range) {
         for (int x = -range; x <= range; x++) {
@@ -69,7 +65,7 @@ public class BlockVectorUtil {
 
         if (isExtensionBlock(blockType))
             return false;
-        for (String keyword : NoneMoveableIDs) {
+        for (String keyword : Arrays.asList(config.getNoneMoveableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -89,7 +85,7 @@ public class BlockVectorUtil {
             return false;
         String id = blockType.getId();
 
-        for (String keyword : NoneMoveableIDs) {
+        for (String keyword : Arrays.asList(config.getNoneMoveableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -109,7 +105,7 @@ public class BlockVectorUtil {
             return false;
         String id = blockType.getId();
 
-        for (String keyword : NoneRotatableIDs) {
+        for (String keyword : Arrays.asList(config.getNoneRotatableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
