@@ -73,6 +73,8 @@ customUI.ArcaneStaffLegend.viewSectionRightClickDescription = On a Relay block t
 customUI.ArcaneStaffLegend.listSectionTitle = Block Settings
 customUI.ArcaneStaffLegend.listSectionDescription = Crouch-interact with an Arcane block for settings.
 
+customUI.triggerVolumeEffectEditor.field.Arcane relay trigger.TriggerType = Trigger type
+customUI.triggerVolumeEffectEditor.field.Arcane relay trigger.TriggerType.tooltip = TRIGGER ALL, Will trigger all the Arcane Blocks within the Volume \n\nTRIGGER CONNECTION, Will only trigger Arcane blocks that can have other linked blocks.
 customUI.ArcaneStaffLegend.dismissSectionTitle = Dismiss Legend 
 customUI.ArcaneStaffLegend.dismissSectionDescription = Hide Arcane Staff legend 
 
