@@ -16,9 +16,11 @@ import com.arcanerelay.interactions.SelectTriggerInteraction;
 import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.resources.CustomHudRestoreState;
+import com.arcanerelay.triggervolumes.effect.ArcaneRelayEffect;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
 import com.arcanerelay.systems.ArcaneSystems;
 import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
+import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.ResourceType;
@@ -82,6 +84,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         config.save();
 
         registerCodecs();
+        registerVolumeTriggers();
         registerInteractions();
         registerComponents();
         registerResources();
@@ -175,6 +178,10 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         registerChunkSystems();
     }
 
+    private void registerVolumeTriggers(){
+        TriggerVolumesPlugin.get().registerEffectType("TriggerArcaneRelay", ArcaneRelayEffect.class, ArcaneRelayEffect.CODEC);
+    }
+  
     private void registerChunkSystems() {
         ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
 

@@ -120,6 +120,7 @@ arcanerelay.qualities.vectorArtifact = Vector Artifact
 arcanerelay.qualities.destructiveArtifact = Destructive Artifact
 
 # === Creative Category ===
+
 ui.arcanerelaycategory.name = Arcane Relay
 ui.arcanerelaycategory.subcategory.tools.name = Arcane Tools
 ui.arcanerelaycategory.subcategory.tools.description = The essential tools for Arcane Relay. With them you can craft and connect all the other arcane artifacts.
@@ -129,3 +130,8 @@ ui.arcanerelaycategory.subcategory.vectorArtifacts.name = Vector Artifacts
 ui.arcanerelaycategory.subcategory.vectorArtifacts.description = Used to move or rotate blocks within the world. Trigger them manualy or remotely via a signal and reshape the world around you. 
 ui.arcanerelaycategory.subcategory.destructiveArtifacts.name = Destructive Artifacts
 ui.arcanerelaycategory.subcategory.destructiveArtifacts.description = Used to destroy or cause damage to the world or the entities in it.
+
+# === Trigger Volume === 
+
+customUI.triggerVolumeEffectEditor.field.TriggerArcaneRelay.TriggerTarget = Trigger Target
+customUI.triggerVolumeEffectEditor.field.TriggerArcaneRelay.TriggerTarget.tooltip = ALL ARCANE BLOCKS IN VOLUME: Triggers all the Arcane Blocks within the Volume. \n\nALL RELAYS IN VOLUME: Will only trigger Relay artifacts within the Volume.
