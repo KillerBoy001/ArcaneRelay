@@ -9,7 +9,6 @@ import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
-import com.hypixel.hytale.builtin.hytalegenerator.noise.FastNoiseLite.Vector3;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -36,7 +35,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
