@@ -9,6 +9,7 @@ import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerContext;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
 import com.hypixel.hytale.builtin.triggervolumes.shape.TriggerVolumeShape;
+import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.block.BlockUtil;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -36,108 +37,108 @@ import org.joml.Vector3i;
 public class ArcaneRelayEffect extends TriggerEffect {
 
     @Nonnull
-    public static final BuilderCodec<ArcaneRelayEffect> CODEC;
+    public static final BuilderCodec<ArcaneRelayEffect> CODEC =BuilderCodec.builder(ArcaneRelayEffect.class, ArcaneRelayEffect::new, BASE_CODEC)
+        .append(new KeyedCodec<>("TriggerTarget", new EnumCodec<>(TriggerTarget.class)),
+                (e, v) -> e.triggerTarget = v, 
+                (e) -> e.triggerTarget)
+        .add()
+        .build();
+
     @Nonnull
-    private TriggerType action;
-    private Ref<ChunkStore> ChunkRef;
-    private Store<ChunkStore> ChunkStore;
+    private TriggerTarget triggerTarget;
+
+    public enum TriggerTarget {
+        ALL_ARCANE_BLOCKS_IN_VOLUME,
+        ALL_RELAYS_IN_VOLUME;
+    }
 
     public ArcaneRelayEffect() {
-        this.action = TriggerType.TRIGGER_ALL;
+        this.triggerTarget = TriggerTarget.ALL_ARCANE_BLOCKS_IN_VOLUME;
     }
 
     public void execute(@Nonnull TriggerContext context) {
-        Ref<EntityStore> entityRef = context.getEntityRef();
         Store<EntityStore> store = context.getStore();
         World world = ((EntityStore) store.getExternalData()).getWorld();
         if (world != null) {
-            TransformComponent triggerTransform = (TransformComponent) store.getComponent(context.getEntityRef(), TransformComponent.getComponentType());
-            Vector3d triggerPos = triggerTransform != null ? triggerTransform.getPosition() : new Vector3d(context.getVolume().getPosition());
-            Vector3d min = new Vector3d();
-            Vector3d max = new Vector3d();
+            Vector3d min = new Vector3d(); Vector3d max = new Vector3d();
             LongOpenHashSet processedBlocks = new LongOpenHashSet();
 
             for(VolumeEntry volume : context.getSpatialVolumes()) {
                 TriggerVolumeShape shape = volume.getShape();
                 Vector3d origin = volume.getPosition();
                 shape.getWorldAABB(origin, min, max);
-                int minX = MathUtil.floor(min.x());
-                int minY = MathUtil.floor(min.y());
-                int minZ = MathUtil.floor(min.z());
-                int maxX = MathUtil.floor(max.x());
-                int maxY = MathUtil.floor(max.y());
-                int maxZ = MathUtil.floor(max.z());
+                int minX = MathUtil.floor(min.x()); int minY = MathUtil.floor(min.y()); int minZ = MathUtil.floor(min.z());
+                int maxX = MathUtil.floor(max.x()); int maxY = MathUtil.floor(max.y()); int maxZ = MathUtil.floor(max.z());
+
                 for(int x = minX; x <= maxX; ++x) {
                     for(int y = minY; y <= maxY; ++y) {
                         for(int z = minZ; z <= maxZ; ++z) {
                             WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(x, z));
-                            if (chunk != null) {
-                                BlockType blockType = chunk.getBlockType(x, y, z);
-                                if (blockType != null) {
-                                    Vector3i anchor = AnchorForCell(world, x, y, z);
-                                    if (processedBlocks.add(BlockUtil.pack(anchor.x, anchor.y, anchor.z))) {
-                                        WorldChunk chunkAtAnchor = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
-                                        if (chunkAtAnchor != null) {
-                                            BlockType typeAtAnchor = chunkAtAnchor.getBlockType(anchor.x, anchor.y, anchor.z);
-                                            if (typeAtAnchor != null && typeAtAnchor.getId().contains("Pseudo")) {
-                                                this.SendTrigger(context,world, chunkAtAnchor, typeAtAnchor, anchor.x, anchor.y, anchor.z);
-                                            }
-                                        }
-                                    }
-                                }
+                            if (chunk == null) {
+                                continue;
                             }
+
+                            BlockType blockType = chunk.getBlockType(x, y, z);
+                            if (blockType == null) {
+                                continue;
+                            }
+
+                            Vector3i anchor = AnchorForCell(world, x, y, z);
+                            if (!processedBlocks.add(BlockUtil.pack(anchor.x, anchor.y, anchor.z))) {
+                                continue;
+                            }
+
+                            WorldChunk chunkAtAnchor = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(anchor.x, anchor.z));
+                            if (chunkAtAnchor == null) {
+                                continue;
+                            }
+
+                            BlockType typeAtAnchor = chunkAtAnchor.getBlockType(anchor.x, anchor.y, anchor.z);
+                            if (typeAtAnchor == null || !typeAtAnchor.getId().contains("Pseudo")) {
+                               continue;
+                            }
+
+                            this.SendTrigger(context,world, chunkAtAnchor, typeAtAnchor, anchor.x, anchor.y, anchor.z);
                         }
                     }
                 }
             }
         }
-    } // End of execute
+    } 
 
     @Nonnull
     private static Vector3i AnchorForCell(@Nonnull World world, int x, int y, int z) {
         WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(x, z));
         if (chunk == null) {
             return new Vector3i(x, y, z);
-        } else {
-            int filler = chunk.getFiller(x, y, z);
-            return filler == 0 ? new Vector3i(x, y, z) : new Vector3i(x - FillerBlockUtil.unpackX(filler), y - FillerBlockUtil.unpackY(filler), z - FillerBlockUtil.unpackZ(filler));
         }
-    }
 
-    static {CODEC = BuilderCodec.builder(
-                    ArcaneRelayEffect.class,
-                    ArcaneRelayEffect::new, BASE_CODEC)
-                .append(new KeyedCodec<>("TriggerType", new EnumCodec<>(TriggerType.class)),
-                        (e, v) -> e.action = v, (e) -> e.action)
-                .add()
-                .build();
+        int filler = chunk.getFiller(x, y, z);
+        return filler == 0 ? new Vector3i(x, y, z) : new Vector3i(x - FillerBlockUtil.unpackX(filler), y - FillerBlockUtil.unpackY(filler), z - FillerBlockUtil.unpackZ(filler));
     }
-
-    public enum TriggerType {
-        TRIGGER_ALL,
-        TRIGGER_CONNECTIONS;
-    }
-
+   
     private void SendTrigger(@Nonnull TriggerContext context, @Nonnull World world, @Nonnull WorldChunk chunk, @Nonnull BlockType blockType, int x, int y, int z) {
-        ChunkRef = chunk.getReference();
-        ChunkStore = ChunkRef.getStore();
+        Ref<ChunkStore> chunkRef = chunk.getReference();
+        Store<ChunkStore> chunkStore = chunkRef.getStore();
 
-        switch(this.action) {
-            //------------------------------//
-            case TRIGGER_ALL:
+        switch(this.triggerTarget) {
+            case ALL_ARCANE_BLOCKS_IN_VOLUME:
                 ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: Trigger All on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
-                ArcaneUtil.setTicking(ChunkStore, x, y, z); // Set ticking so arcane blocks trigger
+                ArcaneUtil.setTicking(chunkStore, x, y, z);
                 break;
-            //------------------------------//
-            case TRIGGER_CONNECTIONS:
-                int blockIndex = ChunkUtil.indexBlockInColumn(x, y, z);
-                BlockComponentChunk blockComponentChunk = ChunkStore.getComponent(ChunkRef, BlockComponentChunk.getComponentType());
-                Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(blockIndex);
+            
+            case ALL_RELAYS_IN_VOLUME:
+                BlockComponentChunk blockComponentChunk = chunkStore.getComponent(chunkRef, BlockComponentChunk.getComponentType());
+                if (blockComponentChunk == null) break;
 
-                ArcaneTriggerBlock trigger = ChunkStore.getComponent(blockRef, ArcaneRelayPlugin.get().getArcaneTriggerBlockComponentType());
-                if (trigger != null) { // if not null it has the Trigger Block Component
-                    ArcaneUtil.setTicking(ChunkStore, x, y, z);
-                    ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: WIP Trigger Connections on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
+                int blockIndex = ChunkUtil.indexBlockInColumn(x, y, z);
+                Ref<ChunkStore> blockRef = blockComponentChunk.getEntityReference(blockIndex);
+                if (blockRef == null || !blockRef.isValid()) break;
+
+                ArcaneTriggerBlock trigger = chunkStore.getComponent(blockRef, ArcaneTriggerBlock.getComponentType());
+                if (trigger != null) {
+                    ArcaneUtil.setTicking(chunkStore, x, y, z);
+                    ArcaneRelayPlugin.LOGGER.atInfo().log("VolumeTrigger: Trigger Relays on block: %s at: %d, %d, %d ", blockType.getId(), x, y, z);
                 }
                 break;
         }

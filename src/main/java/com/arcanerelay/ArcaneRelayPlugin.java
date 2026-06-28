@@ -179,7 +179,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     }
 
     private void registerVolumeTriggers(){
-        TriggerVolumesPlugin.get().registerEffectType("Arcane relay trigger", ArcaneRelayEffect.class, ArcaneRelayEffect.CODEC);
+        TriggerVolumesPlugin.get().registerEffectType("TriggerArcaneRelay", ArcaneRelayEffect.class, ArcaneRelayEffect.CODEC);
     }
   
     private void registerChunkSystems() {
