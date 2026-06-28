@@ -56,6 +56,14 @@ Hit blocks or players and break or kill almost everything that might stand in th
 
 ![More to come](./art/Affinity/BlockNameCards/MoreToCome.png)
 
+## Customize Your Playthrough
+
+![Arcane Relay Settings Page](./art/Affinity/BlockNameCards/SettingsMenu.png)
+
+Added a new command `/arcanerelay settings` to allow you to override most of the important values in our mod! 
+
+**Important Note:** These take effect as soon as you hit the save button (_no_ reload required). So if you are a server owner make sure only the people you want to access this can access it.
+
 ## Plugin Development
 
 ### Activations
@@ -162,7 +170,7 @@ You will need to have Maven installed on your machine.
 ### Prerequisites
 - Java 25 (or compatible)
 - Maven 3.x
-- Hytale game installed
+- Hytale server installed
 
 ### Dependencies
 To build the project make sure to go to `./pom.xml` and under dependencies ensure that the com.hypixel.hytale `<version>{hytale_version}</version>` has the latest release version of the game.
@@ -172,46 +180,97 @@ Then you can run the following:
 mvn -U -X dependency:resolve
 ```
 
-### Building and Installing Manually
+### Building Locally
 Run the following command to generate the `arcanerelay-X.Y.Z.jar` file:
 ```
 mvn clean install
 ```
-You can then copy it manually into your mod folder.
 
-### Deploy
-Alternativley, you can do the following to build and move the JAR automatically to your mod folder:
-1. Copy `.env.example` to `.env` and update the `HYTALE_MODS` path to your Hytale mods directory.
-   - Mac: `/Users/username/Library/Application Support/Hytale/UserData/Mods`
-   - Windows: `C:\Users\username\AppData\Roaming\Hytale\UserData\Mods`
+### Maven Build Profiles
+
+This project includes two Maven profiles for different build types:
+
+- **`debug` profile (default)** – Includes full debug symbols for breakpoint debugging
+- **`release` profile** – Optimized for production, no debug information
+
+**Build with debug profile (default):**
+```bash
+mvn clean install
+# or explicitly:
+mvn clean install -P debug
+```
+
+**Build with release profile:**
+```bash
+mvn clean install -P release
+```
+
+### Deploy to Hytale Server
+1. Copy `.env.template` to `.env` and update the following paths:
+   ```
+   HYTALE_BUILD_TYPE=RELEASE              # or PRERELEASE
+   HYTALE_SERVER_PATH=<your server path>
+   HYTALE_SERVER_MODS_PATH=<your mods path>
+   HYTALE_SERVER_ASSETS_PATH=<path to Assets.zip>
+   MAVEN_PROFILE=debug                    # or release
+   HYTALE_DEBUG_PORT=5005
+   ```
+
 2. Run the deploy script:
-   - Mac/Linux: `./deploy.sh`
-   - Windows: `deploy.bat`
+   - Windows: `scripts\deploy.bat`
+   - macOS/Linux: `./scripts/deploy.sh`
 
-### VS Code Task
-You can setup the following vscode task to deploy it:
+You can also specify the profile on the command line:
+```bash
+# Windows - deploy with release profile
+scripts\deploy.bat release
+
+# macOS/Linux - deploy with debug profile
+./scripts/deploy.sh debug
+```
+
+### VS Code Launch Configuration
+
+To set up VS Code for running and debugging, create or update `.vscode/launch.json`:
+
 ```json
 {
-    "version": "2.0.0",
-    "tasks": [
+    "version": "0.2.0",
+    "configurations": [
         {
-            "label": "Deploy ArcaneRelay",
-            "type": "shell",
-            "command": "if [ -f deploy.sh ]; then ./deploy.sh; else deploy.bat; fi",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "name": "Attach to Hytale Server",
+            "type": "java",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005,
+            "preLaunchTask": "Deploy and Debug Hytale Mod",
             "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
+                "hidden": false,
+                "group": "hytale",
+                "order": 1
             },
-            "options": {
-                "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "sourceRoot": "${workspaceFolder}/src/main/java",
+            "pathMapping": {
+                "/src/main/java": "${workspaceFolder}/src/main/java"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Hytale Mod (Full Workflow)",
+            "configurations": ["Attach to Hytale Server"],
+            "stopOnEntry": false,
+            "presentation": {
+                "hidden": false,
+                "group": "hytale",
+                "order": 2
             }
         }
     ]
 }
-``` 
+```
+
+Then use `Ctrl+Shift+D` (or `Cmd+Shift+D` on macOS) to open the Run and Debug panel, select "Debug Hytale Mod (Full Workflow)", and press F5 to run.
+
+For more detailed information, see [DEBUGGING.md](DEBUGGING.md).

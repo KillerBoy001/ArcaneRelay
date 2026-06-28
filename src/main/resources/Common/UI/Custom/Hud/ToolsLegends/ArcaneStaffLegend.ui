@@ -1,0 +1,151 @@
+$C = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+$ActionButton = "../../ActionButton.ui";
+$LegendCommon = "ToolsLegendsCommon.ui";
+
+@StaffSeparator = Group {
+  Anchor: (Height: 2, Vertical: 12);
+  Background: #ffffff(0.15);
+};
+
+Group #FormContainer {
+  LayoutMode: Left;
+
+  $C.@DecoratedContainer {
+    Anchor: (Left: 20, Top: 130, Width: 300, Bottom: 170);
+
+    #Title {
+      $C.@Title {
+        @Text = %server.customUI.ArcaneStaffLegend.title;
+      }
+    }
+
+    #Content {
+      LayoutMode: Top;
+      Padding: (Horizontal: 20, Bottom: 20);
+      
+      Group #Pages {
+        $LegendCommon.@Page #Page1Basics {
+          Group {
+            LayoutMode: Top;
+
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+              Text: %server.customUI.ArcaneStaffLegend.setupSectionTitle;
+            }
+
+            $LegendCommon.@HotkeyRow {
+              @InputBindingKey = "SecondaryItemAction";
+              @Description = %server.customUI.ArcaneStaffLegend.setupSectionRightClickDescription;
+            }
+
+            $LegendCommon.@HotkeyRow {
+              @InputBindingKey = "PrimaryItemAction";
+              @Description = %server.customUI.ArcaneStaffLegend.setupSectionLeftClickDescription;
+            }
+          }
+
+          @StaffSeparator {}
+
+          Group {
+            LayoutMode: Top;
+
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+              Text: %server.customUI.ArcaneStaffLegend.removeSectionTitle;
+            }
+
+            $LegendCommon.@HotkeyRow {
+              @InputBindingKey = "SecondaryItemAction";
+              @Description = %server.customUI.ArcaneStaffLegend.removeSectionRightClickDescription;
+            }
+
+            $LegendCommon.@HotkeyRow {
+              @InputBindingKey = "PrimaryItemAction";
+              @Description = %server.customUI.ArcaneStaffLegend.removeSectionLeftClickDescription;
+            }
+          }
+
+          @StaffSeparator {}
+
+          Group {
+            LayoutMode: Top;
+            
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+              Text: %server.customUI.ArcaneStaffLegend.viewSectionTitle;
+            }
+
+            $LegendCommon.@HotkeyRow {
+              @InputBindingKey = "SecondaryItemAction";
+              @Description = %server.customUI.ArcaneStaffLegend.viewSectionRightClickDescription;
+            }
+          }
+
+          @StaffSeparator {}
+
+          Group {
+            LayoutMode: Top;
+
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+              Text: %server.customUI.ArcaneStaffLegend.listSectionTitle;
+            }
+
+            $LegendCommon.@HotkeyRow {
+              @InputBindingKey = "F";
+              @InputBindingKeyPrefix = "CTRL + ";
+              @Description = %server.customUI.ArcaneStaffLegend.listSectionDescription;
+            }
+          }
+
+          @StaffSeparator {}
+
+          Group {
+            LayoutMode: Top;
+
+            Label {
+              Anchor: (Bottom: 5);
+              Style: (...$C.@DefaultLabelStyle, Wrap: true, FontSize: 16, TextColor: #94969a, RenderBold: true);
+              Text: %server.customUI.ArcaneStaffLegend.dismissSectionTitle;
+            }
+
+            $LegendCommon.@HotkeyRow {
+              @InputBindingKey = "L";
+              @Description = %server.customUI.ArcaneStaffLegend.dismissSectionDescription;
+            }
+          }
+        }
+      }
+
+      Group {
+        LayoutMode: Center;
+
+        ActionButton #PreviousPage {
+          Disabled: true;
+          KeyBindingLabel: "J";
+        }
+
+        Label #PageCount {
+          Padding: (Horizontal: 10);
+          Style: (
+            Alignment: Center,
+            FontSize: 16,
+            RenderBold: true,
+            RenderUppercase: false
+          );
+          Text: "X / X";
+        }
+
+        ActionButton #NextPage {
+          Disabled: true;
+          KeyBindingLabel: "K";
+        }
+      }
+    }
+  }
+}
