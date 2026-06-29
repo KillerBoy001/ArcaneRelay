@@ -1,0 +1,77 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Void_Wand.name",
+    "Description": "server.items.Pseudo_Arcane_Void_Wand.description"
+  },
+  "Categories": [
+    "Items.Weapons",
+    "Pseudo_Arcane_Category.Arcane_Relay"
+  ],
+  "Icon": "Icons/ItemsGenerated/Psuedo_Arcane_Void_Wand.png",
+  "Quality": "Arcane_Tools",
+  "ItemLevel": 40,
+  "Model": "Items/Tools/Arcane_Void_Wand/Pseudo_Arcane_Void_Wand.blockymodel",
+  "Texture": "Items/Tools/Arcane_Void_Wand/Void_Wand_Texture.png",
+  "PlayerAnimationsId": "Wand",
+  "Particles": [
+    {
+      "SystemId": "Wood_Wand",
+      "TargetNodeName": "Handle"
+    }
+  ],
+  "Utility": {
+    "Compatible": true
+  },
+  "Interactions": {
+    "Primary": "Wand_RootTrigger"
+  },
+  "IconProperties": {
+    "Scale": 0.6,
+    "Rotation": [
+      45,
+      90,
+      0
+    ],
+    "Translation": [
+      -13,
+      -16
+    ]
+  },
+  "DroppedItemAnimation": "Items/Animations/Dropped/Dropped_Diagonal_Left.blockyanim",
+  "Tags": {
+    "Type": [
+      "Weapon"
+    ],
+    "Family": [
+      "Wand"
+    ]
+  },
+  "Weapon": {},
+  "ItemSoundSetId": "ISS_Weapons_Wand",
+  "SubCategory": "Void_Artifacts",
+  "Recipe": {
+    "Input": [
+      {
+        "ItemId": "Ingredient_Crystal_Purple",
+        "Quantity": 8
+      },
+      {
+        "Quantity": 1,
+        "ItemId": "Deco_Iron_Chain_Small"
+      },
+      {
+        "ResourceTypeId": "Rock"
+      }
+    ],
+    "BenchRequirement": [
+      {
+        "Id": "Antiquarianbench",
+        "Type": "Crafting",
+        "Categories": [
+          "Void_Artifacts"
+        ]
+      }
+    ]
+  },
+  "ClipsGeometry": false
+}

@@ -1,0 +1,5 @@
+{
+  "Type": "ToggleSuspension",
+  "Failed": "Wand_Cast_Launch",
+  "Next": "Wand_Cast_Launch"
+}

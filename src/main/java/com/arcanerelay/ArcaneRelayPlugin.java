@@ -11,10 +11,7 @@ import com.arcanerelay.components.ArcaneSuspenderComponent;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.components.ArcaneStaffLegendVisible;
 import com.arcanerelay.components.ArcaneTriggerBlock;
-import com.arcanerelay.interactions.AddOutputInteraction;
-import com.arcanerelay.interactions.ArcaneActivatorInteraction;
-import com.arcanerelay.interactions.SelectTriggerInteraction;
-import com.arcanerelay.interactions.SendSignalInteraction;
+import com.arcanerelay.interactions.*;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.resources.CustomHudRestoreState;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
@@ -154,6 +151,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         Interaction.CODEC.register("AddOutput", AddOutputInteraction.class, AddOutputInteraction.CODEC);
         Interaction.CODEC.register("SendSignal", SendSignalInteraction.class, SendSignalInteraction.CODEC);
         Interaction.CODEC.register("ArcaneActivator", ArcaneActivatorInteraction.class, ArcaneActivatorInteraction.CODEC);
+        Interaction.CODEC.register("ToggleSuspension", ToggleSuspendInteraction.class, ToggleSuspendInteraction.CODEC);
     }
 
     private void registerCodecs() {
