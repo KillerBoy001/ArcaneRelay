@@ -118,7 +118,7 @@ public class BlockVectorUtil {
         return blockType.getMaterial() != BlockMaterial.Empty;
     }
 
-    public static boolean isSuspended(World world,Vector3i pos) {
+    public static boolean isSuspended(World world, Vector3i pos) {
         ArcaneSuspenderComponent Component = BlockModule.getComponent(ArcaneRelayPlugin.get().getArcaneSuspenderComponentType(), world, pos.x, pos.y, pos.z);
         if (Component != null)
         {
