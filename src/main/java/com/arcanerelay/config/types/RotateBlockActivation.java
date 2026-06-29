@@ -184,7 +184,7 @@ public class RotateBlockActivation extends Activation {
             RotationTuple newRotation = BlockVectorUtil.rotateOverAxis90Degrees(currenRotation, rotatorUp, isClockWise);
             
             boolean blockWasRotated = BlockVectorUtil.isRotatable(targetBlockType);
-            if (blockWasRotated) {
+            if (blockWasRotated && !BlockVectorUtil.isSuspended(world,targetPos)) {
                 chunk.setBlock(targetPos.x, targetPos.y, targetPos.z, assetMap.getIndex(targetID), targetBlockType, newRotation.index(), 0, 4);
                 BlockVectorUtil.setTickingAround(chunk,targetPos,1);
             } else {
