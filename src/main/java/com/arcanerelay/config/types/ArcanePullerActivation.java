@@ -140,12 +140,13 @@ public class ArcanePullerActivation extends Activation {
 
         int tipBlockId = tipChunk.getBlock(tipX, tipY, tipZ);
         BlockType tipBlockType = BlockType.getAssetMap().getAsset(tipBlockId);
+        Vector3i tipPos = new Vector3i(tipX, tipY, tipZ);
 
         ArcaneRelayPlugin.LOGGER.atInfo().log(
                 "Puller EXTENDING at %d,%d,%d: extLen=%d tip=%d,%d,%d blockId=%d",
                 pullerPos.x, pullerPos.y, pullerPos.z, extLen, tipX, tipY, tipZ, tipBlockId);
 
-        if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)) {
+        if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)&&!BlockVectorUtil.isSuspended(world,tipPos)) {
             if (extLen == 0) {
                 puller.setIDLE();
                 commandBuffer.run((Store<ChunkStore> s) -> {
@@ -290,7 +291,7 @@ public class ArcanePullerActivation extends Activation {
             updateExtensionConnectedBlocks(s, world, pullerPos, globalUp, newLen, puller.getExtensionBlockKey());
             BlockVectorUtil.setTickingAround(lastChunk, lastPos, 1);
 
-            if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)) {
+            if (BlockVectorUtil.isPullable(tipBlockType, tipBlockId)&&!BlockVectorUtil.isSuspended(world,tipPos)) {
                 ArcaneMoveState moveState = s.getResource(ArcaneMoveState.getResourceType());
                 if (moveState == null) return;
                 moveState.addMoveEntry(tipPos, new Vector3i(globalUp).mul(-1), tipBlockType, tipBlockId,

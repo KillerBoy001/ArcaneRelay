@@ -160,6 +160,7 @@ public class MoveBlockActivation extends Activation {
             int chainLength = 0;
             for (int i = 0; i < maxRange; i++) {
                 Vector3i c = new Vector3i(frontPusherPosition).add(new Vector3i(globalForward).mul(i).add(scaledGlobalUpVector));
+                Vector3i p = new Vector3i(frontPusherPosition).add(new Vector3i(globalForward).mul(i-1).add(scaledGlobalUpVector));
 
                 WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(c.x, c.z));
                 if (chunk == null)
@@ -167,7 +168,7 @@ public class MoveBlockActivation extends Activation {
 
                 int blockId = chunk.getBlock(c.x, c.y, c.z);
                 BlockType blockType = BlockType.getAssetMap().getAsset(blockId);
-                if (!BlockVectorUtil.isMoveable(blockType,blockId))
+                if (!BlockVectorUtil.isMoveable(blockType,blockId)||BlockVectorUtil.isSuspended(world,c))
                     break;
 
                 chainBlockIds[chainLength]     = blockId;

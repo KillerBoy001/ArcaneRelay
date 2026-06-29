@@ -1,5 +1,9 @@
 package com.arcanerelay.util;
 
+import com.arcanerelay.components.ArcaneSuspenderComponent;
+import com.hypixel.hytale.server.core.modules.block.BlockModule;
+import com.hypixel.hytale.server.core.modules.block.components.ItemContainerBlock;
+import com.hypixel.hytale.server.core.universe.world.World;
 import org.joml.Vector3i;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.config.ArcaneRelayConfig;
@@ -112,6 +116,19 @@ public class BlockVectorUtil {
         }
 
         return blockType.getMaterial() != BlockMaterial.Empty;
+    }
+
+    public static boolean isSuspended(World world,Vector3i pos) {
+        ArcaneSuspenderComponent Component = BlockModule.getComponent(ArcaneRelayPlugin.get().getArcaneSuspenderComponentType(), world, pos.x, pos.y, pos.z);
+        if (Component != null)
+        {
+            ArcaneRelayPlugin.LOGGER.atInfo().log("Suspend Component available: at %d,%d,%d Suspension=%s", pos.x, pos.y, pos.z,Component.IsUnmoveable());
+            return Component.IsUnmoveable();
+        }
+        else{
+            //ArcaneRelayPlugin.LOGGER.atInfo().log("Suspend Component: at %d,%d,%d =Component not set", pos.x, pos.y, pos.z);
+            return false;
+        }
     }
 
     public static Vector3i getUpVector(@Nonnull WorldChunk chnk, Vector3i sourcePos) {

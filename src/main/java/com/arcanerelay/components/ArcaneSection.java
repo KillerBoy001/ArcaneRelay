@@ -40,17 +40,11 @@ public class ArcaneSection implements Component<ChunkStore> {
     private static final int MAX_SOURCE_POOL_SIZE = 256;
 
     public static final BuilderCodec<ArcaneSection> CODEC = BuilderCodec.builder(ArcaneSection.class, ArcaneSection::new)
-        .versioned()
-        .codecVersion(VERSION)
-            .append(new KeyedCodec<>("Unmoveable Block", Codec.BOOLEAN),
-                    (c, v) -> c.Unmoveable = v, c -> c.Unmoveable)
+            .versioned()
+            .codecVersion(VERSION)
+            .append(new KeyedCodec<>("Data", Codec.BYTE_ARRAY), ArcaneSection::deserialize, ArcaneSection::serialize)
             .add()
-        .append(new KeyedCodec<>("Data", Codec.BYTE_ARRAY), ArcaneSection::deserialize, ArcaneSection::serialize)
-        .add()
-        .build();
-
-    private boolean Unmoveable = false;
-    public boolean IsUnmoveable() { return Unmoveable; }
+            .build();
 
     private final StampedLock arcaneSectionLock;
     private final ObjectHeapPriorityQueue<ArcaneSection.TickRequest> tickRequests;

@@ -42,7 +42,9 @@
   "BlockType": {
     "BlockEntity": {
       "Components": {
-        "ArcaneTrigger": {}
+        "ArcaneSuspender": {
+          "Unmoveable forced": true
+        }
       }
     },
     "DrawType": "Model",

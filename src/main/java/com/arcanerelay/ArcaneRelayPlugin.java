@@ -7,6 +7,7 @@ import com.arcanerelay.config.types.*;
 import com.arcanerelay.commands.ArcaneRelayCommandCollection;
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.components.ArcanePullerBlock;
+import com.arcanerelay.components.ArcaneSuspenderComponent;
 import com.arcanerelay.components.ArcaneSection;
 import com.arcanerelay.components.ArcaneStaffLegendVisible;
 import com.arcanerelay.components.ArcaneTriggerBlock;
@@ -57,6 +58,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     private ComponentType<ChunkStore, ArcaneTriggerBlock> arcaneTriggerBlockComponentType;
     private ComponentType<ChunkStore, ArcaneSection> arcaneSectionComponentType;
     private ComponentType<ChunkStore, ArcanePullerBlock> arcanePullerBlockComponentType;
+    private ComponentType<ChunkStore, ArcaneSuspenderComponent> ArcaneSuspenderComponentType;
     private ComponentType<EntityStore, ArcaneConfiguratorComponent> arcaneConfiguratorComponentType;
     private ComponentType<EntityStore, ArcaneStaffLegendVisible> arcaneStaffLegendVisibleComponentType;
     private ResourceType<ChunkStore, ArcaneMoveState> arcaneMoveStateResourceType;
@@ -142,6 +144,11 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         return this.arcanePullerBlockComponentType;
     }
 
+    @Nonnull
+    public ComponentType<ChunkStore, ArcaneSuspenderComponent> getArcaneSuspenderComponentType() {
+        return this.ArcaneSuspenderComponentType;
+    }
+
     private void registerInteractions() {
         Interaction.CODEC.register("SelectTrigger", SelectTriggerInteraction.class, SelectTriggerInteraction.CODEC);
         Interaction.CODEC.register("AddOutput", AddOutputInteraction.class, AddOutputInteraction.CODEC);
@@ -218,6 +225,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         this.arcaneTriggerBlockComponentType = chunkRegistry.registerComponent(ArcaneTriggerBlock.class, "ArcaneTrigger", ArcaneTriggerBlock.CODEC);
         this.arcaneSectionComponentType = chunkRegistry.registerComponent(ArcaneSection.class, "ArcaneSection", ArcaneSection.CODEC);
         this.arcanePullerBlockComponentType = chunkRegistry.registerComponent(ArcanePullerBlock.class, "ArcanePuller", ArcanePullerBlock.CODEC);
+        this.ArcaneSuspenderComponentType = chunkRegistry.registerComponent(ArcaneSuspenderComponent.class, "ArcaneSuspender", ArcaneSuspenderComponent.CODEC);
     }
 
     private void registerEntityComponents() {
