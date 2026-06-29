@@ -64,6 +64,12 @@ Added a new command `/arcanerelay settings` to allow you to override most of the
 
 **Important Note:** These take effect as soon as you hit the save button (_no_ reload required). So if you are a server owner make sure only the people you want to access this can access it.
 
+## Trigger Volume Support
+
+![Trigger Volume Support](./art/Affinity/BlockNameCards/TriggerVolumeSupport.png)
+
+Added support for Trigger Volumes, you can now trigger Arcane Relay blocks with a Trigger Volume using the `Trigger Arcane Relay` effect on the menu. For now the interaction is limited to blocks inside the volume, but looking to expand this so that Relays can trigger volumes, and so that volumes can function as independent relays with their own connections.
+
 ## Plugin Development
 
 ### Activations
