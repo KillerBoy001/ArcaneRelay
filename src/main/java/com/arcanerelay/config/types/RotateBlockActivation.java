@@ -14,8 +14,10 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.component.*;
+import com.hypixel.hytale.math.Axis;
 import com.hypixel.hytale.math.shape.Box;
 import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.math.util.MathUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
 import com.hypixel.hytale.server.core.HytaleServer;
@@ -119,7 +121,14 @@ public class RotateBlockActivation extends Activation {
         return ref;
     }
 
-    private void rotateBlockEnt(World world, Vector3i targetPos,  Ref<EntityStore> Entref,boolean isClockWise) {
+    public static float angleDifferenceRadians(float oldAngle, float newAngle) {
+        return (float) Math.atan2(
+                Math.sin(newAngle - oldAngle),
+                Math.cos(newAngle - oldAngle)
+        );
+    }
+
+    private void rotateBlockEntOverTime(World world, Ref<EntityStore> Entref,int OverMS,RotationTuple OldRotation,RotationTuple NewRotation,boolean isClockWise) {
 
         Store<EntityStore> entityStore = world.getEntityStore().getStore();
         if (entityStore == null) return;
@@ -127,21 +136,20 @@ public class RotateBlockActivation extends Activation {
         TransformComponent transform = entityStore.getComponent(Entref, TransformComponent.getComponentType());
         if (transform == null) return;
 
-        /**
-        isClockWise = !isClockWise; //Hardcode to set it back to prior before entityrotate did its thing :D
         Rotation3f rotation = transform.getRotation();
-        float yawAdjustment = isClockWise ? (float) (-Math.PI / 2) : (float) (Math.PI / 2);
-        rotation.addYaw(yawAdjustment);
 
-        isClockWise = !isClockWise;
-        */
 
-        Rotation3f rotation = transform.getRotation();
-        float Endyaw = isClockWise ? (float) (-Math.PI / 2) : (float) (Math.PI / 2);
+        float Endpitch = -angleDifferenceRadians((float)OldRotation.pitch().getRadians(),(float)NewRotation.pitch().getRadians());
 
-        int duration = 300;
-        final int totalSteps = duration/25; // 750ms / 25ms
-        final float yawPerStep = Endyaw/totalSteps;
+        float Endroll = -angleDifferenceRadians((float)OldRotation.roll().getRadians(),(float)NewRotation.roll().getRadians());
+        float Endyaw = angleDifferenceRadians((float)OldRotation.yaw().getRadians(),(float)NewRotation.yaw().getRadians());
+
+
+        final int totalSteps = OverMS/25; // 750ms / 25ms
+
+        final float YawPerStep = Endyaw/totalSteps;
+        final float PitchPerStep = Endpitch/totalSteps;
+        final float RollPerStep = Endroll/totalSteps;
         final int[] step = {0};
 
         AtomicReference<ScheduledFuture<?>> RottaskRef = new AtomicReference<>();
@@ -149,7 +157,9 @@ public class RotateBlockActivation extends Activation {
 
             step[0]++;
             if (step[0] <= totalSteps) {
-                rotation.addYaw(yawPerStep);
+                rotation.addYaw(YawPerStep);
+                rotation.addPitch(PitchPerStep);
+                rotation.addRoll(RollPerStep);
             } else if (step[0] >= totalSteps) {
                 RottaskRef.get().cancel(false);
             }
@@ -162,7 +172,7 @@ public class RotateBlockActivation extends Activation {
                 Entref.getStore().removeEntity(Entref, RemoveReason.REMOVE);
             });
             CleanuptaskRef.get().cancel(false);
-        }, duration+100, TimeUnit.MILLISECONDS);
+        }, OverMS+100, TimeUnit.MILLISECONDS);
     }
 
     private void SetBlockAfterDelay(World world,WorldChunk chunk,int AfterMS,int x, int y, int z, int id, @Nonnull BlockType blockType, int rotation, int filler, int settings){
@@ -294,8 +304,8 @@ public class RotateBlockActivation extends Activation {
             if (targetBlockType == null) return;
             
             String targetID = ArcaneUtil.getOriginalBlockTypeId(targetBlockType);
-            RotationTuple currenRotation = RotationTuple.get(chunk.getRotationIndex(targetPos.x, targetPos.y, targetPos.z));
-            RotationTuple newRotation = BlockVectorUtil.rotateOverAxis90Degrees(currenRotation, rotatorUp, isClockWise);
+            RotationTuple currentRotation = RotationTuple.get(chunk.getRotationIndex(targetPos.x, targetPos.y, targetPos.z));
+            RotationTuple newRotation = BlockVectorUtil.rotateOverAxis90Degrees(currentRotation, rotatorUp, isClockWise);
             
             boolean blockWasRotated = BlockVectorUtil.isRotatable(targetBlockType);
             if (blockWasRotated) {
@@ -304,7 +314,7 @@ public class RotateBlockActivation extends Activation {
                 SetBlockAfterDelay(world,chunk,300,targetPos.x, targetPos.y, targetPos.z, assetMap.getIndex(targetID), targetBlockType, newRotation.index(), 0, 4);
                 if (BlockCopyRef != null)
                 {
-                    rotateBlockEnt(world,targetPos, BlockCopyRef, isClockWise);
+                    rotateBlockEntOverTime(world,BlockCopyRef,300,currentRotation,newRotation, isClockWise);
                 }
                 BlockVectorUtil.setTickingAround(chunk,targetPos,1);
             } else {

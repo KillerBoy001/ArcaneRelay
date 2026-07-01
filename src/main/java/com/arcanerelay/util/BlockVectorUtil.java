@@ -214,7 +214,7 @@ public class BlockVectorUtil {
      * Returns the axis with the largest absolute component.
      */
     @Nullable
-    private static Axis getAxisFromVector(@Nonnull Vector3i vector) {
+    public static Axis getAxisFromVector(@Nonnull Vector3i vector) {
         double x = Math.abs(vector.x);
         double y = Math.abs(vector.y);
         double z = Math.abs(vector.z);
