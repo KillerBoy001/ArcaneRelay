@@ -1,0 +1,134 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Pseudo_Arcane_Pixel.name",
+    "Description": "server.items.Pseudo_Arcane_Pixel.description"
+  },
+  "Interactions": {
+    "Primary": "Block_Primary",
+    "Secondary": "Block_Secondary"
+  },
+  "Recipe": {
+    "TimeSeconds": 0.5,
+   "Input": [
+      {
+        "Quantity": 6,
+        "ItemId": "Crystal_Shards"
+      },
+      {
+        "ItemId": "Ingredient_Bar_Iron",
+        "Quantity": 1
+      },
+      {
+        "ResourceTypeId": "Rock",
+        "Quantity": 1
+      }
+    ],
+    "OutputQuantity": 1,
+    "BenchRequirement": [
+      {
+        "Id": "Antiquarianbench",
+        "Type": "Crafting",
+        "Categories": [
+          "Experimental_Artifacts"
+        ]
+      }
+    ]
+  },
+  "Categories": [
+    "Items.Tools",
+    "Pseudo_Arcane_Category.Arcane_Relay"
+  ],
+  "ItemLevel": 10,
+  "BlockType": {
+    "DrawType": "Model",
+    "BlockSoundSetId": "Stone",
+    "Opacity": "Solid",
+    "CustomModel": "Blocks/Functional/Pixel.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Functional/Pixel_Texture.png",
+        "Weight": 1
+      }
+    ],
+    "CustomModelScale": 1,
+    "BlockParticleSetId": "Crystal",
+    "Material": "Solid",
+    "InteractionHint": "server.interactionHints.relay",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          {
+            "Type": "Condition",
+            "Crouching": true,
+            "Failed": {
+              "Type": "ArcaneActivator",
+              "Activator": "Toggle_Pixel"
+            },
+            "Next": {
+              "Type": "ChangeBlock",
+              "Changes": {
+                "Pseudo_Arcane_Pixel_White": "Pseudo_Arcane_Pixel_White"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "State": {
+      "Definitions": {
+        "Off": {
+          "InteractionHint": "server.interactionHints.relay",
+          "Light": {
+            "Color": "#279"
+          },
+          "Particles": null,
+          "AmbientSoundEventId": null,
+          "Material": "Solid",
+          "CustomModelTexture": [
+            {
+              "Texture": "Blocks/Functional/Pixel_Texture.png"
+            }
+          ],
+          "CubeShadingMode": "Standard",
+          "DrawType": "Model",
+          "InteractionSoundEventId": "SFX_Sticks_Break",
+          "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_Off.blockyanim"
+        }
+      }
+    },
+    "ParticleColor": "#bbac72",
+    "VariantRotation": "DoublePipe",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "ItemId": "Pseudo_Arcane_Relay"
+      }
+    },
+    "CubeShadingMode": "Flat",
+    "InteractionSoundEventId": "SFX_Sticks_Break",
+    "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_On.blockyanim"
+  },
+  "PlayerAnimationsId": "Block",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      22.5,
+      47,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -14
+    ]
+  },
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Relay.png",
+  "Scale": 1,
+  "Tags": {
+    "Type": [
+      "Tool"
+    ]
+  },
+  "ItemSoundSetId": "ISS_Blocks_Stone",
+  "Quality": "Experimental_Artifacts",
+  "SubCategory": "Experimental_Artifacts"
+}

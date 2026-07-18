@@ -13,6 +13,7 @@
   },
   "ContainsBindings": {
     "Pseudo_Arcane_Rotator": "Rotator_Chain",
+    "Pseudo_Arcane_Pixel": "Toggle_Pixel",
     "Door": "Toggle_Door",
     "Gate": "Toggle_Door",
     "Lamp": "Toggle_Torch",
