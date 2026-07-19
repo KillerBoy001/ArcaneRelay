@@ -1,5 +1,5 @@
 {
   "Type": "ToggleState",
-  "OnState": "default",
+  "OnState": "On",
   "OffState": "Off"
 }
