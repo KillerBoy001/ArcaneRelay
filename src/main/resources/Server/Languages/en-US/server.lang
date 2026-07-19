@@ -121,7 +121,7 @@ arcanerelay.qualities.arcaneTool = Arcane Tool
 arcanerelay.qualities.relayArtifact = Relay Artifact
 arcanerelay.qualities.vectorArtifact = Vector Artifact
 arcanerelay.qualities.destructiveArtifact = Destructive Artifact
-arcanerelay.qualities.experimentalArtifacts = Experimental Artifact
+arcanerelay.qualities.experimentalArtifact = Experimental Artifact
 
 # === Creative Category ===
 
@@ -135,7 +135,7 @@ ui.arcanerelaycategory.subcategory.vectorArtifacts.description = Used to move or
 ui.arcanerelaycategory.subcategory.destructiveArtifacts.name = Destructive Artifacts
 ui.arcanerelaycategory.subcategory.destructiveArtifacts.description = Used to destroy or cause damage to the world or the entities in it.
 ui.arcanerelaycategory.subcategory.experimentalArtifacts.name = Experimental Artifacts
-server.ui.arcanerelaycategory.subcategory.experimentalArtifacts.description = Strange and useful artifacts long lost to time. Used in various ways to enhance contraptions or the world around you. 
+ui.arcanerelaycategory.subcategory.experimentalArtifacts.description = Strange and useful artifacts long lost to time. Used in various ways to enhance contraptions or the world around you. 
 
 # === Trigger Volume === 
 

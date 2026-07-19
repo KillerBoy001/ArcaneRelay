@@ -5,7 +5,7 @@
   "SlotTexture": "UI/ItemQualities/Slots/ExperimentalArtifacts.png",
   "BlockSlotTexture": "UI/ItemQualities/Slots/ExperimentalArtifacts.png",
   "SpecialSlotTexture": "UI/ItemQualities/Slots/ExperimentalArtifacts.png",
-  "TextColor": "#3DCD1F",
+  "TextColor": "#FFFFFF",
   "LocalizationKey": "server.arcanerelay.qualities.experimentalArtifact",
   "VisibleQualityLabel": true,
   "RenderSpecialSlot": true

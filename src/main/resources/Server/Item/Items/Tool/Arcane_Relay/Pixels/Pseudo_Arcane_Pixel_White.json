@@ -11,8 +11,8 @@
     "TimeSeconds": 0.5,
     "Input": [
       {
-        "Quantity": 6,
-        "ItemId": "Crystal_Shards"
+        "ResourceTypeId": "Crystal_Shards",
+        "Quantity": 6
       },
       {
         "ItemId": "Ingredient_Bar_Iron",
@@ -42,7 +42,7 @@
   "BlockType": {
     "DrawType": "Model",
     "BlockSoundSetId": "Stone",
-    "Opacity": "Solid",
+    "Opacity": "Transparent",
     "CustomModel": "Blocks/Functional/Pixel/Pixel_White.blockymodel",
     "CustomModelTexture": [
       {
@@ -125,7 +125,7 @@
     "Gathering": {
       "Breaking": {
         "GatherType": "Rocks",
-        "ItemId": "Pseudo_Arcane_Relay"
+        "ItemId": "Pseudo_Arcane_Pixel_White"
       }
     },
     "CubeShadingMode": "Flat",
@@ -144,7 +144,7 @@
       -14
     ]
   },
-  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Relay.png",
+  "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Pixel_White.png",
   "Scale": 1,
   "Tags": {
     "Type": [
