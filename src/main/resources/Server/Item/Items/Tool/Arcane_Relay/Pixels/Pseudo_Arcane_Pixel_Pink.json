@@ -12,13 +12,25 @@
             "Definitions": {
                 "On": {
                     "InteractionSoundEventId": "SFX_Sticks_Break",
-                    "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_On.blockyanim"
+                    "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_On.blockyanim",
+                    "Light": {
+                        "Color": "#b3a",
+                        "Radius": 8
+                    }
                 },
                 "Off": {
                     "InteractionSoundEventId": "SFX_Sticks_Break",
-                    "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_Off.blockyanim"
+                    "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_Off.blockyanim",
+                    "Opacity": "Transparent",
+                    "Light": {
+                        "Color": "#000",
+                        "Radius": 0
+                    }
                 }
             }
+        },
+        "Light": {
+            "Color": "#b3a"
         }
     },
     "IconProperties": {

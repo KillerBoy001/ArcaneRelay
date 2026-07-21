@@ -116,9 +116,15 @@
         },
         "Off": {
           "InteractionSoundEventId": "SFX_Sticks_Break",
-          "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_Off.blockyanim"
+          "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_Off.blockyanim",
+          "Light": {
+            "Radius": 0
+          }
         }
       }
+    },
+    "Light": {
+      "Radius": 8
     },
     "ParticleColor": "#bbac72",
     "VariantRotation": "DoublePipe",
