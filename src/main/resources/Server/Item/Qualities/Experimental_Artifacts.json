@@ -1,0 +1,12 @@
+{
+  "QualityValue": 8,
+  "ItemTooltipTexture": "UI/ItemQualities/Tooltips/ItemTooltipDefault.png",
+  "ItemTooltipArrowTexture": "UI/ItemQualities/Tooltips/ItemTooltipDefaultArrow.png",
+  "SlotTexture": "UI/ItemQualities/Slots/ExperimentalArtifacts.png",
+  "BlockSlotTexture": "UI/ItemQualities/Slots/ExperimentalArtifacts.png",
+  "SpecialSlotTexture": "UI/ItemQualities/Slots/ExperimentalArtifacts.png",
+  "TextColor": "#FFFFFF",
+  "LocalizationKey": "server.arcanerelay.qualities.experimentalArtifact",
+  "VisibleQualityLabel": true,
+  "RenderSpecialSlot": true
+}
