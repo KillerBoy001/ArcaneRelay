@@ -54,6 +54,10 @@ This block only pulls! But it has an extended range, use it to pull back the fir
 
 Hit blocks or players and break or kill almost everything that might stand in the way of this block!
 
+![Pixel](./art/Affinity/BlockNameCards/Pixel.png)
+
+ A light source block that is intended more as a surface lighting. It's got different colors!! Just crouch + interact to see them :D Place it as a wall, on the ground or ceiling. Make screens, 8 segment display or whatever else you might think off! 
+
 ![More to come](./art/Affinity/BlockNameCards/MoreToCome.png)
 
 ## Customize Your Playthrough
