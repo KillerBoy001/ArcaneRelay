@@ -62,7 +62,8 @@
     "PlacementSettings": {
       "AllowRotationKey": true,
       "PlaceInEmptyBlocks": true,
-      "RotationMode": "FacingPlayer"
+      "RotationMode": "Default",
+      "BlockPreviewVisibility": "AlwaysVisible"
     },
     "BlockParticleSetId": "Crystal",
     "Material": "Solid",
@@ -107,7 +108,7 @@
           "Looping": true,
           "InteractionHint": "server.interactionHints.beamer_disable",
           "Supporting": {
-            "CardinalDirections": [
+            "Up": [
               {
                 "FaceType": "Pseudo_Arcane_Beamer_enable"
               }
@@ -129,7 +130,7 @@
       }
     },
     "ParticleColor": "#bbac72",
-    "VariantRotation": "NESW",
+    "VariantRotation": "DoublePipe",
     "Gathering": {
       "Breaking": {
         "ItemId": "Pseudo_Arcane_Beamer",

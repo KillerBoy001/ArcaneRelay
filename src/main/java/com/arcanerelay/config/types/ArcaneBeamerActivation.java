@@ -125,17 +125,13 @@ public class ArcaneBeamerActivation extends Activation {
         return ArcaneSection.BlockTickStrategy.PROCESSED;
     }
 
-    public static void BuildLaserBeam(
-            World world,
-            Vector3i BeamerPos,
-            WorldChunk beamerChunk,
-            int maxRange
-    ) {
+    public static void BuildLaserBeam(World world, Vector3i BeamerPos, WorldChunk beamerChunk, int maxRange) {
 
         BlockTypeAssetMap<String, BlockType> assetMap = BlockType.getAssetMap();
 
         for (int i = 0; i <= maxRange; i++) {
-            Vector3i Localforward = BlockVectorUtil.getForwardVector(beamerChunk,BeamerPos,i+1 );
+            Vector3i Localforward  =BlockVectorUtil.getUpVector(beamerChunk,BeamerPos,i+1 );
+            //Vector3i Localforward = BlockVectorUtil.getForwardVector(beamerChunk,BeamerPos,i+1 );
             Vector3i NextPos = new Vector3i (BeamerPos.x + Localforward.x, BeamerPos.y + Localforward.y, BeamerPos.z + Localforward.z);
 
             WorldChunk chnk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(NextPos.x, NextPos.z));
@@ -284,12 +280,7 @@ public class ArcaneBeamerActivation extends Activation {
         return maxRange;
     }
 
-    public static void SendTriggerFromSourceBeamer (
-            World world,
-            Vector3i TriggerPos,
-            WorldChunk Triggerchunk,
-            int maxRange
-    ) {
+    public static void SendTriggerFromSourceBeamer (World world, Vector3i TriggerPos, WorldChunk Triggerchunk, int maxRange) {
         Vector3i BeamerPos = GetBeamerPosFromLaser(TriggerPos,Triggerchunk,maxRange);
         WorldChunk BeamerChunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(BeamerPos.x, BeamerPos.z));
 
@@ -310,14 +301,17 @@ public class ArcaneBeamerActivation extends Activation {
 
     public static Vector3i GetBeamerPosFromLaser(Vector3i TriggerPos,WorldChunk Chunk,int maxRange){
         for (int i = 1; i <= maxRange+1; i++){
-            Vector3i LocalBackward = BlockVectorUtil.getForwardVector(Chunk,TriggerPos,i-i*2 );
+            Vector3i LocalBackward = BlockVectorUtil.getUpVector(Chunk,TriggerPos,i-i*2 );
             Vector3i NextPos = new Vector3i (TriggerPos.x + LocalBackward.x, TriggerPos.y + LocalBackward.y, TriggerPos.z + LocalBackward.z);
 
             BlockType Block = Chunk.getBlockType(NextPos.x,NextPos.y,NextPos.z);
-            String BlockId = Block.getId();
-            if (!BlockId.contains("Extension")&&BlockId.contains("On")){
-                ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Found laser source at : %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
-                return NextPos;
+            if (Block!=null)
+            {
+                String BlockId = Block.getId();
+                if (!BlockId.contains("Extension")&&BlockId.contains("On")){
+                    ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Found laser source at : %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
+                    return NextPos;
+                }
             }
         }
         return null;
