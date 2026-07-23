@@ -16,11 +16,10 @@ import com.arcanerelay.interactions.SelectTriggerInteraction;
 import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.resources.CustomHudRestoreState;
-import com.arcanerelay.systems.ArcaneBreakBlockSystem;
 import com.arcanerelay.triggervolumes.effect.ArcaneRelayEffect;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
 import com.arcanerelay.systems.ArcaneSystems;
-import com.hypixel.hytale.server.core.event.events.ecs.BreakBlockEvent;
+import com.arcanerelay.systems.ArcaneBreakBlockSystem;
 import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
 import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
@@ -73,7 +72,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     public static ArcaneRelayPlugin get() {
         return instance;
     }
-    
+
     public void saveConfig() {
         config.save();
     }
@@ -83,40 +82,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         instance = this;
         mainThread = Thread.currentThread();
 
-        ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
-        this.arcaneMoveStateResourceType = chunkRegistry.registerResource(ArcaneMoveState.class, ArcaneMoveState::new);
-        this.arcaneTriggerBlockComponentType = chunkRegistry.registerComponent(ArcaneTriggerBlock.class,
-                "ArcaneTrigger", ArcaneTriggerBlock.CODEC);
-        this.arcaneSectionComponentType = chunkRegistry.registerComponent(ArcaneSection.class, "ArcaneSection",
-                ArcaneSection.CODEC);
-        this.arcanePullerBlockComponentType = chunkRegistry.registerComponent(ArcanePullerBlock.class,
-                "ArcanePuller", ArcanePullerBlock.CODEC);
-
-        chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
-        chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
-        chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
-        chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
-
-
-        ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
-        this.arcaneConfiguratorComponentType = entityRegistry.registerComponent(ArcaneConfiguratorComponent.class,
-                ArcaneConfiguratorComponent::new);
-        this.arcaneStaffLegendVisibleComponentType = entityRegistry.registerComponent(ArcaneStaffLegendVisible.class,
-                ArcaneStaffLegendVisible::new);
-        this.customHudRestoreStateResourceType = entityRegistry.registerResource(CustomHudRestoreState.class,
-                CustomHudRestoreState::new);
-        entityRegistry.registerSystem(new ArcaneConfiguratorAddSystem());
-        entityRegistry.registerSystem(new ArcaneStaffHudSystem());
-        entityRegistry.registerSystem(new ArcaneBreakBlockSystem());
-
-        Interaction.CODEC.register("SelectTrigger", SelectTriggerInteraction.class, SelectTriggerInteraction.CODEC);
-        Interaction.CODEC.register("AddOutput", AddOutputInteraction.class, AddOutputInteraction.CODEC);
-        Interaction.CODEC.register("SendSignal", SendSignalInteraction.class, SendSignalInteraction.CODEC);
-        Interaction.CODEC.register("ArcaneActivator", ArcaneActivatorInteraction.class,
-                ArcaneActivatorInteraction.CODEC);
-
-        this.getCodecRegistry(OpenCustomUIInteraction.PAGE_CODEC)
-                .register("ArcaneTrigger", ArcaneTriggerPageSupplier.class, ArcaneTriggerPageSupplier.CODEC);
         config.save();
 
         registerCodecs();
@@ -206,19 +171,19 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
     private void registerEvents() {
         EventRegistry registry = this.getEventRegistry();
-        
+
         registry.registerGlobal(BootEvent.class, event -> ActivationBinding.onBindingsLoaded());
     }
 
     private void registerSystems() {
-        registerEntitySystems(); 
+        registerEntitySystems();
         registerChunkSystems();
     }
 
     private void registerVolumeTriggers(){
         TriggerVolumesPlugin.get().registerEffectType("TriggerArcaneRelay", ArcaneRelayEffect.class, ArcaneRelayEffect.CODEC);
     }
-  
+
     private void registerChunkSystems() {
         ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
 
@@ -232,6 +197,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
 
         entityRegistry.registerSystem(new ArcaneConfiguratorAddSystem());
+        entityRegistry.registerSystem(new ArcaneBreakBlockSystem());
     }
 
     private void registerResources() {
@@ -273,7 +239,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
     private void registerCommands() {
         CommandRegistry registry = this.getCommandRegistry();
-        
+
         registry.registerCommand(new ArcaneRelayCommandCollection());
     }
 }
