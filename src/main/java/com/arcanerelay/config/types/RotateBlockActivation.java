@@ -23,6 +23,7 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.server.core.HytaleServer;
 
 import com.hypixel.hytale.server.core.asset.type.blockhitbox.BlockBoundingBoxes;
+import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.BlockEntity;
 import com.hypixel.hytale.server.core.modules.entity.component.BoundingBox;
@@ -60,6 +61,9 @@ import static com.arcanerelay.ArcaneRelayPlugin.getMainThread;
 
 public class RotateBlockActivation extends Activation {
     private String[] RotTypeID = new String[0];
+    AtomicReference<ScheduledFuture<?>> RotTaskRef = new AtomicReference<>();
+    AtomicReference<ScheduledFuture<?>> CleanupTaskRef = new AtomicReference<>();
+    AtomicReference<ScheduledFuture<?>> SetBlockTaskRef = new AtomicReference<>();
     public static final BuilderCodec<RotateBlockActivation> CODEC = BuilderCodec.builder(
                     RotateBlockActivation.class,
                     RotateBlockActivation::new,
@@ -98,10 +102,18 @@ public class RotateBlockActivation extends Activation {
         BlockEntity blockEntityComponent = new BlockEntity(blockType.getId());
         RotationTuple rotation = RotationTuple.get(chunk.getRotationIndex(position.x, position.y, position.z));
 
+        // Rotational correction - dont ask..
+        Rotation3f Corrected = new Rotation3f();
+        // x = pitch, y= yaw, z= roll, x = pitch
+        Corrected.setYaw((float)rotation.yaw().flip().getRadians());
+        if (rotation.roll().getDegrees() == 90||rotation.roll().getDegrees() == 180) {
+            Corrected.setRoll((float)rotation.roll().getRadians() + (float)Math.PI);
+        }
+        Corrected.setPitch((float)rotation.pitch().getRadians());
+
         // Prepare holder
         holder.addComponent(BlockEntity.getComponentType(), blockEntityComponent);
-        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(Entpos, new Rotation3f()));
-        holder.addComponent(HeadRotation.getComponentType(), new HeadRotation(new Rotation3f((float)rotation.pitch().getRadians(), (float)rotation.yaw().getRadians() + (float)Math.PI, (float)rotation.roll().getRadians())));
+        holder.addComponent(TransformComponent.getComponentType(), new TransformComponent(Entpos, Corrected));
         holder.ensureAndGetComponent(Velocity.getComponentType());
         PhysicsValues physicsValues = (PhysicsValues)holder.ensureAndGetComponent(PhysicsValues.getComponentType());
         physicsValues.replaceValues(new PhysicsValues((double)0.5F, 0.05, false));
@@ -140,7 +152,6 @@ public class RotateBlockActivation extends Activation {
 
 
         float Endpitch = -angleDifferenceRadians((float)OldRotation.pitch().getRadians(),(float)NewRotation.pitch().getRadians());
-
         float Endroll = -angleDifferenceRadians((float)OldRotation.roll().getRadians(),(float)NewRotation.roll().getRadians());
         float Endyaw = angleDifferenceRadians((float)OldRotation.yaw().getRadians(),(float)NewRotation.yaw().getRadians());
 
@@ -152,41 +163,41 @@ public class RotateBlockActivation extends Activation {
         final float RollPerStep = Endroll/totalSteps;
         final int[] step = {0};
 
-        AtomicReference<ScheduledFuture<?>> RottaskRef = new AtomicReference<>();
-        ScheduledFuture<?> Rottask = HytaleServer.SCHEDULED_EXECUTOR.scheduleAtFixedRate(() -> {
-
-            step[0]++;
-            if (step[0] <= totalSteps) {
+        RotTaskRef.set(HytaleServer.SCHEDULED_EXECUTOR.scheduleAtFixedRate(() -> {
+            if (++step[0] < totalSteps) {
                 rotation.addYaw(YawPerStep);
                 rotation.addPitch(PitchPerStep);
                 rotation.addRoll(RollPerStep);
-            } else if (step[0] >= totalSteps) {
-                RottaskRef.get().cancel(false);
+            } else {
+
+                .set(HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> { //Clean-up Thread that initializes a mainthread entityremove
+                            world.execute(() -> {
+                                Entref.getStore().removeEntity(Entref, RemoveReason.REMOVE);
+                            });
+                            CleanupTaskRef.get().cancel(false);
+                        }, 100, TimeUnit.MILLISECONDS)                      // give it 100ms for cleanup so will have no blinking blocks
+                );
+                RotTaskRef.get().cancel(false);
             }
 
-        }, 0, 25, TimeUnit.MILLISECONDS);
-
-        AtomicReference<ScheduledFuture<?>> CleanuptaskRef = new AtomicReference<>();
-        ScheduledFuture<?> Cleanuptask = HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> { //Clean-up Thread that initialized a mainthread entityremove
-            world.execute(() -> {
-                Entref.getStore().removeEntity(Entref, RemoveReason.REMOVE);
-            });
-            CleanuptaskRef.get().cancel(false);
-        }, OverMS+100, TimeUnit.MILLISECONDS);
+        }, 0, 25, TimeUnit.MILLISECONDS)
+        );
     }
 
     private void SetBlockAfterDelay(World world,WorldChunk chunk,int AfterMS,int x, int y, int z, int id, @Nonnull BlockType blockType, int rotation, int filler, int settings){
-        chunk.breakBlock(x, y, z,4);
-        AtomicReference<ScheduledFuture<?>> SetBlockTaskRef = new AtomicReference<>();
-        ScheduledFuture<?> SetBlockTask = HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
+        chunk.breakBlock(x, y, z,4); // Break original
+        chunk.setBlock(x, y, z,"Barrier"); // Place invisible placeholder for now just barrierblock
+        SetBlockTaskRef.set(HytaleServer.SCHEDULED_EXECUTOR.schedule(() -> {
             world.execute(() -> {
+                chunk.breakBlock(x, y, z,4);
                 chunk.setBlock(x, y, z, id, blockType, rotation, filler, settings);
             });
             SetBlockTaskRef.get().cancel(false);
-        }, AfterMS, TimeUnit.MILLISECONDS);
+        }, AfterMS, TimeUnit.MILLISECONDS)
+        );
     }
 
-    private void rotateEntities(World world, Vector3i rotatorPos, Vector3i targetPos, boolean isClockWise, Vector3i rotatorUp, boolean targetBlockRotated) {
+    private void rotateEntities(World world, Vector3i rotatorPos, Vector3i targetPos, boolean isClockWise, Vector3i rotatorUp, boolean targetBlockRotated,Ref<EntityStore> ignore) {
         if (rotatorUp.x != 0 || rotatorUp.y != 1 || rotatorUp.z != 0) {
             return;
         }
@@ -203,7 +214,7 @@ public class RotateBlockActivation extends Activation {
             TransformComponent transform = entityStore.getComponent(ref, TransformComponent.getComponentType());
             if (transform == null) continue;
 
-            rotateEntity(world, entityStore, ref, transform, isClockWise);
+            if(ref != ignore){rotateEntity(world, entityStore, ref, transform, isClockWise);}
         }
 
         if (targetBlockRotated) {
@@ -321,7 +332,7 @@ public class RotateBlockActivation extends Activation {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Rotator: Block of type: '%s', is not allowed to be rotated", targetBlockType.getId());
             }
 
-            rotateEntities(world, rotatorPos, targetPos, isClockWise, rotatorUp, blockWasRotated);
+            rotateEntities(world, rotatorPos, targetPos, isClockWise, rotatorUp, blockWasRotated,BlockCopyRef);
         });
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;
