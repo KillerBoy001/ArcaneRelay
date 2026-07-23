@@ -1,0 +1,55 @@
+{
+    "Parent": "Pseudo_Arcane_Pixel_White",
+    "BlockType": {
+        "CustomModel": "Blocks/Functional/Pixel/Pixel_Red.blockymodel",
+        "CustomModelTexture": [
+            {
+                "Texture": "Blocks/Functional/Pixel/Pixel_Texture.png",
+                "Weight": 1
+            }
+        ],
+        "State": {
+            "Definitions": {
+                "On": {
+                    "InteractionSoundEventId": "SFX_Sticks_Break",
+                    "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_On.blockyanim",
+                    "Light": {
+                        "Color": "#b22",
+                        "Radius": 8
+                    }
+                },
+                "Off": {
+                    "InteractionSoundEventId": "SFX_Sticks_Break",
+                    "CustomModelAnimation": "Blocks/Animations/Functional/Pixel/Pixel_Off.blockyanim",
+                    "Opacity": "Transparent",
+                    "Light": {
+                        "Color": "#000",
+                        "Radius": 0
+                    }
+                }
+            }
+        },
+        "Light": {
+            "Color": "#b22"
+        }
+    },
+    "IconProperties": {
+        "Scale": 0.5,
+        "Rotation": [
+            22.5,
+            47,
+            22.5
+        ],
+        "Translation": [
+            0,
+            -14
+        ]
+    },
+    "Icon": "Icons/ItemsGenerated/Pseudo_Arcane_Pixel_Red.png",
+    "Tags": {
+        "Type": [
+            "Tool"
+        ]
+    },
+    "Quality": "Developer"
+}
