@@ -15,7 +15,6 @@ import com.arcanerelay.interactions.ArcaneActivatorInteraction;
 import com.arcanerelay.interactions.SelectTriggerInteraction;
 import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
-import com.arcanerelay.resources.CustomHudRestoreState;
 import com.arcanerelay.triggervolumes.effect.ArcaneRelayEffect;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
 import com.arcanerelay.systems.ArcaneSystems;
@@ -62,7 +61,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     private ComponentType<EntityStore, ArcaneConfiguratorComponent> arcaneConfiguratorComponentType;
     private ComponentType<EntityStore, ArcaneStaffLegendVisible> arcaneStaffLegendVisibleComponentType;
     private ResourceType<ChunkStore, ArcaneMoveState> arcaneMoveStateResourceType;
-    private ResourceType<EntityStore, CustomHudRestoreState> customHudRestoreStateResourceType;
 
     public ArcaneRelayPlugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -128,11 +126,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
     public ComponentType<ChunkStore, ArcaneTriggerBlock> getArcaneTriggerBlockComponentType() {
         return this.arcaneTriggerBlockComponentType;
-    }
-
-    @Nonnull
-    public ResourceType<EntityStore, CustomHudRestoreState> getCustomHudRestoreStateResourceType() {
-        return customHudRestoreStateResourceType;
     }
 
     @Nonnull
@@ -210,8 +203,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
     private void registerEntityResources() {
         ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
-
-        this.customHudRestoreStateResourceType = entityRegistry.registerResource(CustomHudRestoreState.class, CustomHudRestoreState::new);
     }
 
     private void registerComponents() {
