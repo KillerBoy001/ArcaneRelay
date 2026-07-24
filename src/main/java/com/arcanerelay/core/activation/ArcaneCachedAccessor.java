@@ -3,7 +3,8 @@ package com.arcanerelay.core.activation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.arcanerelay.components.ArcaneSection;
+import com.arcanerelay.core.adapters.ChunkStoreCommandBufferLike;
+import com.arcanerelay.features.signal.components.ArcaneSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.AbstractCachedAccessor;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;

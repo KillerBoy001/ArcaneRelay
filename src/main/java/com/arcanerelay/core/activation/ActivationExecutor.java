@@ -1,10 +1,10 @@
 package com.arcanerelay.core.activation;
 
 import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.components.ArcaneTriggerBlock;
-import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationEffects;
-import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.features.activation.Activation;
+import com.arcanerelay.features.activation.ActivationEffects;
+import com.arcanerelay.features.signal.util.ArcaneUtil;
+import com.arcanerelay.features.signaltrigger.components.ArcaneTriggerBlock;
 import com.arcanerelay.util.BlockUtil;
 import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
