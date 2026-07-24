@@ -8,7 +8,6 @@ import com.arcanerelay.commands.ArcaneRelayCommandCollection;
 import com.arcanerelay.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.components.ArcanePullerBlock;
 import com.arcanerelay.components.ArcaneSection;
-import com.arcanerelay.components.ArcaneStaffLegendVisible;
 import com.arcanerelay.components.ArcaneTriggerBlock;
 import com.arcanerelay.interactions.AddOutputInteraction;
 import com.arcanerelay.interactions.ArcaneActivatorInteraction;
@@ -62,7 +61,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     private ComponentType<ChunkStore, ArcaneSection> arcaneSectionComponentType;
     private ComponentType<ChunkStore, ArcanePullerBlock> arcanePullerBlockComponentType;
     private ComponentType<EntityStore, ArcaneConfiguratorComponent> arcaneConfiguratorComponentType;
-    private ComponentType<EntityStore, ArcaneStaffLegendVisible> arcaneStaffLegendVisibleComponentType;
     private ResourceType<ChunkStore, ArcaneMoveState> arcaneMoveStateResourceType;
 
     public ArcaneRelayPlugin(@Nonnull JavaPluginInit init) {
@@ -120,11 +118,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     @Nonnull
     public ResourceType<ChunkStore, ArcaneMoveState> getArcaneMoveStateResourceType() {
         return this.arcaneMoveStateResourceType;
-    }
-
-    @Nonnull
-    public ComponentType<EntityStore, ArcaneStaffLegendVisible> getArcaneStaffLegendVisibleComponentType() {
-        return arcaneStaffLegendVisibleComponentType;
     }
 
     public ComponentType<ChunkStore, ArcaneTriggerBlock> getArcaneTriggerBlockComponentType() {
@@ -225,7 +218,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
 
         this.arcaneConfiguratorComponentType = entityRegistry.registerComponent(ArcaneConfiguratorComponent.class, ArcaneConfiguratorComponent::new);
-        this.arcaneStaffLegendVisibleComponentType = entityRegistry.registerComponent(ArcaneStaffLegendVisible.class, ArcaneStaffLegendVisible::new);
     }
 
     private void registerCommands() {
