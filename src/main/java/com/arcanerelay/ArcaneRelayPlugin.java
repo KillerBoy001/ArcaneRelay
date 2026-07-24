@@ -16,8 +16,11 @@ import com.arcanerelay.interactions.SelectTriggerInteraction;
 import com.arcanerelay.interactions.SendSignalInteraction;
 import com.arcanerelay.resources.ArcaneMoveState;
 import com.arcanerelay.triggervolumes.effect.ArcaneRelayEffect;
+import com.arcanerelay.systems.BlockMovementSystem;
+import com.arcanerelay.systems.EnsureArcaneSectionSystem;
+import com.arcanerelay.systems.signal.PreTickSignalPropagationSystem;
+import com.arcanerelay.systems.signal.TickingSignalPropagationSystem;
 import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
-import com.arcanerelay.systems.ArcaneSystems;
 import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
 import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
@@ -178,10 +181,10 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     private void registerChunkSystems() {
         ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
 
-        chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
-        chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
-        chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
-        chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
+        chunkRegistry.registerSystem(new EnsureArcaneSectionSystem());
+        chunkRegistry.registerSystem(new PreTickSignalPropagationSystem());
+        chunkRegistry.registerSystem(new TickingSignalPropagationSystem());
+        chunkRegistry.registerSystem(new BlockMovementSystem());
     }
 
     private void registerEntitySystems() {
