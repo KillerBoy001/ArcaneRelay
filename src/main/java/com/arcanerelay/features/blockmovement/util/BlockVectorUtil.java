@@ -22,6 +22,7 @@ public class BlockVectorUtil {
         if (config == null) {
             config = ArcaneRelayPlugin.get().getConfig();
         }
+        
         return config;
     }
 
