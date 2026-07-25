@@ -127,6 +127,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         return this.arcaneMoveStateResourceType;
     }
 
+    @Nonnull
     public ComponentType<ChunkStore, ArcaneTriggerBlock> getArcaneTriggerBlockComponentType() {
         return this.arcaneTriggerBlockComponentType;
     }
