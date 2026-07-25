@@ -1,25 +1,33 @@
 package com.arcanerelay;
 
-import com.arcanerelay.config.Activation;
-import com.arcanerelay.config.ActivationBinding;
-import com.arcanerelay.config.ArcaneRelayConfig;
-import com.arcanerelay.config.types.*;
 import com.arcanerelay.commands.ArcaneRelayCommandCollection;
-import com.arcanerelay.components.ArcaneConfiguratorComponent;
-import com.arcanerelay.components.ArcanePullerBlock;
-import com.arcanerelay.components.ArcaneSection;
-import com.arcanerelay.components.ArcaneStaffLegendVisible;
-import com.arcanerelay.components.ArcaneTriggerBlock;
-import com.arcanerelay.interactions.AddOutputInteraction;
-import com.arcanerelay.interactions.ArcaneActivatorInteraction;
-import com.arcanerelay.interactions.SelectTriggerInteraction;
-import com.arcanerelay.interactions.SendSignalInteraction;
-import com.arcanerelay.resources.ArcaneMoveState;
-import com.arcanerelay.resources.CustomHudRestoreState;
-import com.arcanerelay.triggervolumes.effect.ArcaneRelayEffect;
-import com.arcanerelay.systems.ArcaneConfiguratorAddSystem;
-import com.arcanerelay.systems.ArcaneSystems;
-import com.arcanerelay.ui.ArcaneTriggerPageSupplier;
+import com.arcanerelay.features.activation.Activation;
+import com.arcanerelay.features.activation.ActivationBinding;
+import com.arcanerelay.features.activation.interactions.ArcaneActivatorInteraction;
+import com.arcanerelay.features.activation.types.ChainActivation;
+import com.arcanerelay.features.activation.types.ToggleStateActivation;
+import com.arcanerelay.features.blockmovement.activations.MoveBlockActivation;
+import com.arcanerelay.features.blockmovement.activations.RotateBlockActivation;
+import com.arcanerelay.features.blockmovement.resources.ArcaneMoveState;
+import com.arcanerelay.features.blockmovement.systems.BlockMovementSystem;
+import com.arcanerelay.features.blocks.breaker.activation.HitActivation;
+import com.arcanerelay.features.blocks.doors.activation.ToggleDoorActivation;
+import com.arcanerelay.features.blocks.puller.activations.ArcanePullerActivation;
+import com.arcanerelay.features.blocks.puller.components.ArcanePullerBlock;
+import com.arcanerelay.features.config.ArcaneRelayConfig;
+import com.arcanerelay.features.configurator.components.ArcaneConfiguratorComponent;
+import com.arcanerelay.features.configurator.interactions.AddOutputInteraction;
+import com.arcanerelay.features.configurator.interactions.SelectTriggerInteraction;
+import com.arcanerelay.features.configurator.systems.ArcaneConfiguratorAddSystem;
+import com.arcanerelay.features.signal.components.ArcaneSection;
+import com.arcanerelay.features.signal.systems.EnsureArcaneSectionSystem;
+import com.arcanerelay.features.signal.systems.PreTickSignalPropagationSystem;
+import com.arcanerelay.features.signal.systems.TickingSignalPropagationSystem;
+import com.arcanerelay.features.signaltrigger.activation.SendSignalActivation;
+import com.arcanerelay.features.signaltrigger.components.ArcaneTriggerBlock;
+import com.arcanerelay.features.signaltrigger.interactions.SendSignalInteraction;
+import com.arcanerelay.features.signaltrigger.ui.ArcaneTriggerPageSupplier;
+import com.arcanerelay.features.triggervolume.ArcaneRelayEffect;
 import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
@@ -60,9 +68,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     private ComponentType<ChunkStore, ArcaneSection> arcaneSectionComponentType;
     private ComponentType<ChunkStore, ArcanePullerBlock> arcanePullerBlockComponentType;
     private ComponentType<EntityStore, ArcaneConfiguratorComponent> arcaneConfiguratorComponentType;
-    private ComponentType<EntityStore, ArcaneStaffLegendVisible> arcaneStaffLegendVisibleComponentType;
     private ResourceType<ChunkStore, ArcaneMoveState> arcaneMoveStateResourceType;
-    private ResourceType<EntityStore, CustomHudRestoreState> customHudRestoreStateResourceType;
 
     public ArcaneRelayPlugin(@Nonnull JavaPluginInit init) {
         super(init);
@@ -122,17 +128,8 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     }
 
     @Nonnull
-    public ComponentType<EntityStore, ArcaneStaffLegendVisible> getArcaneStaffLegendVisibleComponentType() {
-        return arcaneStaffLegendVisibleComponentType;
-    }
-
     public ComponentType<ChunkStore, ArcaneTriggerBlock> getArcaneTriggerBlockComponentType() {
         return this.arcaneTriggerBlockComponentType;
-    }
-
-    @Nonnull
-    public ResourceType<EntityStore, CustomHudRestoreState> getCustomHudRestoreStateResourceType() {
-        return customHudRestoreStateResourceType;
     }
 
     @Nonnull
@@ -185,10 +182,10 @@ public class ArcaneRelayPlugin extends JavaPlugin {
     private void registerChunkSystems() {
         ComponentRegistryProxy<ChunkStore> chunkRegistry = this.getChunkStoreRegistry();
 
-        chunkRegistry.registerSystem(new ArcaneSystems.EnsureArcaneSection());
-        chunkRegistry.registerSystem(new ArcaneSystems.PreTick());
-        chunkRegistry.registerSystem(new ArcaneSystems.Ticking());
-        chunkRegistry.registerSystem(new ArcaneSystems.MoveBlock());
+        chunkRegistry.registerSystem(new EnsureArcaneSectionSystem());
+        chunkRegistry.registerSystem(new PreTickSignalPropagationSystem());
+        chunkRegistry.registerSystem(new TickingSignalPropagationSystem());
+        chunkRegistry.registerSystem(new BlockMovementSystem());
     }
 
     private void registerEntitySystems() {
@@ -210,8 +207,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
     private void registerEntityResources() {
         ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
-
-        this.customHudRestoreStateResourceType = entityRegistry.registerResource(CustomHudRestoreState.class, CustomHudRestoreState::new);
     }
 
     private void registerComponents() {
@@ -231,7 +226,6 @@ public class ArcaneRelayPlugin extends JavaPlugin {
         ComponentRegistryProxy<EntityStore> entityRegistry = this.getEntityStoreRegistry();
 
         this.arcaneConfiguratorComponentType = entityRegistry.registerComponent(ArcaneConfiguratorComponent.class, ArcaneConfiguratorComponent::new);
-        this.arcaneStaffLegendVisibleComponentType = entityRegistry.registerComponent(ArcaneStaffLegendVisible.class, ArcaneStaffLegendVisible::new);
     }
 
     private void registerCommands() {

@@ -3,7 +3,8 @@ package com.arcanerelay.core.activation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.arcanerelay.components.ArcaneSection;
+import com.arcanerelay.core.adapters.ChunkStoreCommandBufferLike;
+import com.arcanerelay.features.signal.components.ArcaneSection;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.chunk.section.BlockSection;
@@ -13,7 +14,7 @@ import com.hypixel.hytale.server.core.universe.world.chunk.section.ChunkSection;
  * Accessor for activation execution. Same pattern as
  * {@link com.hypixel.hytale.server.core.asset.type.fluid.FluidTicker.Accessor}: section components
  * by chunk coords. Block-specific data (refs, coords, sources) is passed to
- * {@link com.arcanerelay.config.Activation#execute} individually.
+ * {@link com.arcanerelay.features.activation.Activation#execute} individually.
  */
 public interface ArcaneActivationAccessor {
     @Nonnull ChunkStoreCommandBufferLike getCommandBuffer();
