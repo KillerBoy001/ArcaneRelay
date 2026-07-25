@@ -82,7 +82,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
                                 continue;
                             }
 
-                            Vector3i anchor = AnchorForCell(world, x, y, z);
+                            Vector3i anchor = anchorForCell(world, x, y, z);
                             if (!processedBlocks.add(BlockUtil.pack(anchor.x, anchor.y, anchor.z))) {
                                 continue;
                             }
@@ -97,7 +97,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
                                continue;
                             }
 
-                            this.SendTrigger(context,world, chunkAtAnchor, typeAtAnchor, anchor.x, anchor.y, anchor.z);
+                            this.sendTrigger(context,world, chunkAtAnchor, typeAtAnchor, anchor.x, anchor.y, anchor.z);
                         }
                     }
                 }
@@ -106,7 +106,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
     } 
 
     @Nonnull
-    private static Vector3i AnchorForCell(@Nonnull World world, int x, int y, int z) {
+    private static Vector3i anchorForCell(@Nonnull World world, int x, int y, int z) {
         WorldChunk chunk = world.getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(x, z));
         if (chunk == null) {
             return new Vector3i(x, y, z);
@@ -116,7 +116,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
         return filler == 0 ? new Vector3i(x, y, z) : new Vector3i(x - FillerBlockUtil.unpackX(filler), y - FillerBlockUtil.unpackY(filler), z - FillerBlockUtil.unpackZ(filler));
     }
    
-    private void SendTrigger(@Nonnull TriggerContext context, @Nonnull World world, @Nonnull WorldChunk chunk, @Nonnull BlockType blockType, int x, int y, int z) {
+    private void sendTrigger(@Nonnull TriggerContext context, @Nonnull World world, @Nonnull WorldChunk chunk, @Nonnull BlockType blockType, int x, int y, int z) {
         Ref<ChunkStore> chunkRef = chunk.getReference();
         Store<ChunkStore> chunkStore = chunkRef.getStore();
 

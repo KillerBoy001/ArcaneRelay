@@ -60,7 +60,7 @@ public class ArcaneTriggerSettingsPage extends InteractiveCustomUIPage<ArcaneTri
         if (!isTriggerBlock) return;
         
         List<Vector3i> outputs = trigger.getOutputPositions();
-        AddOutputDestinationList(chunkStore, commandBuilder, eventBuilder, trigger, outputs);
+        addOutputDestinationList(chunkStore, commandBuilder, eventBuilder, trigger, outputs);
 
         // Update connection count
         int count = outputs.size();
@@ -85,7 +85,7 @@ public class ArcaneTriggerSettingsPage extends InteractiveCustomUIPage<ArcaneTri
     }
 
     @NonNullDecl
-    private static void AddOutputDestinationList(@NonNullDecl Store<ChunkStore> chunkStore, @NonNullDecl UICommandBuilder commandBuilder, @NonNullDecl UIEventBuilder eventBuilder, ArcaneTriggerBlock trigger, List<Vector3i> outputs) {        
+    private static void addOutputDestinationList(@NonNullDecl Store<ChunkStore> chunkStore, @NonNullDecl UICommandBuilder commandBuilder, @NonNullDecl UIEventBuilder eventBuilder, ArcaneTriggerBlock trigger, List<Vector3i> outputs) {        
         boolean isEmpty = outputs.isEmpty();
         commandBuilder.set("#NoConnections.Visible", isEmpty);
 
