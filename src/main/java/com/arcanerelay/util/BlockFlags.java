@@ -15,7 +15,7 @@ public class BlockFlags {
     }
 
     public BlockFlags add(int flag) {
-        this.value = this.value & flag;
+        this.value = this.value | flag;
 
         return this;
     }
