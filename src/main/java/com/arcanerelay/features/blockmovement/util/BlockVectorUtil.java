@@ -16,7 +16,14 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class BlockVectorUtil {
-    private static ArcaneRelayConfig config = ArcaneRelayPlugin.get().getConfig();
+    private static ArcaneRelayConfig config = null;
+
+    private static ArcaneRelayConfig getConfig() {
+        if (config == null) {
+            config = ArcaneRelayPlugin.get().getConfig();
+        }
+        return config;
+    }
 
     public static void setTickingAround(@Nonnull WorldChunk chnk, Vector3i pos, int range) {
         for (int x = -range; x <= range; x++) {
@@ -53,7 +60,7 @@ public class BlockVectorUtil {
 
         if (isExtensionBlock(blockType))
             return false;
-        for (String keyword : Arrays.asList(config.getNoneMoveableBlocks())) {
+        for (String keyword : Arrays.asList(getConfig().getNoneMoveableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -73,7 +80,7 @@ public class BlockVectorUtil {
             return false;
         String id = blockType.getId();
 
-        for (String keyword : Arrays.asList(config.getNoneMoveableBlocks())) {
+        for (String keyword : Arrays.asList(getConfig().getNoneMoveableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -93,7 +100,7 @@ public class BlockVectorUtil {
             return false;
         String id = blockType.getId();
 
-        for (String keyword : Arrays.asList(config.getNoneRotatableBlocks())) {
+        for (String keyword : Arrays.asList(getConfig().getNoneRotatableBlocks())) {
             if (id.contains(keyword)) {
                 return false;
             }
