@@ -61,45 +61,49 @@ public class ArcaneRelayConfig {
 
         .build();
 
-    private int relayDistance = 10;
-    private int pusherRange = 15;
-    private int pullerRange = 15;
-    private float breakerEntityDamage = 5.0f;
-    private float breakerBlockDamageScalar = 1.0f;
-    private String[] noneMoveableBlocks = { "Barrier", "Bedrock" };
-    private String[] noneRotatableBlocks = { "Bench", "Bed", "Barrier", "Bedrock" };
+    private static final int DEFAULT_RELAY_DISTANCE = 10;
+    private static final int DEFAULT_PUSHER_RANGE = 15;
+    private static final int DEFAULT_PULLER_RANGE = 15;
+    private static final float DEFAULT_BREAKER_ENTITY_DAMAGE = 5.0f;
+    private static final float DEFAULT_BREAKER_BLOCK_DAMAGE_SCALAR = 1.0f;
+    private static final String[] DEFAULT_NONE_MOVEABLE = { "Barrier", "Bedrock" };
+    private static final String[] DEFAULT_NONE_ROTATABLE = { "Bench", "Bed", "Barrier", "Bedrock" };
 
-    public void resetToDefaults() {
-        this.relayDistance = 10;
-        this.pusherRange = 15;
-        this.pullerRange = 15;
-        this.breakerEntityDamage = 5.0f;
-        this.breakerBlockDamageScalar = 1.0f;
-        this.noneMoveableBlocks = new String[] { "Barrier", "Bedrock" };
-        this.noneRotatableBlocks = new String[] { "Bench", "Bed", "Barrier", "Bedrock" };
-    }
+    private int relayDistance;
+    private int pusherRange;
+    private int pullerRange;
+    private float breakerEntityDamage;
+    private float breakerBlockDamageScalar;
+    private String[] noneMoveableBlocks;
+    private String[] noneRotatableBlocks;
 
     public ArcaneRelayConfig() {
+        resetToDefaults();
     }
 
     public ArcaneRelayConfig(ArcaneRelayConfig other) {
-        this.relayDistance = other.relayDistance;
-        this.pusherRange = other.pusherRange;
-        this.pullerRange = other.pullerRange;
-        this.breakerEntityDamage = other.breakerEntityDamage;
-        this.breakerBlockDamageScalar = other.breakerBlockDamageScalar;
-        this.noneMoveableBlocks = other.noneMoveableBlocks.clone();
-        this.noneRotatableBlocks = other.noneRotatableBlocks.clone();
+        copyFrom(other);
+    }
+
+    public void resetToDefaults() {
+        this.relayDistance = DEFAULT_RELAY_DISTANCE;
+        this.pusherRange = DEFAULT_PUSHER_RANGE;
+        this.pullerRange = DEFAULT_PULLER_RANGE;
+        this.breakerEntityDamage = DEFAULT_BREAKER_ENTITY_DAMAGE;
+        this.breakerBlockDamageScalar = DEFAULT_BREAKER_BLOCK_DAMAGE_SCALAR;
+        this.noneMoveableBlocks = DEFAULT_NONE_MOVEABLE.clone();
+        this.noneRotatableBlocks = DEFAULT_NONE_ROTATABLE.clone();
     }
 
     public void copyFrom(ArcaneRelayConfig other) {
+        if (other == null) return;
         this.relayDistance = other.relayDistance;
         this.pusherRange = other.pusherRange;
         this.pullerRange = other.pullerRange;
         this.breakerEntityDamage = other.breakerEntityDamage;
         this.breakerBlockDamageScalar = other.breakerBlockDamageScalar;
-        this.noneMoveableBlocks = other.noneMoveableBlocks.clone();
-        this.noneRotatableBlocks = other.noneRotatableBlocks.clone();
+        this.noneMoveableBlocks = other.noneMoveableBlocks != null ? other.noneMoveableBlocks.clone() : null;
+        this.noneRotatableBlocks = other.noneRotatableBlocks != null ? other.noneRotatableBlocks.clone() : null;
     }
 
     @Override
@@ -109,12 +113,12 @@ public class ArcaneRelayConfig {
         
         ArcaneRelayConfig that = (ArcaneRelayConfig) o;
         return relayDistance == that.relayDistance &&
-            pusherRange == that.pusherRange &&
-            pullerRange == that.pullerRange &&
-            Float.compare(that.breakerEntityDamage, breakerEntityDamage) == 0 &&
-            Float.compare(that.breakerBlockDamageScalar, breakerBlockDamageScalar) == 0 &&
-            Arrays.equals(noneMoveableBlocks, that.noneMoveableBlocks) &&
-            Arrays.equals(noneRotatableBlocks, that.noneRotatableBlocks);
+                pusherRange == that.pusherRange &&
+                pullerRange == that.pullerRange &&
+                Float.compare(that.breakerEntityDamage, breakerEntityDamage) == 0 &&
+                Float.compare(that.breakerBlockDamageScalar, breakerBlockDamageScalar) == 0 &&
+                Arrays.equals(noneMoveableBlocks, that.noneMoveableBlocks) &&
+                Arrays.equals(noneRotatableBlocks, that.noneRotatableBlocks);
     }
 
     // Getters
