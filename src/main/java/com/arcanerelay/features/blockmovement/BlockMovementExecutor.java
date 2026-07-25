@@ -105,23 +105,22 @@ public final class BlockMovementExecutor {
     }
 
     private static void setBlockAndNeighboursTicking(World world, WorldChunk chunk, Vector3i blockPosition) {
+        Store<ChunkStore> store= world.getChunkStore().getStore();
+        BlockChunk blockChunkComponent = store.getComponent(chunk.getReference(), BlockChunk.getComponentType());
+        
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
                     if (!ChunkUtil.isSameChunkSection(blockPosition.x, blockPosition.y, blockPosition.z, blockPosition.x + x,blockPosition.y + y, blockPosition.z + z)) {
-                        Store<ChunkStore> store= world.getChunkStore().getStore();
                         long fromChunkIndex = ChunkUtil.indexChunkFromBlock(blockPosition.x, blockPosition.z);
                         WorldChunk newChunk = world.getChunk(fromChunkIndex);
-                        BlockChunk blockChunkComponent = store.getComponent(newChunk.getReference(), BlockChunk.getComponentType());
-                        BlockSection section = blockChunkComponent.getSectionAtBlockY(blockPosition.y + y);
+                        BlockChunk newBlockChunkComponent = store.getComponent(newChunk.getReference(), BlockChunk.getComponentType());
+                        BlockSection section = newBlockChunkComponent.getSectionAtBlockY(blockPosition.y + y);
                         section.setTicking(blockPosition.x + x, blockPosition.y + y, blockPosition.z + z, true);
                         continue;
                     }
                     
-                    Store<ChunkStore> store= world.getChunkStore().getStore();
-                    BlockChunk blockChunkComponent = store.getComponent(chunk.getReference(), BlockChunk.getComponentType());
                     BlockSection section = blockChunkComponent.getSectionAtBlockY(blockPosition.y + y);
-                
                     section.setTicking(blockPosition.x + x, blockPosition.y + y, blockPosition.z + z, true);
                 }
             }
