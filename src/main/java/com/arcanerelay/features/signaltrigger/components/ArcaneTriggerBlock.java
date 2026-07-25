@@ -56,13 +56,7 @@ public class ArcaneTriggerBlock implements Component<ChunkStore> {
 
     /** Remove output position by coordinates. Returns true if removed. */
     public boolean removeOutputPosition(int x, int y, int z) {
-        for (Vector3i p : outputPositions) {
-            if (p.x == x && p.y == y && p.z == z) {
-                outputPositions.remove(p);
-                return true;
-            }
-        }
-        return false;
+        return outputPositions.removeIf(p -> p.x == x && p.y == y && p.z == z);
     }
 
     public boolean hasOutputPositions() {
