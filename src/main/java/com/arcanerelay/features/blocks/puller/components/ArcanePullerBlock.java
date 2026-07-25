@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.arcanerelay.ArcaneRelayPlugin;
+import com.arcanerelay.util.BlockUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -112,12 +113,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         return extensionBlockKey;
     }
 
-    private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
-        if (blockId == 0) return true;
-        if (blockType == null) return true;
-        return blockType.getMaterial() == BlockMaterial.Empty;
-    }
-
     /**
      * Attempt to place an extension block at the end of the chain.
      * Uses isEmpty as "test place" validation.
@@ -150,7 +145,7 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
 
         int existingId = chunk.getBlock(posX, posY, posZ);
         BlockType existingType = assetMap.getAsset(existingId);
-        if (!isEmpty(existingType, existingId)) return false;
+        if (!BlockUtil.isEmpty(existingType, existingId)) return false;
 
         int extensionBlockIndex = BlockType.getAssetMap().getIndex(extensionBlockType.getId());
         Store<ChunkStore> store = world.getChunkStore().getStore();

@@ -40,18 +40,6 @@ public class BlockVectorUtil {
         return lower.contains("puller") && lower.contains("extension");
     }
 
-    public static boolean isEmpty(@Nullable BlockType blockType, int blockID) {
-        if (blockID == 0)
-            return false;
-        return isEmpty(blockType);
-    }
-
-    public static boolean isEmpty(@Nullable BlockType blockType) {
-        if (blockType == null)
-            return true;
-        return blockType.getMaterial() == BlockMaterial.Empty;
-    }
-
     public static boolean isPullable(@Nullable BlockType blockType, int blockID) {
         if (blockID == 0)
             return false;

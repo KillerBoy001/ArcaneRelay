@@ -3,6 +3,8 @@ package com.arcanerelay.util;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
+import com.hypixel.hytale.protocol.BlockMaterial;
+
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
@@ -109,5 +111,15 @@ public final class BlockUtil {
             if (isFeetOnTopOfBlock(feet, blockPosition))
                 out.add(ref);
         }
+    }
+
+    public static boolean isEmpty(@Nullable BlockType blockType, int blockID) {
+        if (blockID == 0) return true;
+        return isEmpty(blockType);
+    }
+
+    public static boolean isEmpty(@Nullable BlockType blockType) {
+        if (blockType == null) return true;
+        return blockType.getMaterial() == BlockMaterial.Empty;
     }
 }

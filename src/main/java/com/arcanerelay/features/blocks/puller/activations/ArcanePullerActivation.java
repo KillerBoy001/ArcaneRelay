@@ -12,6 +12,7 @@ import com.arcanerelay.features.blocks.puller.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.features.config.ArcaneRelayConfig;
 import com.arcanerelay.features.signal.components.ArcaneSection;
 import com.arcanerelay.features.signal.util.ArcaneUtil;
+import com.arcanerelay.util.BlockUtil;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -181,7 +182,7 @@ public class ArcanePullerActivation extends Activation {
             }
         }
 
-        if (isEmpty(tipBlockType, tipBlockId)) {
+        if (BlockUtil.isEmpty(tipBlockType, tipBlockId)) {
             if (extLen >= maxExtend) {
                 puller.setPULLING_BACK();
                 handlePullingBack(commandBuffer, world, puller, pullerPos, globalForward);
@@ -332,12 +333,6 @@ public class ArcanePullerActivation extends Activation {
 
 
         return ArcaneSection.BlockTickStrategy.PROCESSED;
-    }
-
-    private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
-        if (blockId == 0) return true;
-        if (blockType == null) return true;
-        return blockType.getMaterial() == BlockMaterial.Empty;
     }
 
     private void syncExtensionChain(

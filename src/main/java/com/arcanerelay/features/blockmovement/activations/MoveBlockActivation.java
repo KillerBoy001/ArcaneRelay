@@ -73,16 +73,6 @@ public class MoveBlockActivation extends Activation {
         .add()
         .build();
 
-    private static boolean isEmpty(@Nullable BlockType blockType, int blockId) {
-        if (blockId == 0)
-            return true;
-
-        if (blockType == null)
-            return true;
-
-        return blockType.getMaterial() == BlockMaterial.Empty;
-    }
-
     private boolean isWallPusherVariant(@Nonnull ComponentAccessor<ChunkStore> commandBuffer, @Nonnull Ref<ChunkStore> blockRef, @Nonnull Ref<ChunkStore> sectionRef, int worldX, int worldY, int worldZ) {
         World world = commandBuffer.getExternalData().getWorld();
         WorldChunk chunk = world.getChunk(ChunkUtil.indexChunkFromBlock(worldX, worldZ));
@@ -189,7 +179,7 @@ public class MoveBlockActivation extends Activation {
 
             int emptyBlockId = emptyChunk.getBlock(nextEmptyPosition.x, nextEmptyPosition.y, nextEmptyPosition.z);
             BlockType emptyBlockType = BlockType.getAssetMap().getAsset(emptyBlockId);
-            if (!isEmpty(emptyBlockType, emptyBlockId))
+            if (!BlockUtil.isEmpty(emptyBlockType, emptyBlockId))
                 return;
 
             movePlayers(world, globalForward, scaledGlobalUpVector, frontPusherPosition, nextEmptyPosition, chainLength);
