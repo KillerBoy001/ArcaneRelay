@@ -1,6 +1,8 @@
 package com.arcanerelay.features.blocks.breaker.activation;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,13 +25,10 @@ import com.hypixel.hytale.math.vector.Vector3iUtil;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemTool.DurabilityLossBlockTypes;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemToolSpec;
-import com.hypixel.hytale.server.core.entity.LivingEntity;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.modules.debug.DebugUtils;
 import com.hypixel.hytale.server.core.modules.entity.damage.Damage;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageCause;
 import com.hypixel.hytale.server.core.modules.entity.damage.DamageSystems;
@@ -119,7 +118,7 @@ public class HitActivation extends Activation {
         targets.addAll(getTargetNonPlayerEntities(store, targetDestination, globalUp));
 
         // Remove duplicates across both lists
-        java.util.Set<Ref<EntityStore>> seen = new java.util.HashSet<>();
+        Set<Ref<EntityStore>> seen = new HashSet<>();
         targets.removeIf(target -> !seen.add(target));
 
         if (targets.isEmpty()) {

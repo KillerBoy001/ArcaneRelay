@@ -1,7 +1,6 @@
 package com.arcanerelay.features.signaltrigger.activation;
 
 import com.arcanerelay.core.activation.ActivationExecutor;
-import com.arcanerelay.core.activation.ArcaneActivationAccessor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.adapters.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.codec.builder.BuilderCodec;

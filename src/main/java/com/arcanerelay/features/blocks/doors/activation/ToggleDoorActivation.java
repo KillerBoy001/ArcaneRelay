@@ -1,7 +1,6 @@
 package com.arcanerelay.features.blocks.doors.activation;
 
 import com.arcanerelay.core.activation.ActivationExecutor;
-import com.arcanerelay.core.activation.ArcaneActivationAccessor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.adapters.ChunkStoreCommandBufferLike;
 import com.arcanerelay.util.BlockUtil;
@@ -19,7 +18,6 @@ import com.hypixel.hytale.server.core.asset.type.blocktype.config.Rotation;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.arcanerelay.features.activation.Activation;
-import com.arcanerelay.features.activation.ActivationEffects;
 import com.arcanerelay.features.signal.components.ArcaneSection;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;

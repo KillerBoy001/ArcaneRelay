@@ -1,6 +1,5 @@
 package com.arcanerelay.features.activation;
 
-import com.arcanerelay.ArcaneRelayPlugin;
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.assetstore.AssetMap;
 import com.hypixel.hytale.assetstore.AssetRegistry;

@@ -1,7 +1,6 @@
 package com.arcanerelay.features.configurator.interactions;
 
 import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.features.config.ArcaneRelayConfig;
 import com.arcanerelay.features.configurator.components.ArcaneConfiguratorComponent;
 import com.arcanerelay.features.configurator.util.VisualsUtil;
 import com.arcanerelay.features.signaltrigger.components.ArcaneTriggerBlock;

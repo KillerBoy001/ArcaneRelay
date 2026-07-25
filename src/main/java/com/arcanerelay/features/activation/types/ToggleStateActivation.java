@@ -1,8 +1,6 @@
 package com.arcanerelay.features.activation.types;
 
-import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.core.activation.ActivationExecutor;
-import com.arcanerelay.core.activation.ArcaneActivationAccessor;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.adapters.ChunkStoreCommandBufferLike;
 import com.hypixel.hytale.codec.Codec;
@@ -11,7 +9,6 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 
 import java.util.List;
 
@@ -21,7 +18,6 @@ import javax.annotation.Nullable;
 import com.arcanerelay.features.activation.Activation;
 import com.arcanerelay.features.activation.ActivationEffects;
 import com.arcanerelay.features.signal.components.ArcaneSection;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;

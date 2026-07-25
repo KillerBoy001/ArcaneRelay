@@ -1,14 +1,12 @@
 package com.arcanerelay.features.triggervolume;
 
 import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.core.activation.ActivationExecutor;
 import com.arcanerelay.features.signal.util.ArcaneUtil;
 import com.arcanerelay.features.signaltrigger.components.ArcaneTriggerBlock;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerContext;
 import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
 import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
 import com.hypixel.hytale.builtin.triggervolumes.shape.TriggerVolumeShape;
-import com.hypixel.hytale.component.ComponentAccessor;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.math.block.BlockUtil;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -19,7 +17,6 @@ import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.util.MathUtil;
 
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
@@ -55,6 +52,7 @@ public class ArcaneRelayEffect extends TriggerEffect {
         this.triggerTarget = TriggerTarget.ALL_ARCANE_BLOCKS_IN_VOLUME;
     }
 
+    @Override
     public void execute(@Nonnull TriggerContext context) {
         Store<EntityStore> store = context.getStore();
         World world = ((EntityStore) store.getExternalData()).getWorld();

@@ -22,7 +22,6 @@ import com.hypixel.hytale.math.vector.Rotation3f;
 
 import org.joml.Vector3d;
 import org.joml.Vector3i;
-import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.VariantRotation;
 import com.hypixel.hytale.protocol.ChangeVelocityType;
