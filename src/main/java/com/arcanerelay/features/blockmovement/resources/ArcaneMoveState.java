@@ -22,28 +22,23 @@ public class ArcaneMoveState implements Resource<ChunkStore> {
     }
 
     public void addMoveEntry(Vector3i blockPosition, Vector3i moveDirection, BlockType blockType, int blockId, int blockRotation, int filler, int settings, Holder<ChunkStore> componentHolder) {
-        synchronized (this.moveEntries) {
-            if (this.moveEntries.containsKey(blockPosition)) {
-                this.moveEntries.get(blockPosition).updateDirection(moveDirection);
-                return;
+        this.moveEntries.compute(blockPosition, (key, existingEntry) -> {
+            if (existingEntry != null) {
+                existingEntry.updateDirection(moveDirection);
+                return existingEntry;
             }
-
-            this.moveEntries.put(blockPosition, new MoveEntry(blockPosition, moveDirection, blockType, blockId, blockRotation, filler, settings, componentHolder));
-        }
+            return new MoveEntry(blockPosition, moveDirection, blockType, blockId, blockRotation, filler, settings, componentHolder);
+        });
     }
 
     public HashMap<Vector3i, MoveEntry> getMoveEntries() {
-        // clone the map to avoid concurrent modification exceptions
         synchronized (this.moveEntries) {
-            HashMap<Vector3i, MoveEntry> clone = new HashMap<>(this.moveEntries);
-            return clone;
+            return new HashMap<>(this.moveEntries);
         }
     }
 
     public void clear() {
-        synchronized (this.moveEntries) {
-            this.moveEntries.clear();
-        }
+        this.moveEntries.clear();
     }
 
     @Override
