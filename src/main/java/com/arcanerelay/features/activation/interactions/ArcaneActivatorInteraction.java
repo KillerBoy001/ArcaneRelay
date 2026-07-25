@@ -13,7 +13,6 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import org.joml.Vector3d;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.protocol.InteractionState;
@@ -39,6 +38,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Runs the arcane Activation for the target block (from bindings).
@@ -54,7 +54,7 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
             .add()
             .build();
 
-    @javax.annotation.Nullable
+    @Nullable
     private String activator;
 
     public ArcaneActivatorInteraction() {
@@ -65,7 +65,7 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
     }
 
     /** Activation ID to run. When null/empty, uses the block's binding. */
-    @javax.annotation.Nullable
+    @Nullable
     public String getActivator() {
         return activator;
     }
@@ -84,8 +84,6 @@ public class ArcaneActivatorInteraction extends SimpleInstantInteraction {
 
         TransformComponent playerTransform = cb.getComponent(ref, TransformComponent.getComponentType());
         if (playerTransform == null) return;
-
-        Vector3d playerPosition = playerTransform.getPosition();
  
         int blockX, blockY, blockZ;
         BlockPosition targetRaw = context.getMetaStore().getMetaObject(Interaction.TARGET_BLOCK_RAW);
