@@ -171,26 +171,32 @@ public class ArcaneSection implements Component<ChunkStore> {
     }
 
     public boolean setTicking(int blockIndex, boolean ticking) {
-        long readStamp = this.arcaneSectionLock.readLock();
-
-      try {
-         if (this.tickingBlocks.get(blockIndex) == ticking) {
-            return false;
-         }
-      } finally {
-         this.arcaneSectionLock.unlockRead(readStamp);
-      }
-      
-      boolean result = false;
-
-      long writeStamp = this.arcaneSectionLock.writeLock();
-      try {
-        this.tickingBlocks.set(blockIndex, ticking);
-        result = true;
-      } finally {
-        this.arcaneSectionLock.unlockWrite(writeStamp);
-      }
-      return result;
+        long stamp = this.arcaneSectionLock.readLock();
+        try {
+            if (this.tickingBlocks.get(blockIndex) == ticking) {
+                return false;
+            }
+            
+            long writeStamp = this.arcaneSectionLock.tryConvertToWriteLock(stamp);
+            
+            if (writeStamp != 0L) {
+                stamp = writeStamp;
+                this.tickingBlocks.set(blockIndex, ticking);
+                return true;
+            } else { 
+                this.arcaneSectionLock.unlockRead(stamp);
+                stamp = this.arcaneSectionLock.writeLock();
+                
+                if (this.tickingBlocks.get(blockIndex) == ticking) {
+                    return false;
+                }
+                
+                this.tickingBlocks.set(blockIndex, ticking);
+                return true;
+            }
+        } finally {
+            this.arcaneSectionLock.unlock(stamp);
+        }
     }
 
     /** Serializes ticking state to the buffer (under read lock). */
