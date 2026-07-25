@@ -1,14 +1,10 @@
 package com.arcanerelay.features.blocks.puller.components;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.util.BlockUtil;
@@ -23,12 +19,10 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
-import com.hypixel.hytale.protocol.BlockMaterial;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
 import com.hypixel.hytale.server.core.blocktype.component.BlockPhysics;
 import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.chunk.BlockChunk;
 import com.hypixel.hytale.server.core.universe.world.chunk.ChunkColumn;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
@@ -149,14 +143,8 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
 
         int extensionBlockIndex = BlockType.getAssetMap().getIndex(extensionBlockType.getId());
         Store<ChunkStore> store = world.getChunkStore().getStore();
-        BlockChunk blockChunk = store.getComponent(chunk.getReference(), BlockChunk.getComponentType());
-
+       
         int noParticles = 4;
-        int applyPhysics = 32;
-        int maybeConnectedComponents = 132;
-        // chunk.placeBlock(posX, posY, posZ, extensionBlockKey, rotationTuple.yaw(), rotationTuple.pitch(), rotationTuple.roll());
-        //chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, noParticles | applyPhysics | maybeConnectedComponents | 2048);
-        // chunk.setTicking(posX, posY, posZ, true);
         chunk.setBlock(posX, posY, posZ, extensionBlockIndex, extensionBlockType, rotationIndex, 0, noParticles);
         ChunkColumn column = (ChunkColumn)store.getComponent(chunk.getReference(), ChunkColumn.getComponentType());
         Ref<ChunkStore> section = column.getSection(ChunkUtil.chunkCoordinate(posY));
@@ -164,16 +152,6 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         BlockPhysics.reset(store, section, posX, posY, posZ);
 
         this.extensionPositions.add(chainLen);
-
-        // if (store != null) {
-        //     if (blockChunk != null) {
-        //         BlockSection blockSection = blockChunk.getSectionAtBlockY(posY);
-        //         if (blockSection != null) {
-        //             blockSection.scheduleTick(ChunkUtil.indexBlock(posX, posY, posZ), Instant.now().plus(Duration.ofMillis(100)));
-        //             blockSection.invalidate();
-        //         }
-        //     }
-        // }
 
         return true;
     }
@@ -186,17 +164,3 @@ public class ArcanePullerBlock implements Component<ChunkStore> {
         };
     }
 }
-
-
-// Puller -> ArcanePullerBlock, keeps track of placed extensions.
-    // we might want to simply use an entity group :D, i think its more efficient (to group multuple blcoks/components)
-// Extension -> ArcanePullerExtensionBlock
-    // have a system that listens for extension blocks break (from an external system (like a player or a pusher)) as if this happens we want to halt
-
-// Activation -> ArcanePullerActivation, 
-// Check phase/state of ArcanePullerBlock (IDLE, EXTENDING, PULLING_BACK)
-// Execute pull-back or extension logic based on phase, validate action
-    // when extending, we are placing an extension block.
-    // when pulling back, we are (removing an extension block) and enqueing a move entry for the pulled block.
-// If we have not finished pulling or extending, continue to next tick
-
