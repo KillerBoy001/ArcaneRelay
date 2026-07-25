@@ -32,9 +32,7 @@ public class ArcaneMoveState implements Resource<ChunkStore> {
     }
 
     public HashMap<Vector3i, MoveEntry> getMoveEntries() {
-        synchronized (this.moveEntries) {
-            return new HashMap<>(this.moveEntries);
-        }
+        return new HashMap<>(this.moveEntries); // This could return entires that are being added by other threads while this is being copied.
     }
 
     public void clear() {
