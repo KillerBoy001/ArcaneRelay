@@ -13,7 +13,6 @@ import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
 
 public class BlockVectorUtil {
     private static ArcaneRelayConfig config = null;
@@ -37,8 +36,7 @@ public class BlockVectorUtil {
     }
 
     private static boolean isExtensionBlock(@Nullable BlockType blockType) {
-        if (blockType == null)
-            return false;
+        if (blockType == null) return false;
 
         String id = blockType.getId();
         if (id == null)
@@ -49,19 +47,18 @@ public class BlockVectorUtil {
     }
 
     public static boolean isPullable(@Nullable BlockType blockType, int blockID) {
-        if (blockID == 0)
-            return false;
+        if (blockID == 0) return false;
         return isPullable(blockType);
     }
 
     public static boolean isPullable(@Nullable BlockType blockType) {
-        if (blockType == null)
-            return false;
+        if (blockType == null) return false;
         String id = blockType.getId();
 
         if (isExtensionBlock(blockType))
             return false;
-        for (String keyword : Arrays.asList(getConfig().getNoneMoveableBlocks())) {
+
+        for (String keyword : getConfig().getNoneMoveableBlocks()) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -71,17 +68,15 @@ public class BlockVectorUtil {
     }
 
     public static boolean isMoveable(@Nullable BlockType blockType, int blockID) {
-        if (blockID == 0)
-            return false;
+        if (blockID == 0) return false;
         return isMoveable(blockType);
     }
 
     public static boolean isMoveable(@Nullable BlockType blockType) {
-        if (blockType == null)
-            return false;
+        if (blockType == null) return false;
         String id = blockType.getId();
 
-        for (String keyword : Arrays.asList(getConfig().getNoneMoveableBlocks())) {
+        for (String keyword : getConfig().getNoneMoveableBlocks()) {
             if (id.contains(keyword)) {
                 return false;
             }
@@ -91,17 +86,15 @@ public class BlockVectorUtil {
     }
 
     public static boolean isRotatable(@Nullable BlockType blockType, int blockID) {
-        if (blockID == 0)
-            return false;
+        if (blockID == 0) return false;
         return isRotatable(blockType);
     }
 
     public static boolean isRotatable(@Nullable BlockType blockType) {
-        if (blockType == null)
-            return false;
+        if (blockType == null) return false;
         String id = blockType.getId();
 
-        for (String keyword : Arrays.asList(getConfig().getNoneRotatableBlocks())) {
+        for (String keyword : getConfig().getNoneRotatableBlocks()) {
             if (id.contains(keyword)) {
                 return false;
             }

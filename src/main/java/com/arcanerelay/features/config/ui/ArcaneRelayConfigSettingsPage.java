@@ -22,8 +22,12 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import com.hypixel.hytale.server.core.util.NotificationUtil;
 
 import javax.annotation.Nonnull;
+
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Custom UI page for Arcane Relay Config: view and modify configuration
@@ -127,10 +131,10 @@ public class ArcaneRelayConfigSettingsPage
                 handleFloatInput(data, val -> stagingConfig.setBreakerBlockDamageScalar(val));
                 return;
             case "UpdateNonMovableList":
-                handleStringArrayInput(data, stagingConfig::setNoneMoveableBlocks);
+                handleSetInput(data, stagingConfig::setNoneMoveableBlocks);
                 return;
             case "UpdateNonRotatableList":
-                handleStringArrayInput(data, stagingConfig::setNoneRotatableBlocks);
+                handleSetInput(data, stagingConfig::setNoneRotatableBlocks);
                 return;
             case "Save":
                 attemptSaveConfig();
@@ -179,14 +183,14 @@ public class ArcaneRelayConfigSettingsPage
         }
     }
 
-    private void handleStringArrayInput(PageEventData data, java.util.function.Consumer<String[]> setter) {
+    private void handleSetInput(PageEventData data, Consumer<Set<String>> setter) {
         if (data.textValue == null || data.textValue.isEmpty())
             return;
 
-        String[] blocks = java.util.Arrays.stream(data.textValue.split(","))
+        Set<String> blocks = Arrays.stream(data.textValue.split(","))
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
-                .toArray(String[]::new);
+                .collect(Collectors.toSet());
 
         setter.accept(blocks);
     }

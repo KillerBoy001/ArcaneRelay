@@ -1,6 +1,9 @@
 package com.arcanerelay.features.config;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -48,14 +51,14 @@ public class ArcaneRelayConfig {
         .add()
 
         .append(new KeyedCodec<String[]>("MoveableBlacklist", Codec.STRING_ARRAY),
-                (config, value, info) -> config.noneMoveableBlocks = value,
-                (config, info) -> config.noneMoveableBlocks)
+                (config, value, info) -> config.noneMoveableBlocks = value != null ? new HashSet<>(Arrays.asList(value)) : new HashSet<>(),
+                (config, info) -> config.noneMoveableBlocks.toArray(new String[0]))
         .documentation("List of blocks that cannot be moved.")
         .add()
 
         .append(new KeyedCodec<String[]>("RotatableBlacklist", Codec.STRING_ARRAY),
-                (config, value, info) -> config.noneRotatableBlocks = value,
-                (config, info) -> config.noneRotatableBlocks)
+                (config, value, info) -> config.noneRotatableBlocks = value != null ? new HashSet<>(Arrays.asList(value)) : new HashSet<>(),
+                (config, info) -> config.noneRotatableBlocks.toArray(new String[0]))
         .documentation("List of blocks that cannot be rotated.")
         .add()
 
@@ -74,8 +77,8 @@ public class ArcaneRelayConfig {
     private int pullerRange;
     private float breakerEntityDamage;
     private float breakerBlockDamageScalar;
-    private String[] noneMoveableBlocks;
-    private String[] noneRotatableBlocks;
+    private Set<String> noneMoveableBlocks;
+    private Set<String> noneRotatableBlocks;
 
     public ArcaneRelayConfig() {
         resetToDefaults();
@@ -91,8 +94,8 @@ public class ArcaneRelayConfig {
         this.pullerRange = DEFAULT_PULLER_RANGE;
         this.breakerEntityDamage = DEFAULT_BREAKER_ENTITY_DAMAGE;
         this.breakerBlockDamageScalar = DEFAULT_BREAKER_BLOCK_DAMAGE_SCALAR;
-        this.noneMoveableBlocks = DEFAULT_NONE_MOVEABLE.clone();
-        this.noneRotatableBlocks = DEFAULT_NONE_ROTATABLE.clone();
+        this.noneMoveableBlocks = new HashSet<>(Arrays.asList(DEFAULT_NONE_MOVEABLE));
+        this.noneRotatableBlocks = new HashSet<>(Arrays.asList(DEFAULT_NONE_ROTATABLE));
     }
 
     public void copyFrom(ArcaneRelayConfig other) {
@@ -102,8 +105,8 @@ public class ArcaneRelayConfig {
         this.pullerRange = other.pullerRange;
         this.breakerEntityDamage = other.breakerEntityDamage;
         this.breakerBlockDamageScalar = other.breakerBlockDamageScalar;
-        this.noneMoveableBlocks = other.noneMoveableBlocks != null ? other.noneMoveableBlocks.clone() : null;
-        this.noneRotatableBlocks = other.noneRotatableBlocks != null ? other.noneRotatableBlocks.clone() : null;
+        this.noneMoveableBlocks = other.noneMoveableBlocks != null ? new HashSet<>(other.noneMoveableBlocks) : new HashSet<>();
+        this.noneRotatableBlocks = other.noneRotatableBlocks != null ? new HashSet<>(other.noneRotatableBlocks) : new HashSet<>();
     }
 
     @Override
@@ -117,8 +120,8 @@ public class ArcaneRelayConfig {
                 pullerRange == that.pullerRange &&
                 Float.compare(that.breakerEntityDamage, breakerEntityDamage) == 0 &&
                 Float.compare(that.breakerBlockDamageScalar, breakerBlockDamageScalar) == 0 &&
-                Arrays.equals(noneMoveableBlocks, that.noneMoveableBlocks) &&
-                Arrays.equals(noneRotatableBlocks, that.noneRotatableBlocks);
+                Objects.equals(noneMoveableBlocks, that.noneMoveableBlocks) &&
+                Objects.equals(noneRotatableBlocks, that.noneRotatableBlocks);
     }
 
     // Getters
@@ -142,11 +145,11 @@ public class ArcaneRelayConfig {
         return breakerBlockDamageScalar;
     }
 
-    public String[] getNoneMoveableBlocks() {
+    public Set<String> getNoneMoveableBlocks() {
         return noneMoveableBlocks;
     }
 
-    public String[] getNoneRotatableBlocks() {
+    public Set<String> getNoneRotatableBlocks() {
         return noneRotatableBlocks;
     }
 
@@ -155,6 +158,6 @@ public class ArcaneRelayConfig {
     public void setPullerRange(int pullerRange) { this.pullerRange = pullerRange; }
     public void setBreakerEntityDamage(float breakerEntityDamage) { this.breakerEntityDamage = breakerEntityDamage; }
     public void setBreakerBlockDamageScalar(float breakerBlockDamageScalar) { this.breakerBlockDamageScalar = breakerBlockDamageScalar; }
-    public void setNoneMoveableBlocks(String[] noneMoveableBlocks) { this.noneMoveableBlocks = noneMoveableBlocks; }
-    public void setNoneRotatableBlocks(String[] noneRotatableBlocks) { this.noneRotatableBlocks = noneRotatableBlocks; }
+    public void setNoneMoveableBlocks(Set<String> noneMoveableBlocks) { this.noneMoveableBlocks = noneMoveableBlocks; }
+    public void setNoneRotatableBlocks(Set<String> noneRotatableBlocks) { this.noneRotatableBlocks = noneRotatableBlocks; }
 }
