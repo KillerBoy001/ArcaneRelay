@@ -4,18 +4,13 @@ import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.components.ArcaneTriggerBlock;
 import com.arcanerelay.config.Activation;
 import com.arcanerelay.components.ArcaneSection;
-import com.arcanerelay.config.Activation;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
-import com.arcanerelay.resources.ArcaneMoveState;
-import com.arcanerelay.util.ArcaneConnectedBlocksUtil;
 import com.arcanerelay.util.ArcaneUtil;
 import com.arcanerelay.util.BlockVectorUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.builtin.triggervolumes.EntityTargetType;
 import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
-import com.hypixel.hytale.builtin.triggervolumes.effect.TriggerEffect;
-import com.hypixel.hytale.builtin.triggervolumes.manager.GroupEntry;
 import com.hypixel.hytale.builtin.triggervolumes.manager.TriggerVolumeManager;
 import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
 import com.hypixel.hytale.builtin.triggervolumes.shape.BoxShape;
@@ -23,32 +18,23 @@ import com.hypixel.hytale.builtin.triggervolumes.shape.TriggerVolumeShape;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.universe.world.chunk.BlockComponentChunk;
 import org.joml.Vector3d;
 import org.joml.Vector3i;
-import com.hypixel.hytale.protocol.BlockMaterial;
-import com.hypixel.hytale.protocol.ChangeVelocityType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
-import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
-import com.hypixel.hytale.server.core.entity.knockback.KnockbackComponent;
-import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
-import com.hypixel.hytale.server.core.modules.splitvelocity.VelocityConfig;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.chunk.WorldChunk;
 import com.hypixel.hytale.server.core.universe.world.storage.ChunkStore;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.TargetUtil;
+
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.*;
-
 
 public class ArcaneBeamerActivation extends Activation {
     private static int range = 15;
@@ -267,7 +253,7 @@ public class ArcaneBeamerActivation extends Activation {
     ){
         int ret =1;
         for (int i = 0; i <= maxRange; i++) {
-            Vector3i Localforward = BlockVectorUtil.getForwardVector(beamerChunk,BeamerPos,i+1 );
+            Vector3i Localforward = BlockVectorUtil.getUpVector(beamerChunk,BeamerPos,i+1 );
             Vector3i NextPos = new Vector3i (BeamerPos.x + Localforward.x, BeamerPos.y + Localforward.y, BeamerPos.z + Localforward.z);
 
             WorldChunk chnk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(NextPos.x, NextPos.z));
