@@ -1,13 +1,14 @@
-package com.arcanerelay.config.types;
+package com.arcanerelay.features.signaltrigger.activation;
 
 import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.components.ArcaneTriggerBlock;
-import com.arcanerelay.config.Activation;
-import com.arcanerelay.components.ArcaneSection;
+import com.arcanerelay.features.signaltrigger.components.ArcaneTriggerBlock;
+import com.arcanerelay.features.activation.Activation;
+import com.arcanerelay.features.signal.components.ArcaneSection;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
-import com.arcanerelay.core.activation.ChunkStoreCommandBufferLike;
-import com.arcanerelay.util.ArcaneUtil;
-import com.arcanerelay.util.BlockVectorUtil;
+import com.arcanerelay.core.adapters.ChunkStoreCommandBufferLike;
+import com.arcanerelay.features.signal.util.ArcaneUtil;
+import com.arcanerelay.features.blockmovement.util.BlockVectorUtil;
+import com.arcanerelay.util.BlockUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.builtin.triggervolumes.EntityTargetType;
 import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
@@ -34,7 +35,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.concurrent.*;
 
 public class ArcaneBeamerActivation extends Activation {
     private static int range = 15;
@@ -131,11 +131,11 @@ public class ArcaneBeamerActivation extends Activation {
             if (Block.getId().contains("Extension")) {
                 // Just log and move on ,when rebuilding partial existing laser
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Existing laser at: %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
-            } else if (BlockVectorUtil.isEmpty(Block)) {
+            } else if (BlockUtil.isEmpty(Block)) {
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Creating laser at: %d,%d,%d", NextPos.x, NextPos.y, NextPos.z);
                 chnk.setBlock(NextPos.x, NextPos.y, NextPos.z, LaserID, LaserType, rotind, 0, 4);
                 BlockVectorUtil.setTickingAround(chnk, NextPos, 1);
-            }else if(!BlockVectorUtil.isEmpty(Block)){ //Not empty
+            }else if(!BlockUtil.isEmpty(Block)){ //Not empty
                 ArcaneRelayPlugin.LOGGER.atInfo().log("Beamer: Created laser with range: %d", i);
                 break;
             }
@@ -258,7 +258,7 @@ public class ArcaneBeamerActivation extends Activation {
 
             WorldChunk chnk = commandBuffer.getExternalData().getWorld().getChunkIfInMemory(ChunkUtil.indexChunkFromBlock(NextPos.x, NextPos.z));
             BlockType Block = chnk.getBlockType(NextPos.x,NextPos.y,NextPos.z);
-            if(!BlockVectorUtil.isEmpty(Block)){
+            if(!BlockUtil.isEmpty(Block)){
                 ret = i;
                 return ret;
             }

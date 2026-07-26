@@ -1,8 +1,8 @@
-package com.arcanerelay.systems;
+package com.arcanerelay.features.blockbreak.systems;
 
 import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.config.types.ArcaneBeamerActivation;
-import com.arcanerelay.util.ArcaneUtil;
+import com.arcanerelay.features.signaltrigger.activation.ArcaneBeamerActivation;
+import com.arcanerelay.features.signal.util.ArcaneUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
