@@ -3,7 +3,7 @@ package com.arcanerelay.commands;
 import javax.annotation.Nonnull;
 
 import com.arcanerelay.ArcaneRelayPlugin;
-import com.arcanerelay.ui.ArcaneRelayConfigSettingsPage;
+import com.arcanerelay.features.config.ui.ArcaneRelayConfigSettingsPage;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
