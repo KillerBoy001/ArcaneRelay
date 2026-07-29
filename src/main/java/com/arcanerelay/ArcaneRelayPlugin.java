@@ -28,6 +28,7 @@ import com.arcanerelay.features.signaltrigger.components.ArcaneTriggerBlock;
 import com.arcanerelay.features.signaltrigger.interactions.SendSignalInteraction;
 import com.arcanerelay.features.signaltrigger.ui.ArcaneTriggerPageSupplier;
 import com.arcanerelay.features.triggervolume.ArcaneRelayEffect;
+import com.arcanerelay.features.triggervolume.PlayerFlyEffect;
 import com.hypixel.hytale.builtin.triggervolumes.TriggerVolumesPlugin;
 import com.hypixel.hytale.component.ComponentRegistryProxy;
 import com.hypixel.hytale.component.ComponentType;
@@ -177,6 +178,7 @@ public class ArcaneRelayPlugin extends JavaPlugin {
 
     private void registerVolumeTriggers(){
         TriggerVolumesPlugin.get().registerEffectType("TriggerArcaneRelay", ArcaneRelayEffect.class, ArcaneRelayEffect.CODEC);
+        TriggerVolumesPlugin.get().registerEffectType("PlayerFlight", PlayerFlyEffect.class, PlayerFlyEffect.CODEC);
     }
   
     private void registerChunkSystems() {
