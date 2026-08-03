@@ -1,5 +1,6 @@
 package com.arcanerelay.features.blockmovement.activations;
 
+import com.arcanerelay.features.triggervolume.util.TriggerVolumeUtil;
 import com.arcanerelay.ArcaneRelayPlugin;
 import com.arcanerelay.core.activation.ArcaneCachedAccessor;
 import com.arcanerelay.core.adapters.ChunkStoreCommandBufferLike;
@@ -9,6 +10,7 @@ import com.arcanerelay.features.blockmovement.util.BlockVectorUtil;
 import com.arcanerelay.features.signal.components.ArcaneSection;
 import com.arcanerelay.features.signal.util.ArcaneUtil;
 import com.hypixel.hytale.assetstore.map.BlockTypeAssetMap;
+import com.hypixel.hytale.builtin.triggervolumes.manager.VolumeEntry;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -18,6 +20,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.math.util.ChunkUtil;
 import com.hypixel.hytale.math.vector.Rotation3f;
 
+import org.joml.Vector3d;
 import org.joml.Vector3i;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.BlockType;
 import com.hypixel.hytale.server.core.asset.type.blocktype.config.RotationTuple;
@@ -36,6 +39,8 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.arcanerelay.features.triggervolume.util.TriggerVolumeUtil.ResizeMode;
 
 public class RotateBlockActivation extends Activation {
     private String[] RotTypeID = new String[0];
@@ -170,6 +175,15 @@ public class RotateBlockActivation extends Activation {
             Vector3i rotatorPos = new Vector3i(worldX, worldY, worldZ);
             boolean isClockWise = isClockWise(rotatorBlockType);
             Vector3i rotatorUp = BlockVectorUtil.getUpVector(chunk, rotatorPos);
+
+            //
+            VolumeEntry test = TriggerVolumeUtil.CreateTV(world,rotatorPos,"tester");
+            TriggerVolumeUtil.SetTVShapeSize(world,test,"cylinder",new Vector3d(2.0,2.0,2.0),ResizeMode.Center_Extend);
+
+            TriggerVolumeUtil.SetTVEffectPreset(world,"tester","FlyZone");
+            TriggerVolumeUtil.SetTVEffectPreset(world,test,"FlyZone");
+
+            TriggerVolumeUtil.SetTVEnabled(world,test,false);
 
             // Target Info
             Vector3i tempUp = BlockVectorUtil.getUpVector(chunk, rotatorPos);
